@@ -1,0 +1,10 @@
+
+*.log
+.env
+
+.cache
+
+# IDE
+.vscode
+.idea
+.fleet

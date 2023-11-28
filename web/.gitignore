@@ -1,0 +1,10 @@
+# Config
+*.env
+
+# Config IDE (Delete if use)
+.vscode
+.fleet
+.idea
+
+# Log
+*.log

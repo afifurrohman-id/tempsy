@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{ template "components/meta" .}}
+
+    <meta name="description" content="Dashboard Tempsy, Manage files">
+    <title>Dashboard Files {{.user.UserName}}</title>
+    <script type="module" src="/public/scripts/pages/dashboard.js"></script>
+    <link href="/public/styles/pages/dashboard.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/public/styles/components/user-nav.css">
+    <link rel="stylesheet" href="/public/styles/components/upload.css">
+    <link rel="stylesheet" href="/public/styles/utils/theme.css">
+    <link rel="stylesheet" href="/public/styles/utils/base.css">
+</head>
+
+<body>
+
+{{ template "components/nav" . }}
+
+{{ template "components/upload" .}}
+
+    <main>
+        {{$length := len .files}}{{ if eq $length 0 }}
+            <h1>No Files here, Add one</h1>
+            {{ else }}
+                <ul>
+                {{ range $_, $file := .files }}
+                <li class="card">
+                    <h1>{{$file.Name}}</h1>
+                    <h2>Type: {{$file.ContentType}}</h2>
+                    {{if $file.IsPublic}}
+                    <h3>File Is Publicly Accessible</h3>
+                    {{end}}
+                    <h3>File Size: {{$file.Size}} Byte</h3>
+                    <a href="/dashboard/{{ $.user.UserName }}/{{$file.Name}}" class="btn-details">details</a>
+                    </li>
+                {{end}}
+                </ul>
+            {{end}}
+    </main>
+</body>
+</html>

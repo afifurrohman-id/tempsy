@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {{ template "components/meta" . }}
+
+    <meta name="description" content="Tempsy, Synchronized your file any devices and time">
+    <title>Tempsy - Share temporary files instantly</title>
+    <link rel="stylesheet" href="/public/styles/pages/index.css">
+    <link rel="stylesheet" href="/public/styles/components/user-nav.css">
+    <link rel="stylesheet" href="/public/styles/utils/theme.css">
+    <link rel="stylesheet" href="/public/styles/utils/base.css">
+    <script type="module" src="/public/scripts/pages/index.js"></script>
+</head>
+
+<body>
+    {{template "components/nav" .}}
+    <header>
+        <h1 class="main-header">Welcome to Tempsy</h1>
+
+        <p class="header-description">Save Temporary files in global CDN</p>
+
+        <div class="header-icon-wrapper">
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
+                    class="bi bi-shield-fill-check" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M8 0c-.69 0-1.843.265-2.928.56-1.11.3-2.229.655-2.887.87a1.54 1.54 0 0 0-1.044 1.262c-.596 4.477.787 7.795 2.465 9.99a11.777 11.777 0 0 0 2.517 2.453c.386.273.744.482 1.048.625.28.132.581.24.829.24s.548-.108.829-.24a7.159 7.159 0 0 0 1.048-.625 11.775 11.775 0 0 0 2.517-2.453c1.678-2.195 3.061-5.513 2.465-9.99a1.541 1.541 0 0 0-1.044-1.263 62.467 62.467 0 0 0-2.887-.87C9.843.266 8.69 0 8 0zm2.146 5.146a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647z" />
+                </svg>
+                <h1>Secure</h1>
+                <p>Secure by default using https to transfer files</p>
+            </div>
+
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
+                    class="bi bi-speedometer" viewBox="0 0 16 16">
+                    <path
+                        d="M8 2a.5.5 0 0 1 .5.5V4a.5.5 0 0 1-1 0V2.5A.5.5 0 0 1 8 2zM3.732 3.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707zM2 8a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8zm9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5zm.754-4.246a.389.389 0 0 0-.527-.02L7.547 7.31A.91.91 0 1 0 8.85 8.569l3.434-4.297a.389.389 0 0 0-.029-.518z" />
+                    <path fill-rule="evenodd"
+                        d="M6.664 15.889A8 8 0 1 1 9.336.11a8 8 0 0 1-2.672 15.78zm-4.665-4.283A11.945 11.945 0 0 1 8 10c2.186 0 4.236.585 6.001 1.606a7 7 0 1 0-12.002 0z" />
+                </svg>
+                <h1>Faster</h1>
+                <p>Faster using smart global cdn with low latency</p>
+            </div>
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor"
+                    class="bi bi-cloud-check-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M8 2a5.53 5.53 0 0 0-3.594 1.342c-.766.66-1.321 1.52-1.464 2.383C1.266 6.095 0 7.555 0 9.318 0 11.366 1.708 13 3.781 13h8.906C14.502 13 16 11.57 16 9.773c0-1.636-1.242-2.969-2.834-3.194C12.923 3.999 10.69 2 8 2zm2.354 4.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
+                </svg>
+                <h1>High availability</h1>
+                <p>Serve files in cloud to avoid availability for all devices</p>
+            </div>
+        </div>
+    </header>
+
+    <section class="guest-section">
+        {{ if not .user }}
+        <a href="/auth/login?type=guest" class="btn-guest">Try as Guest</a>
+        {{ end }}
+    </section>
+
+</body>
+
+</html>

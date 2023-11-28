@@ -1,0 +1,19 @@
+:root {
+    --dark-color: rgb(15 23 42);
+    --light-color: rgb(226 232 240);
+}
+
+.dark {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+}
+
+#btn-theme-changer {
+    border: none;
+    background-color: transparent;
+}
+
+#btn-user-toggle-menu {
+    background-color: transparent;
+    border: none;
+}

@@ -1,0 +1,71 @@
+
+.main-header {
+    text-align: center;
+    margin: 5em 0 10px 0;
+    font-size: 10vw;
+    font-family: "Cascadia Code", serif;
+    font-weight: bolder;
+}
+
+.header-description {
+    text-align: center;
+    font-size: 1rem;
+    color: rgb(128, 128, 128);
+    margin-bottom: 6em;
+}
+
+.header-icon-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 6vw;
+    text-align: center;
+}
+
+.guest-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 5em 0;
+}
+
+.btn-guest {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+@media screen and (min-width: 800px) {
+    h1.main-header {
+        font-size: 4rem;
+    }
+    div.header-icon-wrapper {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (min-width: 576px) {
+    h1.main-header {
+        font-size: 3rem;
+    }
+    .header-icon-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .card {
+        font-size: 1.3rem;
+    }
+}

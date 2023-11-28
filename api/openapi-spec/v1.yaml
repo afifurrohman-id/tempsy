@@ -1,0 +1,767 @@
+openapi: 3.0.3
+info:
+  title: Tempsy RESTful API
+  description: Temporary Files Storage API Documentation
+  version: 1.0.0
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit
+  contact:
+    name: Afifurrohman
+    url: https://afifurrohman.my.id
+    email: afifurrohman.id@outlook.com
+servers:
+  - url: https://api.tempsy.afifurrohman.my.id
+    description: Production server
+  - url: https://staging.api.tempsy.afifurrohman.my.id
+    description: Staging server
+paths:
+  /files/{username}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - files
+      summary: Get all files
+      description: Get all files of the user
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/fileData'
+
+                  error:
+                    nullable: true
+                    description: "null"
+                    default: null
+              examples:
+                ok:
+                  value:
+                      - name: hello.txt
+                        url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.txt
+                        auto_deleted_at: 1634179200000
+                        private_url_expires: 100
+                        is_public: false
+                        uploaded_at: 1634179200000
+                        updated_at: 1634179200000
+                        size: 100
+                        type: text/plain; charset=utf-8
+
+                      - name: example.png
+                        url: https://api.tempsy.afifurrohman.my.id/files/afif/public/example.png
+                        auto_deleted_at: 1634179200000
+                        private_url_expires: 100
+                        is_public: true
+                        uploaded_at: 1634179200000
+                        updated_at: 1634179200000
+                        size: 100
+                        type: image/png
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - files
+      summary: Upload file
+      description: Upload file on the server by the user
+      parameters:
+        - name: X-File-Name
+          in: header
+          description: File name of the file want to be uploaded
+          required: true
+          schema:
+            $ref: '#/components/schemas/fileName'
+
+        - $ref: '#/components/parameters/username'
+        - $ref: '#/components/parameters/fileMetaAutoDeletedAt'
+        - $ref: '#/components/parameters/fileMetaPrivateUrl'
+        - $ref: '#/components/parameters/fileMetaPublic'
+        - $ref: '#/components/parameters/type'
+      requestBody:
+        $ref: '#/components/requestBodies/uploadFile'
+
+      responses:
+        201:
+          description: Success Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileData'
+              examples:
+                ok:
+                  $ref: '#/components/examples/dataResponse'
+
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                invalidFileName:
+                  summary: Bad Request invalid file name
+                  value:
+                    error_type: invalid_file_name
+                    error_description: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
+                errorEmptyFileUpload:
+                  $ref: '#/components/examples/invalidEmptyFile'
+        422:
+          description: Unprocessable Entity, Missing Header file metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/missingHeaderMetadata'
+        415:
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  summary: Unsupported Media Type
+                  value:
+                    error_type: unsupported_content_type
+                    error_description: 'Unsupported Content-Type: application/octet-stream'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  summary: File name Conflict
+                  value:
+                    error_type: file_already_exists
+                    error_description: 'File: hello.txt already exists'
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - files
+      summary: Delete all files
+      description: Delete all files of the user
+      parameters:
+        - $ref: '#/components/parameters/username'
+      responses:
+        204:
+          description: Success
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  summary: Bad Request delete empty files
+                  value:
+                    error_type: delete_empty_data
+                    error_description: 'Cannot delete empty data files, no data for user: afif'
+
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+  /files/{username}/public/{filename}:
+    get:
+      tags:
+        - file
+      summary: Get public file
+      description: Get public file by file name
+      parameters:
+        - $ref: '#/components/parameters/username'
+        - $ref: '#/components/parameters/filename'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileData'
+              examples:
+                ok:
+                  $ref: '#/components/examples/dataResponse'
+        404:
+          description: File Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/fileNotFound'
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+  /files/{username}/{filename}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - file
+      summary: Get file
+      description: Get file by file name
+      parameters:
+        - $ref: '#/components/parameters/username'
+        - $ref: '#/components/parameters/filename'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileData'
+              examples:
+                ok:
+                  $ref: '#/components/examples/dataResponse'
+        404:
+          description: File Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/fileNotFound'
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - file
+      summary: Update file
+      description: Update file by file name
+      parameters:
+        - $ref: '#/components/parameters/username'
+        - $ref: '#/components/parameters/filename'
+        - $ref: '#/components/parameters/fileMetaAutoDeletedAt'
+        - $ref: '#/components/parameters/fileMetaPrivateUrl'
+        - $ref: '#/components/parameters/fileMetaPublic'
+        - $ref: '#/components/parameters/type'
+      requestBody:
+        $ref: '#/components/requestBodies/uploadFile'
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/fileData'
+              examples:
+                ok:
+                  $ref: '#/components/examples/dataResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                errorMismatchContentType:
+                  summary: Bad Request mismatch content type
+                  value:
+                    error_type: mismatch_content_type
+                    error_description: Please use the same content type as the original file
+                errorUpdateWithEmptyFile:
+                  $ref: '#/components/examples/invalidEmptyFile'
+        422:
+          description: Unprocessable Entity, Missing Header file metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/missingHeaderMetadata'
+        404:
+          description: File Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/fileNotFound'
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - file
+      summary: Delete file
+      description: Delete file by file name
+      parameters:
+        - $ref: '#/components/parameters/username'
+        - $ref: '#/components/parameters/filename'
+      responses:
+        '204':
+          description: Success
+        404:
+          description: File Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/fileNotFound'
+        500:
+          description: Unknown Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+              examples:
+                error:
+                  $ref: '#/components/examples/internalServer'
+
+  /files/auth/userinfo/me:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - auth
+      summary: Get user info
+      description: Return total files and username
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                description: api data userinfo
+                properties:
+                  username:
+                    type: string
+                    description: Username of the user
+                    example: afif
+                  total_files:
+                    type: string
+                    description: Email of the user
+                    example: 100
+
+              examples:
+                ok:
+                  value:
+                      username: afif
+                      total_files: 100
+        400:
+            description: Bad Request
+            content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/errorResponse'
+                  examples:
+                      error:
+                        summary: Bad Request invalid token
+                        description: Invalid Token cause by authorization header have invalid token, maybe expires or have been revoked
+                        value:
+                            error_type: invalid_token
+                            error_description: Invalid Token, cannot get user info
+
+        500:
+            description: Unknown Internal Server Error
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/errorResponse'
+                    examples:
+                        error:
+                          $ref: '#/components/examples/internalServer'
+  /files/auth/guest/token:
+    get:
+      tags:
+        - auth
+      summary: Get guest token
+      description: return guest token
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                description: api data guest token
+                properties:
+                  access_token:
+                    type: string
+                    description: Guest token
+                  token_type:
+                    type: string
+                    description: Token type, currently only Bearer
+                    example: Bearer
+                  expires_in:
+                    type: integer
+                    description: Token expires in seconds
+                    example: 3600
+
+        400:
+            description: Bad Request
+            content:
+                application/json:
+                  schema:
+                      $ref: '#/components/schemas/errorResponse'
+                  examples:
+                      error:
+                        summary: Bad Request already have token
+                        description: Already have a token
+                        value:
+                            error_type: already_have_token
+                            error_description: You already have token
+        500:
+            description: Unknown Internal Server Error
+            content:
+                application/json:
+                    schema:
+                        $ref: '#/components/schemas/errorResponse'
+                    examples:
+                        error:
+                          $ref: '#/components/examples/internalServer'
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Google OAuth2 access_token or Guest JWT access_token
+
+  parameters:
+    fileMetaPublic:
+      name: X-File-Is-Public
+      in: header
+      description: File is public or not
+      required: true
+      schema:
+        type: boolean
+    fileMetaPrivateUrl:
+      name: X-File-Private-Url-Expires
+      required: true
+      in: header
+      description: Private url will be expires
+      schema:
+        description: Seconds, relative from now
+        type: integer
+        maximum: 604800 # 7 days
+        format: int
+    fileMetaAutoDeletedAt:
+      name: X-File-Auto-Deleted-At
+      in: header
+      description: File will be deleted at
+      required: true
+      schema:
+        type: integer
+        format: int64
+        description: Unix date in milliseconds
+
+    username:
+      name: username
+      in: path
+      description: Username of the user
+      required: true
+      schema:
+        type: string
+    filename:
+      name: filename
+      in: path
+      description: File name of the file
+      required: true
+      schema:
+        type: string
+        format: name.ext
+    type:
+      name: Content-Type
+      required: true
+      in: header
+      description: Content-Type Header for file upload
+      schema:
+        type: string
+        description: Content-Type accepted by the server
+        enum:
+          - application/json; charset=utf-8
+          - application/json
+          - text/html; charset=utf-8
+          - text/html
+          - text/plain; charset=utf-8
+          - text/plain
+          - text/javascript; charset=utf-8
+          - text/javascript
+          - application/xml; charset=utf-8
+          - application/xml
+          - text/csv
+          - text/css
+          - image/gif
+          - image/jpeg
+          - image/png
+          - application/x-sh
+          - image/svg+xml
+          - image/webp
+          - image/x-icon # Major Browsers
+          - image/vnd.microsoft.icon # Standard IANA
+          - image/avif
+          - application/wasm
+
+  schemas:
+    fileName:
+      description: File name pattern of the file
+      type: string
+      pattern: ^[a-zA-Z0-9_-]+\.+[a-zA-Z0-9_-]+$
+      example: example.txt
+    errorResponse:
+      description: Error Response body, without data
+      type: object
+      properties:
+        error_type:
+          type: string
+          description: 'Error type: unknown_server_error'
+        error_description:
+          type: string
+          description: Error message description
+    fileData:
+      description: File Data Response
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/fileName'
+        url:
+          type: string
+          format: uri
+          example: https://api.tempsy.afifurrohman.my.id/files/afif/hello.txt
+        autoDeletedAt:
+          type: integer
+          format: int64
+          description: Unix date in milliseconds
+        privateUrlExpires:
+          type: integer
+          format: int
+          description: Seconds, relative from now
+        isPublic:
+          type: boolean
+          description: File is public or not
+        uploadedAt:
+          type: integer
+          format: int64
+          description: Unix date in milliseconds
+        updatedAt:
+          type: integer
+          format: int64
+          description: Unix date in milliseconds
+        size:
+          type: integer
+          format: int64
+          description: File size in bytes
+        type:
+          type: string
+          description: MIME type of file
+          example: text/plain; charset=utf-8
+  examples:
+    fileNotFound:
+      summary: File Not Found
+      description: File Not Found Error Response
+      value:
+        error_type: file_not_found
+        error_description: 'File: hello.txt Not Found'
+    missingHeaderMetadata:
+      summary: Missing Header Metadata
+      description: Error Missing file metadata
+      value:
+        error_type: invalid_header_file
+        error_description: Cannot Parse NaN as int64
+    dataResponse:
+      summary: Data Response Body
+      description: Single File Data for Response Body
+      value:
+        name: hello.webp
+        url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.webp
+        auto_deleted_at: 1634179200000
+        private_url_expires: 100
+        is_public: false
+        uploaded_at: 1634179200000
+        updated_at: 1634179200000
+        size: 100
+        type: text/plain; charset=utf-8
+    internalServer:
+      summary: Internal Server Error
+      description: Internal Server Error for Response Body
+      value:
+        error_type: unknown_server_error
+        error_description: Unknown Internal Server Error. Unexpected Error
+    invalidEmptyFile:
+        summary: Invalid Empty File
+        description: Invalid Empty File Upload Error Response
+        value:
+            error_type: invalid_empty_file
+            error_description: File cannot be empty
+  requestBodies:
+    uploadFile:
+      required: true
+      description: Binary or text file
+      content:
+        application/json:
+          schema:
+            nullable: false
+            description: JSON
+            type: string
+          examples:
+            json:
+              value:
+                message: Hello World
+        image/png:
+          schema:
+            nullable: false
+            description: Image binary
+            type: string
+            format: binary
+        image/jpeg:
+          schema:
+            nullable: false
+            description: Image binary
+            type: string
+            format: binary
+        text/html:
+          schema:
+            nullable: false
+            description: Html Text
+            type: string
+        text/plain:
+          schema:
+            nullable: false
+            description: Plain Text
+            type: string
+          examples:
+            text:
+              value: Hello World
+
+        text/javascript:
+          schema:
+            nullable: false
+            description: Javascript Text
+            type: string
+          examples:
+            js:
+              value: |
+                console.info('Hello World')
+
+        application/xml:
+          schema:
+            nullable: false
+            description: XML Text
+            type: string
+
+        text/csv:
+          schema:
+            nullable: false
+            description: CSV Text
+            type: string
+        text/css:
+          schema:
+            nullable: false
+            description: CSS Text
+            type: string
+        image/gif:
+            schema:
+                nullable: false
+                description: GIF Image
+                type: string
+                format: binary
+        application/x-sh:
+            schema:
+                nullable: false
+                description: Shell Script text
+                type: string
+            examples:
+                sh:
+                    value: |
+                        #!/bin/sh
+                        echo "Hello World"
+
+        image/svg+xml:
+            schema:
+                nullable: false
+                description: SVG Image text
+                type: string
+        image/webp:
+            schema:
+                nullable: false
+                description: WebP Image
+                type: string
+                format: binary
+        image/vnd.microsoft.icon:
+            schema:
+                nullable: false
+                description: Icon Image
+                type: string
+                format: binary
+        image/avif:
+            schema:
+                nullable: false
+                description: AVIF Image
+                type: string
+                format: binary
+
+        application/wasm:
+            schema:
+                nullable: false
+                description: WebAssembly Binary
+                type: string
+                format: binary

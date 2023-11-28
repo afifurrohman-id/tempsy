@@ -1,0 +1,35 @@
+name: Statistics - Live | Preview
+
+on: [deployment_status]
+
+jobs:
+  lighthouse:
+    name: Test using Lighthouse
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Audit using lighthouse
+        uses: treosh/lighthouse-ci-action@v10
+        id: lighthouse
+        with:
+          urls: ${{ github.event.deployment_status.environment_url }}
+          temporaryPublicStorage: true
+      - name: Job Successful Feedback
+        if: ${{ success() }}
+        run: |
+          cat >> ${GITHUB_STEP_SUMMARY} <<MD
+          # Lighthouse Report from: ${{github.event.deployment_status.environment_url}}
+
+          **Overall Result:**
+          - [x] Performance: ${{ fromJSON(steps.lighthouse.outputs.manifest)[0].summary.performance }}
+          - [x] Accessibility: ${{ fromJSON(steps.lighthouse.outputs.manifest)[0].summary.accessibility }}
+          - [x] Best Practices: ${{ fromJSON(steps.lighthouse.outputs.manifest)[0].summary.best-practices }}
+          - [x] Search Engine Optimization: ${{ fromJSON(steps.lighthouse.outputs.manifest)[0].summary.seo }}
+          - [x] Progressive Web App: ${{ fromJSON(steps.lighthouse.outputs.manifest)[0].summary.pwa }}
+
+          [Details Report Page]($(echo '${{steps.lighthouse.outputs.links}}' | jq -r '.["${{github.event.deployment_status.environment_url}}/"]'))
+          MD

@@ -1,0 +1,82 @@
+.header-upload {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5em;
+}
+
+.upload-area {
+    margin-top: 8em;
+}
+
+#file-upload-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1em;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: var(--dark-color) 2px dashed;
+}
+
+body.dark #file-upload-box {
+    border: var(--light-color) 2px dashed;
+}
+
+body.dark #file-upload-box.drag {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+#file-upload-box.drag {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+#input-file {
+    display: none;
+}
+
+.label-file {
+    cursor: pointer;
+}
+
+#file-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+/*datetime calendar*/
+#file-info input[type="datetime-local"],input[type="number"] {
+    font-size: 10px;
+}
+
+#file-info h4 {
+    text-align: center;
+}
+
+#file-info button:hover {
+    opacity: 70%;
+}
+
+#file-info button:active {
+    opacity: 100%;
+}
+
+#file-info button {
+    align-self: center;
+}
+
+.btn-upload {
+    padding: 5px 10px;
+    width: max-content;
+    background-color: orange;
+    border-radius: 10em;
+    color: inherit;
+    font-weight: bold;
+}
+
+@media screen and (min-width: 576px) {
+
+    #file-info input[type="number"] {
+        font-size: 1em;
+    }
+}

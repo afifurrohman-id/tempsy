@@ -1,0 +1,64 @@
+main {
+    width: 100%;
+}
+
+main > h1 {
+    text-align: center;
+    font-size: 1rem;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+ul .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    padding: 15px;
+    margin: 10px;
+    border-radius: 10px;
+    border: rgba(128, 128, 128, 0.32) 2px solid;
+}
+
+.card h2 {
+    font-size: 1rem;
+    font-weight: lighter;
+    text-decoration: underline;
+}
+
+.card p {
+    font-size: 0.8rem;
+    color: rgb(128, 128, 128);
+}
+
+.card a {
+    text-decoration: none;
+    color: inherit;
+    border-radius: 999px;
+    padding: 5px 10px;
+    width: max-content;
+    background-color: orange;
+}
+
+@media screen and (min-width: 576px) {
+    ul {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .file-upload-box {
+        padding: 1em 2em;
+    }
+
+    #file-info label:nth-child(2) input {
+        font-size: 1em;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    main ul {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}

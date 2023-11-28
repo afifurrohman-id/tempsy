@@ -1,0 +1,50 @@
+{
+    "name": "Tempsy - Shares files anytime and anywhere",
+    "short_name": "Tempsy",
+    "description": "Serve files and sync with other devices",
+    "id": "/",
+    "scope": "/",
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "theme_color": "#fbbf24",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "https://acbtwffwdoxzwlfgpisu.supabase.co/storage/v1/object/public/projects/tempsy/images/icons/icon-48x48.png",
+            "type": "image/png",
+            "sizes": "48x48",
+            "purpose": "maskable"
+        },
+        {
+            "src": "https://acbtwffwdoxzwlfgpisu.supabase.co/storage/v1/object/public/projects/tempsy/images/icons/icon-144x144.png",
+            "type": "image/png",
+            "sizes": "144x144",
+            "purpose": "any"
+        },
+        {
+            "src": "https://acbtwffwdoxzwlfgpisu.supabase.co/storage/v1/object/public/projects/tempsy/images/icons/icon-512x512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "https://acbtwffwdoxzwlfgpisu.supabase.co/storage/v1/object/public/projects/tempsy/images/screenshot/mac.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Tempsy in Mac"
+        },
+        {
+            "src": "https://acbtwffwdoxzwlfgpisu.supabase.co/storage/v1/object/public/projects/tempsy/images/screenshot/mac.png",
+            "sizes": "388x786",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Tempsy in Mobile"
+        }
+    ],
+    "display_override": [
+        "standalone",
+        "window-controls-overlay"
+    ]
+}
