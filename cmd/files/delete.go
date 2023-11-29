@@ -19,7 +19,7 @@ func HandleDeleteFile(ctx *fiber.Ctx) error {
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	if _, err := store.GetObject(storeCtx, filePath); err != nil {
@@ -44,7 +44,7 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, username)

@@ -16,8 +16,6 @@ import (
 	"time"
 )
 
-const timeoutCtx = 25 * time.Second
-
 func TestCreateStorageClient(test *testing.T) {
 	storeCtx := context.Background()
 	storeCtx, cancel := context.WithTimeout(storeCtx, 8*time.Second)
@@ -42,7 +40,7 @@ func TestGetAllObject(test *testing.T) {
 		storeCtx  = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -82,7 +80,7 @@ func TestGetObject(test *testing.T) {
 	)
 
 	storeCtx := context.Background()
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -112,7 +110,7 @@ func TestGetObject(test *testing.T) {
 		assert.Equal(test, objByte, body)
 
 		Format(fileData)
-		//TODO: Local time is different with server time
+		//Local time is different with server time
 		//assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
 		assert.Equal(test, fileData.UpdatedAt, fileData.UploadedAt)
 		assert.Greater(test, fileData.AutoDeletedAt, time.Now().UnixMilli())
@@ -134,7 +132,7 @@ func TestUploadObject(test *testing.T) {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -172,7 +170,7 @@ func TestDeleteObject(test *testing.T) {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
 	client, err := createClient(storeCtx)
 	require.NoError(test, err)
 

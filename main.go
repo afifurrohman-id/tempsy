@@ -62,13 +62,11 @@ func main() {
 		return ctx.SendStatus(fiber.StatusNoContent)
 	})
 
-	routeApiFiles := app.Group("/files")
-
-	routeAuthApi := routeApiFiles.Group("/auth")
+	routeAuthApi := app.Group("/auth")
 	routeAuthApi.Get("/userinfo/me", middleware.RateLimiterProcessing, etag.New(), files.HandleGetUserInfo)
 	routeAuthApi.Get("/guest/token", middleware.RateLimiterGuestToken, files.HandleGetGuestToken)
 
-	routeFilesByUsername := routeApiFiles.Group("/:username", middleware.PurgeAnonymousAccount, middleware.AutoDeleteScheduler)
+	routeFilesByUsername := app.Group("/files/:username", middleware.PurgeAnonymousAccount, middleware.AutoDeleteScheduler)
 	routeFilesByUsername.Get("/public/:filename", middleware.Cache, files.HandleGetPublicFile)
 	routeFilesByUsername.Get("/", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), files.HandleGetAllFileData)
 	routeFilesByUsername.Get("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), files.HandleGetFileData)

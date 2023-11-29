@@ -37,13 +37,11 @@ func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 }
 
 func GetGoogleAccountInfo(accessToken string) (*models.GoogleAccountInfo, error) {
-	const timeout = 10 * time.Second
-
 	agent := fiber.Get("https://www.googleapis.com/userinfo/v2/me")
 
 	agent.Set(fiber.HeaderAuthorization, auth.BearerPrefix+accessToken)
-	// TODO: Add parameter timeout
-	agent.Timeout(timeout)
+
+	agent.Timeout(10 * time.Second)
 
 	userinfo := new(models.GoogleAccountInfo)
 

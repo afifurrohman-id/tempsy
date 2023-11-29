@@ -7,7 +7,7 @@ import (
 const (
 	ErrorTypeFileNotPublic     = "file_not_found_or_not_public"
 	ErrorTypeFileNotFound      = "file_not_found"
-	ErrorTypeHaveToken         = "already_have_token"
+	ErrorTypeHaveToken         = "already_have_valid_token"
 	ErrorTypeInvalidToken      = "invalid_token"
 	ErrorTypeEmptyData         = "delete_empty_data"
 	ErrorTypeInvalidHeaderFile = "invalid_header_file"

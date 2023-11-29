@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 1.0.0
+  version: 2.0.0
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -82,7 +82,7 @@ paths:
       summary: Upload file
       description: Upload file on the server by the user
       parameters:
-        - name: X-File-Name
+        - name: File-Name
           in: header
           description: File name of the file want to be uploaded
           required: true
@@ -373,7 +373,7 @@ paths:
                 error:
                   $ref: '#/components/examples/internalServer'
 
-  /files/auth/userinfo/me:
+  /auth/userinfo/me:
     get:
       security:
         - bearerAuth: []
@@ -427,7 +427,7 @@ paths:
                     examples:
                         error:
                           $ref: '#/components/examples/internalServer'
-  /files/auth/guest/token:
+  /auth/guest/token:
     get:
       tags:
         - auth
@@ -488,14 +488,14 @@ components:
 
   parameters:
     fileMetaPublic:
-      name: X-File-Is-Public
+      name: File-Is-Public
       in: header
       description: File is public or not
       required: true
       schema:
         type: boolean
     fileMetaPrivateUrl:
-      name: X-File-Private-Url-Expires
+      name: File-Private-Url-Expires
       required: true
       in: header
       description: Private url will be expires
@@ -505,7 +505,7 @@ components:
         maximum: 604800 # 7 days
         format: int
     fileMetaAutoDeletedAt:
-      name: X-File-Auto-Deleted-At
+      name: File-Auto-Deleted-At
       in: header
       description: File will be deleted at
       required: true

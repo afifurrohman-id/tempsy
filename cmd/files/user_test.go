@@ -20,10 +20,10 @@ import (
 
 func TestGetGuestToken(test *testing.T) {
 	app := fiber.New()
-	app.Get("/api/files/auth/guest/token", HandleGetGuestToken)
+	app.Get("/token", HandleGetGuestToken)
 
 	test.Run("TestOk", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodGet, "/api/files/auth/guest/token", nil)
+		req := httptest.NewRequest(fiber.MethodGet, "/token", nil)
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
 
@@ -44,9 +44,13 @@ func TestGetGuestToken(test *testing.T) {
 		assert.Equal(test, fiber.StatusOK, res.StatusCode)
 	})
 
-	test.Run("TestAlreadyHaveToken", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodGet, "/api/files/auth/guest/token", nil)
-		req.Header.Set(fiber.HeaderAuthorization, auth.BearerPrefix+"test")
+	test.Run("TestAlreadyValidHaveToken", func(test *testing.T) {
+		req := httptest.NewRequest(fiber.MethodGet, "/token", nil)
+
+		token, err := guest.CreateToken(guest.GenerateUsername())
+		require.NoError(test, err)
+
+		req.Header.Set(fiber.HeaderAuthorization, auth.BearerPrefix+token)
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
 

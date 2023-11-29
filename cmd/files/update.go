@@ -21,7 +21,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	if len(ctx.Body()) < 1 {

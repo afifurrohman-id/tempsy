@@ -2,7 +2,7 @@
 > Simple Temporary Files sharing RESTful API with oauth2
 
 ## API Documentation
-- [OpenAPI Specification](api/openapi-spec/v1.yaml)
+- [OpenAPI Specification](api/openapi-spec.yaml)
 
 ## Usage
 

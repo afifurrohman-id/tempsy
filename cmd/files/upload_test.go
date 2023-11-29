@@ -40,7 +40,7 @@ func TestHandleUploadFile(test *testing.T) {
 		fileByte = []byte(test.Name())
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()

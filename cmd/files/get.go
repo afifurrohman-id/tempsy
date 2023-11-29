@@ -13,12 +13,8 @@ import (
 	"time"
 )
 
-// timeoutCtx
-// TODO: Don't duplicate, use in internal package instead
-const timeoutCtx = 25 * time.Second
-
 func HandleGetPublicFile(ctx *fiber.Ctx) error {
-	storeCtx, cancel := context.WithTimeout(context.Background(), timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	var (
@@ -70,7 +66,7 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 	)
 
 	storeCtx := context.Background()
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	fileData, err := store.GetObject(storeCtx, filePath)
@@ -94,7 +90,7 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, username)

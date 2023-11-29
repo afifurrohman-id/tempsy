@@ -34,7 +34,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 		storeCtx = context.Background()
 		fileByte = []byte(test.Name())
 	)
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 
 	app.Get("/:username", HandleGetAllFileData)
 
@@ -114,7 +114,7 @@ func TestHandleGetFileData(test *testing.T) {
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 		fileByte = []byte(test.Name())
 	)
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 
 	app.Get("/:username/:filename", HandleGetFileData)
 
@@ -186,7 +186,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 
 	app.Get("/:username/public/:filename", HandleGetPublicFile)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()

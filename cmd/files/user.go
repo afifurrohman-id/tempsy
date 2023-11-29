@@ -13,14 +13,21 @@ import (
 )
 
 func HandleGetGuestToken(ctx *fiber.Ctx) error {
-	if strings.Contains(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix) {
+	if _, err := guest.ParseToken(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
-			Description: "You already have token",
+			Description: "You already have valid token",
 		})
 	}
-	username := guest.GenerateUsername()
 
+	if _, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
+			Type:        internal.ErrorTypeHaveToken,
+			Description: "You already have valid token",
+		})
+	}
+
+	username := guest.GenerateUsername()
 	token, err := guest.CreateToken(username)
 	internal.Check(err)
 
@@ -51,7 +58,7 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 		userinfo.UserName = goUser.UserName
 	}
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, timeoutCtx)
+	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
 	defer cancel()
 
 	files, err := store.GetAllObject(storeCtx, userinfo.UserName)

@@ -14,37 +14,67 @@ import (
 	"time"
 )
 
-// AcceptedContentType TODO: Support PDF ? Word?
 var AcceptedContentType = []string{
-	fiber.MIMEApplicationJSONCharsetUTF8,
+	fiber.MIMEApplicationJSONCharsetUTF8, // not sure
 	fiber.MIMEApplicationJSON,
-	fiber.MIMETextHTMLCharsetUTF8,
+	fiber.MIMETextHTMLCharsetUTF8, // not sure
 	fiber.MIMETextHTML,
-	fiber.MIMETextPlainCharsetUTF8,
+	fiber.MIMETextPlainCharsetUTF8, // not sure
 	fiber.MIMETextPlain,
-	fiber.MIMETextJavaScriptCharsetUTF8,
+	fiber.MIMETextJavaScriptCharsetUTF8, // not sure
 	fiber.MIMETextJavaScript,
-	fiber.MIMEApplicationXMLCharsetUTF8,
-	fiber.MIMEApplicationXML,
+	fiber.MIMEApplicationXMLCharsetUTF8, // not sure
+	fiber.MIMEApplicationXML,            // Standard
+	fiber.MIMETextXML,                   // Common Major browsers
+	fiber.MIMETextXMLCharsetUTF8,        // not sure
 	"text/csv",
 	"text/css",
+	"video/mpeg",
+	"audio/mpeg",
+	"application/epub+zip", // standard
+	"application/epub",     // Chrome
 	"image/gif",
 	"image/jpeg",
+	"application/pdf",
+	"audio/wav",
+	"audio/ogg",
 	"image/png",
+	"application/font-woff",    // Chrome
+	"font/woff",                // standard
+	"font/woff2",               // standard
+	"application/x-compressed", // Chrome (7z, rar)
+	"application/x-7z-compressed",
+
+	// excel (xls, xlsx)
+	"application/vnd.ms-excel",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	// word (doc, docx)
+	"application/msword",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	// powerpoint (ppt, pptx)
+	"application/vnd.ms-powerpoint",
+	"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+
 	"application/x-sh",
 	"image/svg+xml",
+	"application/x-tar",
+	"application/x-gzip", // common Major browsers
+	"application/gzip",   // standard
 	"image/webp",
 	"image/x-icon",             // Common Major browsers
-	"image/vnd.microsoft.icon", // IANA standard
+	"image/vnd.microsoft.icon", // standard
 	"image/avif",
 	"application/wasm",
+	"application/x-zip-compressed", // common Major browsers
+	"application/zip",              // standard
 }
 
 const (
-	HeaderAutoDeletedAt     = "X-File-Auto-Deleted-At"
-	HeaderPrivateUrlExpires = "X-File-Private-Url-Expires"
-	HeaderIsPublic          = "X-File-Is-Public"
-	HeaderFileName          = "X-File-Name"
+	HeaderAutoDeletedAt     = "File-Auto-Deleted-At"
+	HeaderPrivateUrlExpires = "File-Private-Url-Expires"
+	HeaderIsPublic          = "File-Is-Public"
+	HeaderFileName          = "File-Name"
+	DefaultTimeoutCtx       = 25 * time.Second
 )
 
 func createClient(ctx context.Context) (*storage.Client, error) {

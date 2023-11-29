@@ -34,9 +34,11 @@ func CheckAuth(ctx *fiber.Ctx) error {
 	if strings.HasPrefix(authToken, auth.BearerPrefix) {
 		if strings.HasPrefix(username, guest.UsernamePrefix) {
 			tokenMap, err := guest.ParseToken(strings.TrimPrefix(authToken, auth.BearerPrefix))
+
 			if err == nil && tokenMap["jti"] == username {
 				return ctx.Next()
 			}
+			log.Error(err)
 		} else {
 			accountInfo, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(authToken, auth.BearerPrefix))
 
