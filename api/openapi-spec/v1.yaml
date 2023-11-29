@@ -13,7 +13,7 @@ info:
 servers:
   - url: https://api.tempsy.afifurrohman.my.id
     description: Production server
-  - url: https://staging.api.tempsy.afifurrohman.my.id
+  - url: https://api.tempsy.staging.afifurrohman.my.id
     description: Staging server
 paths:
   /files/{username}:
