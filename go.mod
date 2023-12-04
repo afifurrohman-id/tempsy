@@ -5,7 +5,7 @@ go 1.20
 require (
 	cloud.google.com/go/storage v1.35.1
 	github.com/gofiber/fiber/v2 v2.51.0
-	github.com/golang-jwt/jwt/v5 v5.1.0
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/exp v0.0.0-20231110203233-9a3e6036ecaa
