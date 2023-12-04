@@ -99,8 +99,8 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 		return err
 	}
 
-	cutoff := time.Now().Add(604801 * time.Second) // 7 days + 1 second
-	if !time.Now().Add(time.Duration(privateUrlExpiredAt) * time.Second).Before(cutoff) {
+	// cutoff 7 days + 1 second from now
+	if cutoff := time.Now().Add(604801 * time.Second); !time.Now().Add(time.Duration(privateUrlExpiredAt) * time.Second).Before(cutoff) {
 		return errors.New("expired_url_should_be_within_7_day_from_now")
 	}
 

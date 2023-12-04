@@ -10,5 +10,3 @@ ENV CGO_ENABLED=0
 
 # Install CA certificates
 RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
-
-CMD ["go"]

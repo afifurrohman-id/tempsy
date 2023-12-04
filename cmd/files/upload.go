@@ -70,17 +70,22 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 			}
 
 			fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
+
 			if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
+				log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
+
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 					Type:        internal.ErrorTypeInvalidHeaderFile,
 					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 				})
 			}
 
-			if !checkCompareUrlExpires(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt) {
+			if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
+				log.Errorf("Error Validate Expiry: %s", err.Error())
+
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 					Type:        internal.ErrorTypeInvalidHeaderFile,
-					Description: "Private url expires cannot be later than auto deleted at starting from now",
+					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 				})
 			}
 
@@ -102,9 +107,15 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	})
 }
 
-func checkCompareUrlExpires(urlExp int, autoDel int64) bool {
+func validateExpiry(urlExp int, autoDel int64) error {
 	if time.Now().Add(time.Duration(urlExp)*time.Second).UnixMilli() > autoDel {
-		return false
+		return errors.New("private_url_expires_cannot_be_later_than_auto_deleted_at_starting_from_now")
 	}
-	return true
+
+	// cutoff one year from now
+	if cutoff := time.Now().Add(8766 * time.Hour); !time.UnixMilli(autoDel).Before(cutoff) {
+		return errors.New("auto_deleted_at_cannot_be_later_than_1_year_from_now")
+	}
+
+	return nil
 }

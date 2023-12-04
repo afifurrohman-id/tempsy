@@ -1,9 +1,0 @@
-**/.env
-*.log
-.github
-.cache
-
-# IDE
-.idea
-.fleet
-.vscode

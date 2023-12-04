@@ -9,11 +9,13 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"strings"
 )
 
 func HandleGetGuestToken(ctx *fiber.Ctx) error {
 	if _, err := guest.ParseToken(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
+		log.Errorf("Error Parse Token: %s", err.Error())
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",
@@ -21,6 +23,7 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 	}
 
 	if _, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
+		log.Errorf("Error Token, Cannot Get Google Account info: %s", err.Error())
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",

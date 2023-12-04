@@ -55,7 +55,7 @@ func AutoDeleteScheduler(ctx *fiber.Ctx) error {
 		storeCtx = context.Background()
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, 3*time.Second)
+	storeCtx, cancel := context.WithTimeout(storeCtx, 10*time.Second)
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, username)

@@ -9,6 +9,7 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"strings"
 )
 
@@ -56,16 +57,20 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
 
 	if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
+		log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
+
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeInvalidHeaderFile,
 			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 		})
 	}
 
-	if !checkCompareUrlExpires(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt) {
+	if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
+		log.Errorf("Error Validate Expiry: %s", err.Error())
+
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeInvalidHeaderFile,
-			Description: "Private url expires cannot be later than auto deleted at starting from now",
+			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 		})
 	}
 
