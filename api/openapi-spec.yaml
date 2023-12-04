@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 0.2.0
+  version: 0.3.0
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -48,21 +48,21 @@ paths:
                   value:
                       - name: hello.txt
                         url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.txt
-                        auto_deleted_at: 1634179200000
-                        private_url_expires: 100
-                        is_public: false
-                        uploaded_at: 1634179200000
-                        updated_at: 1634179200000
+                        autoDeletedAt: 1634179200000
+                        privateUrlExpires: 100
+                        isPublic: false
+                        uploadedAt: 1634179200000
+                        updatedAt: 1634179200000
                         size: 100
                         type: text/plain; charset=utf-8
 
                       - name: example.png
                         url: https://api.tempsy.afifurrohman.my.id/files/afif/public/example.png
-                        auto_deleted_at: 1634179200000
-                        private_url_expires: 100
-                        is_public: true
-                        uploaded_at: 1634179200000
-                        updated_at: 1634179200000
+                        autoDeletedAt: 1634179200000
+                        privateUrlExpires: 100
+                        isPublic: true
+                        uploadedAt: 1634179200000
+                        updatedAt: 1634179200000
                         size: 100
                         type: image/png
         500:
@@ -118,8 +118,8 @@ paths:
                 invalidFileName:
                   summary: Bad Request invalid file name
                   value:
-                    error_type: invalid_file_name
-                    error_description: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
+                    errorType: invalid_file_name
+                    errorDescription: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
                 errorEmptyFileUpload:
                   $ref: '#/components/examples/invalidEmptyFile'
         422:
@@ -141,8 +141,8 @@ paths:
                 error:
                   summary: Unsupported Media Type
                   value:
-                    error_type: unsupported_content_type
-                    error_description: 'Unsupported Content-Type: application/octet-stream'
+                    errorType: unsupported_content_type
+                    errorDescription: 'Unsupported Content-Type: application/octet-stream'
         409:
           description: Conflict
           content:
@@ -153,8 +153,8 @@ paths:
                 error:
                   summary: File name Conflict
                   value:
-                    error_type: file_already_exists
-                    error_description: 'File: hello.txt already exists'
+                    errorType: file_already_exists
+                    errorDescription: 'File: hello.txt already exists'
         500:
           description: Unknown Internal Server Error
           content:
@@ -186,8 +186,8 @@ paths:
                 error:
                   summary: Bad Request delete empty files
                   value:
-                    error_type: delete_empty_data
-                    error_description: 'Cannot delete empty data files, no data for user: afif'
+                    errorType: delete_empty_data
+                    errorDescription: 'Cannot delete empty data files, no data for user: afif'
 
         500:
           description: Unknown Internal Server Error
@@ -310,8 +310,8 @@ paths:
                 errorMismatchContentType:
                   summary: Bad Request mismatch content type
                   value:
-                    error_type: mismatch_content_type
-                    error_description: Please use the same content type as the original file
+                    errorType: mismatch_content_type
+                    errorDescription: Please use the same content type as the original file
                 errorUpdateWithEmptyFile:
                   $ref: '#/components/examples/invalidEmptyFile'
         422:
@@ -394,7 +394,7 @@ paths:
                     type: string
                     description: Username of the user
                     example: afif
-                  total_files:
+                  totalFiles:
                     type: string
                     description: Email of the user
                     example: 100
@@ -403,7 +403,7 @@ paths:
                 ok:
                   value:
                       username: afif
-                      total_files: 100
+                      totalFiles: 100
         400:
             description: Bad Request
             content:
@@ -415,8 +415,8 @@ paths:
                         summary: Bad Request invalid token
                         description: Invalid Token cause by authorization header have invalid token, maybe expires or have been revoked
                         value:
-                            error_type: invalid_token
-                            error_description: Invalid Token, cannot get user info
+                            errorType: invalid_token
+                            errorDescription: Invalid Token, cannot get user info
 
         500:
             description: Unknown Internal Server Error
@@ -442,14 +442,10 @@ paths:
                 type: object
                 description: api data guest token
                 properties:
-                  access_token:
+                  accessToken:
                     type: string
                     description: Guest token
-                  token_type:
-                    type: string
-                    description: Token type, currently only Bearer
-                    example: Bearer
-                  expires_in:
+                  expiresIn:
                     type: integer
                     description: Token expires in seconds
                     example: 3600
@@ -465,8 +461,8 @@ paths:
                         summary: Bad Request already have token
                         description: Already have a token
                         value:
-                            error_type: already_have_token
-                            error_description: You already have token
+                            errorType: already_have_token
+                            errorDescription: You already have token
         500:
             description: Unknown Internal Server Error
             content:
@@ -571,10 +567,10 @@ components:
       description: Error Response body, without data
       type: object
       properties:
-        error_type:
+        errorType:
           type: string
           description: 'Error type: unknown_server_error'
-        error_description:
+        errorDescription:
           type: string
           description: Error message description
     fileData:
@@ -619,39 +615,39 @@ components:
       summary: File Not Found
       description: File Not Found Error Response
       value:
-        error_type: file_not_found
-        error_description: 'File: hello.txt Not Found'
+        errorType: file_not_found
+        errorDescription: 'File: hello.txt Not Found'
     missingHeaderMetadata:
       summary: Missing Header Metadata
       description: Error Missing file metadata
       value:
-        error_type: invalid_header_file
-        error_description: Cannot Parse NaN as int64
+        errorType: invalid_header_file
+        errorDescription: Cannot Parse NaN as int64
     dataResponse:
       summary: Data Response Body
       description: Single File Data for Response Body
       value:
         name: hello.webp
         url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.webp
-        auto_deleted_at: 1634179200000
-        private_url_expires: 100
-        is_public: false
-        uploaded_at: 1634179200000
-        updated_at: 1634179200000
+        autoDeletedAt: 1634179200000
+        privateUrlExpires: 100
+        isPublic: false
+        uploadedAt: 1634179200000
+        updatedAt: 1634179200000
         size: 100
         type: text/plain; charset=utf-8
     internalServer:
       summary: Internal Server Error
       description: Internal Server Error for Response Body
       value:
-        error_type: unknown_server_error
-        error_description: Unknown Internal Server Error. Unexpected Error
+        errorType: unknown_server_error
+        errorDescription: Unknown Internal Server Error. Unexpected Error
     invalidEmptyFile:
         summary: Invalid Empty File
         description: Invalid Empty File Upload Error Response
         value:
-            error_type: invalid_empty_file
-            error_description: File cannot be empty
+            errorType: invalid_empty_file
+            errorDescription: File cannot be empty
   requestBodies:
     uploadFile:
       required: true

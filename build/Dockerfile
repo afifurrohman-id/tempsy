@@ -4,10 +4,11 @@ LABEL authors=afif
 WORKDIR /src
 COPY . .
 
+RUN go mod tidy && go fmt ./...
+
 # Install CA certificates and update them
 RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
-RUN go mod tidy && go fmt ./...
 ENV CGO_ENABLED=0
 
 # Reduce binary size by removing debug information

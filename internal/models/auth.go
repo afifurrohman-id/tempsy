@@ -15,16 +15,17 @@ type GoogleAccountInfo struct {
 	VerifiedEmail bool   `json:"verified_email"`
 }
 
-type Token struct {
+type GuestToken struct {
 	AccessToken string `json:"accessToken"`
 	ExpiresIn   int    `json:"expiresIn"` // in seconds
-	TokenType   string `json:"tokenType"`
 }
 
 // GOAuth2Token
 // For unmarshal purpose
 type GOAuth2Token struct {
-	*Token
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int    `json:"expires_in"` // in seconds
+	TokenType    string `json:"token_type"`
 	Scopes       string `json:"scope"` // separated by space
 	IdToken      string `json:"id_token"`
 	RefreshToken string `json:"refresh_token"`

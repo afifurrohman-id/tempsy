@@ -27,7 +27,6 @@ func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 	if len(errs) > 0 {
 		return nil, errs[0]
 	}
-
 	if statusCode != fiber.StatusOK {
 		log.Errorf("access_token_error_not_ok_status_code_%d_body_%s", statusCode, body)
 		return nil, GOAuth2Error

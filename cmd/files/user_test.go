@@ -13,7 +13,6 @@ import (
 	"io"
 	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
 	"time"
 )
@@ -34,12 +33,11 @@ func TestGetGuestToken(test *testing.T) {
 		body, err := io.ReadAll(res.Body)
 		require.NoError(test, err)
 
-		apiRes := new(models.Token)
+		apiRes := new(models.GuestToken)
 		require.NoError(test, json.Unmarshal(body, &apiRes))
 
 		assert.NotNil(test, apiRes)
 		assert.NotEmpty(test, apiRes.AccessToken)
-		assert.Equal(test, strings.TrimSpace(auth.BearerPrefix), apiRes.TokenType)
 		assert.Greater(test, time.Now().Add(time.Duration(apiRes.ExpiresIn)*time.Second).UnixMilli(), time.Now().UnixMilli())
 		assert.Equal(test, fiber.StatusOK, res.StatusCode)
 	})

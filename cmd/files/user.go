@@ -9,13 +9,11 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"strings"
 )
 
 func HandleGetGuestToken(ctx *fiber.Ctx) error {
 	if _, err := guest.ParseToken(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
-		log.Errorf("Error Parse Token: %s", err.Error())
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",
@@ -23,7 +21,6 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 	}
 
 	if _, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
-		log.Errorf("Error Token, Cannot Get Google Account info: %s", err.Error())
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",
@@ -34,9 +31,8 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 	token, err := guest.CreateToken(username)
 	internal.Check(err)
 
-	return ctx.JSON(&models.Token{
+	return ctx.JSON(&models.GuestToken{
 		AccessToken: token,
-		TokenType:   strings.TrimSpace(auth.BearerPrefix),
 		ExpiresIn:   604800, // 7 days in seconds
 	})
 }
@@ -55,7 +51,7 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 		if err != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 				Type:        internal.ErrorTypeInvalidToken,
-				Description: "Token is not valid, Cannot get user info",
+				Description: "GuestToken is not valid, Cannot get user info",
 			})
 		}
 		userinfo.UserName = goUser.UserName
