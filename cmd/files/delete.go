@@ -57,6 +57,7 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 		})
 	}
 
+	//TODO: More efficient way to delete all files
 	for _, fileData := range filesData {
 		internal.Check(store.DeleteObject(storeCtx, fileData.Name))
 	}

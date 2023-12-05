@@ -9,6 +9,7 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"strings"
 )
 
@@ -47,6 +48,8 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 	if claims, err := guest.ParseToken(token); err == nil {
 		userinfo.UserName = claims["jti"].(string)
 	} else {
+		log.Error(err)
+
 		goUser, err := oauth2.GetGoogleAccountInfo(token)
 		if err != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{

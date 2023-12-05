@@ -77,7 +77,7 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
 			})
 		}
-		internal.Check(err)
+		log.Panic(err)
 	}
 
 	store.Format(fileData)

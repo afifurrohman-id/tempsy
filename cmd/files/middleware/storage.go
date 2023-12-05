@@ -22,8 +22,8 @@ func PurgeAnonymousAccount(ctx *fiber.Ctx) error {
 	)
 
 	if strings.HasPrefix(username, guest.UsernamePrefix) {
-		if lU := strings.SplitN(username, "-", 3); len(lU) > 2 {
-			autoDeletedAccount, err := strconv.ParseInt(lU[1], 10, 64)
+		if nameSplit := strings.SplitN(username, "-", 3); len(nameSplit) > 2 {
+			autoDeletedAccount, err := strconv.ParseInt(nameSplit[1], 10, 64)
 			if err == nil {
 				if autoDeletedAccount < time.Now().UnixMilli() {
 					timeout := 15 * time.Second
