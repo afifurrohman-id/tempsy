@@ -5,8 +5,8 @@ services:
   firebase_emulators:
     image: afifurrohman/tiny-firebase
     ports:
-      - "4000:4000"
-      - "9999:9999"
+      - 4000:4000
+      - 9999:9999
     restart: on-failure
     command: firebase emulators:start -P $COMPOSE_PROJECT_NAME
     volumes:
@@ -14,5 +14,5 @@ services:
       - ../configs/firebase.json:/firebase/firebase.json
       - ../configs/storage.rules:/firebase/storage.rules
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
 

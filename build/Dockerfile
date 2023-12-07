@@ -1,18 +1,20 @@
-FROM golang:alpine AS builder
+FROM golang:1.20-alpine AS builder
 LABEL authors=afif
 
 WORKDIR /src
 COPY . .
 
-RUN go mod tidy && go fmt ./...
-
-# Install CA certificates and update them
-RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
-
 ENV CGO_ENABLED=0
 
+# Install CA certificates and update them
+RUN apk update && \
+    apk add --no-cache ca-certificates=20230506-r0 && \
+    update-ca-certificates
+
 # Reduce binary size by removing debug information
-RUN go build -ldflags '-w -s' -o tempsy main.go
+RUN go fmt ./... && \
+    go mod tidy && \
+    go build -ldflags '-w -s' -o tempsy main.go
 
 FROM scratch
 WORKDIR /app

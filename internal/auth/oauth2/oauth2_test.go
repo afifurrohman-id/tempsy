@@ -35,7 +35,7 @@ func TestOAuth2(test *testing.T) {
 		test.Run("TestOnInvalidRefreshToken", func(test *testing.T) {
 			oToken, err := GetAccessToken("invalid")
 			require.Error(test, err)
-			
+
 			assert.True(test, errors.Is(err, GOAuth2Error))
 			assert.Nil(test, oToken)
 		})

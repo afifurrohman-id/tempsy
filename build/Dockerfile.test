@@ -1,12 +1,15 @@
-FROM golang:alpine
+FROM golang:1.20-alpine
 
 WORKDIR /src
 
 COPY . .
 
-RUN go mod tidy && go fmt ./...
-
 ENV CGO_ENABLED=0
 
-# Install CA certificates
-RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+# Install CA certificates and update them
+RUN apk update && \
+    apk add --no-cache ca-certificates=20230506-r0 && \
+    update-ca-certificates
+
+RUN go fmt ./... && \
+    go mod tidy
