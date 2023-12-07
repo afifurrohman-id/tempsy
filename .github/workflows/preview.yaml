@@ -24,11 +24,11 @@ jobs:
             - name: Clone Repository
               uses: actions/checkout@v4
 
-            - uses: hadolint/hadolint-action@v3
+            - uses: hadolint/hadolint-action@v3.1.0
               with:
                 dockerfile: build/Dockerfile
 
-            - uses: hadolint/hadolint-action@v3
+            - uses: hadolint/hadolint-action@v3.1.0
               with:
                 dockerfile: build/Dockerfile.test
 
