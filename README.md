@@ -82,7 +82,7 @@ go build -o tempsy main.go
 - Build Image
 
 ```sh
-docker build -f build/Dockerfile -t tempsy .
+docker build -f build/package/Dockerfile -t tempsy .
 ```
 
 - Test (Unit Test)

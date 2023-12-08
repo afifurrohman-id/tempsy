@@ -56,7 +56,6 @@ func TestLimitAuthTokenProcess(test *testing.T) {
 
 func TestLimitGuestToken(test *testing.T) {
 	app := fiber.New()
-
 	app.Get("/guest", RateLimiterGuestToken, func(ctx *fiber.Ctx) error {
 		return nil
 	})
@@ -81,22 +80,44 @@ func TestLimitGuestToken(test *testing.T) {
 	})
 
 	test.Run("TestOnProxy", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodGet, "/guest", nil)
-		req.Header.Set(auth.HeaderRealIp, "8.8.8.8")
-
-		for i := 0; i <= MaxReqGuestTokenPerSeconds; i++ {
-			res, err := app.Test(req, 1500*10) // 15 seconds
-			require.NoError(test, err)
-
-			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
-			})
-
-			if i < MaxReqGuestTokenPerSeconds {
-				assert.Equal(test, fiber.StatusOK, res.StatusCode)
-			} else {
-				assert.Equal(test, fiber.StatusTooManyRequests, res.StatusCode)
-			}
+		testsTable := []struct {
+			Name   string
+			Header string
+			Value  string
+		}{
+			{
+				Name:   "TestOnXRealIp",
+				Header: auth.HeaderXRealIp,
+				Value:  "1.1.1.1",
+			},
+			{
+				Name:   "TestOnRealIp",
+				Header: auth.HeaderRealIp,
+				Value:  "76.76.2.0",
+			},
 		}
+
+		for _, table := range testsTable {
+			test.Run(table.Name, func(test *testing.T) {
+				req := httptest.NewRequest(fiber.MethodGet, "/guest", nil)
+				req.Header.Set(table.Header, table.Value)
+
+				for i := 0; i <= MaxReqGuestTokenPerSeconds; i++ {
+					res, err := app.Test(req, 1500*10) // 15 seconds
+					require.NoError(test, err)
+
+					test.Cleanup(func() {
+						internal.LogErr(res.Body.Close())
+					})
+
+					if i < MaxReqGuestTokenPerSeconds {
+						assert.Equal(test, fiber.StatusOK, res.StatusCode)
+					} else {
+						assert.Equal(test, fiber.StatusTooManyRequests, res.StatusCode)
+					}
+				}
+			})
+		}
+
 	})
 }

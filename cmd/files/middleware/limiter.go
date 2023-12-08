@@ -33,6 +33,11 @@ var RateLimiterGuestToken = limiter.New(limiter.Config{
 		if ctx.Get(auth.HeaderRealIp) != "" {
 			return ctx.Get(auth.HeaderRealIp)
 		}
+
+		if ctx.Get(auth.HeaderXRealIp) != "" {
+			return ctx.Get(auth.HeaderXRealIp)
+		}
+
 		return ctx.IP()
 	},
 	LimitReached: func(ctx *fiber.Ctx) error {
