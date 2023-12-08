@@ -6,6 +6,7 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 const (
@@ -16,7 +17,9 @@ const (
 
 var RateLimiterProcessing = limiter.New(limiter.Config{
 	KeyGenerator: func(ctx *fiber.Ctx) string {
-		return ctx.Get(fiber.HeaderAuthorization)
+		// Go fiber is immutable by default,
+		// need to copy the string to prevent unexpected behavior
+		return utils.CopyString(ctx.Get(fiber.HeaderAuthorization))
 	},
 	Max: MaxReqProcsPerSeconds,
 	LimitReached: func(ctx *fiber.Ctx) error {
@@ -31,13 +34,14 @@ var RateLimiterGuestToken = limiter.New(limiter.Config{
 	Max: MaxReqGuestTokenPerSeconds,
 	KeyGenerator: func(ctx *fiber.Ctx) string {
 		if ctx.Get(auth.HeaderRealIp) != "" {
-			return ctx.Get(auth.HeaderRealIp)
+			return utils.CopyString(ctx.Get(auth.HeaderRealIp))
 		}
 
 		if ctx.Get(auth.HeaderXRealIp) != "" {
-			return ctx.Get(auth.HeaderXRealIp)
+			return utils.CopyString(ctx.Get(auth.HeaderXRealIp))
 		}
 
+		// ctx.IP() is copy by default
 		return ctx.IP()
 	},
 	LimitReached: func(ctx *fiber.Ctx) error {

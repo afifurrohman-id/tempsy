@@ -93,7 +93,7 @@ func TestLimitGuestToken(test *testing.T) {
 			{
 				Name:   "TestOnRealIp",
 				Header: auth.HeaderRealIp,
-				Value:  "76.76.2.0",
+				Value:  "8.8.8.8",
 			},
 		}
 
