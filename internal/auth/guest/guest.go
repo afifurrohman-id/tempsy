@@ -29,13 +29,13 @@ func CreateToken(username string) (string, error) {
 	if !strings.HasPrefix(username, UsernamePrefix) {
 		return "", errors.New("invalid_username_must_be_within_format")
 	}
-	jose := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.RegisteredClaims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &jwt.RegisteredClaims{
 		Subject:   "guest",
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(168 * time.Hour)), // 7 days
 		ID:        username,
 	})
 
-	return jose.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
+	return token.SignedString([]byte(os.Getenv("JWT_SECRET_KEY")))
 }
 
 func ParseToken(accessToken string) (jwt.MapClaims, error) {

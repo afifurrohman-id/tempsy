@@ -2,7 +2,7 @@ FROM golang:1.20-alpine AS builder
 LABEL authors=afif
 
 WORKDIR /src
-COPY .. .
+COPY . .
 
 ENV CGO_ENABLED=0
 
