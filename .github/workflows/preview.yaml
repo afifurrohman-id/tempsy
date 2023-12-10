@@ -24,20 +24,16 @@ jobs:
             - name: Clone Repository
               uses: actions/checkout@v4
 
-            - uses: hadolint/hadolint-action@v3.1.0
+            - uses: jbergstroem/hadolint-gh-action@v1
               with:
-                dockerfile: build/package/Dockerfile
-
-            - uses: hadolint/hadolint-action@v3.1.0
-              with:
-                dockerfile: build/package/Dockerfile.test
+                dockerfile: build/package/**Dockerfile
 
             - name: Run Docker Compose
               run: docker compose -f deployments/compose.yaml up -d
 
             - name: Unit testing
               run: |
-                docker build -t ${{github.event.repository.name}} -f build/package/Dockerfile.test .
+                docker build -t ${{github.event.repository.name}} -f build/package/test.Dockerfile .
 
                 docker run --rm --name ${{github.event.repository.owner.login}} --add-host=host.docker.internal:host-gateway -e GOOGLE_CLOUD_STORAGE_SERVICE_ACCOUNT -e GOOGLE_CLOUD_STORAGE_BUCKET -e SERVER_URI -e GOOGLE_CLOUD_STORAGE_EMULATOR_ENDPOINT -e GOOGLE_OAUTH2_REFRESH_TOKEN_TEST -e PORT -e GOOGLE_OAUTH2_CLIENT_ID_TEST -e GOOGLE_OAUTH2_CLIENT_SECRET_TEST ${{github.event.repository.name}} go test -v --cover -ldflags '-w -s' ./...
 
