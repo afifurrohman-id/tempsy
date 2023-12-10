@@ -21,23 +21,25 @@ jobs:
           PORT: ${{secrets.PORT}}
 
         steps:
-            - name: Clone Repository
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
+            - uses: docker/setup-qemu-action@v3
+            - uses: docker/setup-buildx-action@v3
 
             - uses: jbergstroem/hadolint-gh-action@v1
               with:
                 dockerfile: build/package/**Dockerfile
 
+            - name: Build Image Test
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                load: true
+                file: build/package/test.Dockerfile
+                tags: ${{github.event.repository.name}}
+
             - name: Unit testing # Using staging environment
               run: |
-                  docker build -t ${{github.event.repository.name}} -f build/package/test.Dockerfile .
-
                   docker run --rm --name ${{github.event.repository.owner.login}} --add-host=host.docker.internal:host-gateway -e GOOGLE_CLOUD_STORAGE_SERVICE_ACCOUNT -e GOOGLE_CLOUD_STORAGE_BUCKET -e SERVER_URI -e GOOGLE_OAUTH2_REFRESH_TOKEN_TEST -e APP_ENV -e PORT -e GOOGLE_OAUTH2_CLIENT_ID_TEST -e GOOGLE_OAUTH2_CLIENT_SECRET_TEST ${{github.event.repository.name}} go test -v --cover -ldflags '-w -s' ./...
-
-            - name: Clean up
-              if: always()
-              run: |
-                  docker rmi ${{github.event.repository.name}}
 
     deploy:
         needs: [ test ]
@@ -51,24 +53,17 @@ jobs:
         permissions:
           packages: write
         steps:
-          - name: Clone Repository
-            uses: actions/checkout@v4
+          - uses: actions/checkout@v4
+          - uses: docker/setup-qemu-action@v3
+          - uses: docker/setup-buildx-action@v3
 
-          - name: Setup QEMU
-            uses: docker/setup-qemu-action@v3
-
-          - name: Set up Docker Buildx
-            uses: docker/setup-buildx-action@v3
-
-          - name: Login to container registry
-            uses: docker/login-action@v3
+          - uses: docker/login-action@v3
             with:
               registry: ${{env.REGISTRY}}
               username: ${{github.repository_owner}}
               password: ${{secrets.GITHUB_TOKEN}}
 
-          - name: Build Image &  Push to Registry
-            uses: docker/build-push-action@v5
+          - uses: docker/build-push-action@v5
             with:
               context: .
               file: build/package/Dockerfile
@@ -77,13 +72,11 @@ jobs:
                 ${{env.IMAGE_NAME}}:${{github.sha}}
                 ${{env.IMAGE_NAME}}
 
-          - name: Azure Login
-            uses: azure/login@v1
+          - uses: azure/login@v1
             with:
               creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-          - name: Deploy to Azure Container Apps
-            uses: azure/container-apps-deploy-action@v2
+          - uses: azure/container-apps-deploy-action@v2
             with:
               registryUrl: ${{env.REGISTRY}}
               containerAppName: ${{github.event.repository.name}}
