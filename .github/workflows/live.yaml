@@ -23,6 +23,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - uses: docker/setup-qemu-action@v3
+            - uses: docker/setup-buildx-action@v3
 
             - uses: jbergstroem/hadolint-gh-action@v1
               with:
@@ -33,7 +34,6 @@ jobs:
               with:
                 context: .
                 load: true
-                platforms: linux/amd64,linux/arm64
                 file: build/package/test.Dockerfile
                 tags: ${{github.event.repository.name}}
 

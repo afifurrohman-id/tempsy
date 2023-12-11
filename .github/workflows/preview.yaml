@@ -33,7 +33,12 @@ jobs:
               run: docker compose -f deployments/compose.yaml up -d
 
             - name: Build Image Test
-              run: docker build --platform linux/amd64,linux/arm64 -t ${{github.event.repository.name}} -f build/package/test.Dockerfile .
+              uses: docker/build-push-action@v5
+              with:
+                context: .
+                load: true
+                file: build/package/test.Dockerfile
+                tags: ${{github.event.repository.name}}
 
             - name: Unit testing
               run: |
