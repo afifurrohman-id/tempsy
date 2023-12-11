@@ -31,6 +31,10 @@ jobs:
             - name: Run Firebase Emulator
               run: docker compose -f deployments/compose.yaml up -d
 
+            - name: Debug Docker builder
+              run: docker buildx inspect
+
+
             - name: Build Image Test
               uses: docker/build-push-action@v5
               with:
