@@ -10,6 +10,7 @@ services:
       - tempsy_data:/root/.cache/firebase
       - ../configs/firebase.json:/firebase/firebase.json
       - ../configs/storage.rules:/firebase/storage.rules
+    # Needed for access public file when using emulator
     extra_hosts:
       - host.docker.internal:host-gateway
 
