@@ -20,7 +20,7 @@ import (
 
 func init() {
 	if os.Getenv("APP_ENV") != "production" {
-		internal.LogErr(godotenv.Load(path.Join("deployments", ".env")))
+		internal.LogErr(godotenv.Load(path.Join("configs", ".env")))
 	}
 }
 

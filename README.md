@@ -30,7 +30,7 @@ cd tempsy
 - Create `.env` file
 
 ```sh
-touch deployments/.env
+touch configs/.env
 ```
 
 - Insert Variable into `.env` file

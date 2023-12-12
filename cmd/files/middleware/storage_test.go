@@ -20,7 +20,7 @@ import (
 )
 
 func init() {
-	internal.LogErr(godotenv.Load(path.Join("..", "..", "..", "deployments", ".env")))
+	internal.LogErr(godotenv.Load(path.Join("..", "..", "..", "configs", ".env")))
 }
 
 func TestPurgeAnonymousAccount(test *testing.T) {
