@@ -1,6 +1,3 @@
-volumes:
-  tempsy_data:
-
 services:
   firebase_emulators:
     image: afifurrohman/tiny-firebase
@@ -16,3 +13,5 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
 
+volumes:
+  tempsy_data:
