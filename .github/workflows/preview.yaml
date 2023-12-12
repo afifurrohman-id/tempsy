@@ -27,7 +27,7 @@ jobs:
 
             - uses: jbergstroem/hadolint-gh-action@v1
               with:
-                dockerfile: build/package/**Dockerfile
+                dockerfile: build/package/**Containerfile
 
             - name: Run Firebase Emulator
               run: docker compose -f deployments/compose.yaml up -d
@@ -37,7 +37,7 @@ jobs:
               with:
                 context: .
                 load: true
-                file: build/package/test.Dockerfile
+                file: build/package/test.Containerfile
                 tags: ${{github.event.repository.name}}
 
             - name: Unit testing
@@ -74,7 +74,7 @@ jobs:
             - uses: docker/build-push-action@v5
               with:
                 context: .
-                file: build/package/Dockerfile
+                file: build/package/Containerfile
                 platforms: linux/amd64,linux/arm64
                 push: true
                 tags: |
