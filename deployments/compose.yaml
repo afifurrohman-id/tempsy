@@ -1,6 +1,9 @@
 services:
   firebase_emulators:
+    container_name: firebase_emulators
     image: afifurrohman/tiny-firebase
+    networks:
+      - tempsy_net
     ports:
       - 4000:4000
       - 9999:9999
@@ -10,9 +13,10 @@ services:
       - tempsy_data:/root/.cache/firebase
       - ../configs/firebase.json:/firebase/firebase.json
       - ../configs/storage.rules:/firebase/storage.rules
-    # Needed for access public file when using emulator
-    extra_hosts:
-      - host.docker.internal:host-gateway
 
 volumes:
   tempsy_data:
+
+networks:
+  tempsy_net:
+    name: tempsy_net
