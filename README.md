@@ -35,7 +35,6 @@ git clone https://github.com/afifurrohman-id/tempsy.git
 cd tempsy
 ```
 
-
 - Insert Variable into `.env` file
 
 ```sh
@@ -99,4 +98,3 @@ make build-image
 ```sh
 make test
 ```
-

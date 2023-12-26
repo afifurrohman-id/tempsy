@@ -6,7 +6,7 @@ COPY . .
 
 ENV CGO_ENABLED=0
 
-# Install CA certificates and update them
+# Need install ca-certificates for tls compatibility for go library
 RUN apk update && \
     apk add --no-cache ca-certificates=20230506-r0 && \
     update-ca-certificates
