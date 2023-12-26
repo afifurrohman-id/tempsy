@@ -35,15 +35,12 @@ git clone https://github.com/afifurrohman-id/tempsy.git
 cd tempsy
 ```
 
-- Create `.env` file
-
-```sh
-touch configs/.env
-```
 
 - Insert Variable into `.env` file
 
 ```sh
+cat <<EOENV > configs/.env
+
 # Server
 GOOGLE_CLOUD_STORAGE_BUCKET=example-google-cloud-storage-bucket
 APP_ENV=testing
@@ -61,6 +58,8 @@ GOOGLE_CLOUD_STORAGE_EMULATOR_ENDPOINT=https://example.com/emulators/storage/v1
 GOOGLE_OAUTH2_REFRESH_TOKEN_TEST=example-oauth2-refresh-token
 GOOGLE_OAUTH2_CLIENT_ID_TEST=example-google-oauth2-client-id
 GOOGLE_OAUTH2_CLIENT_SECRET_TEST=example-google-oauth2-client-secret
+
+EOENV
 ```
 
 - Download dependencies
@@ -100,3 +99,4 @@ make build-image
 ```sh
 make test
 ```
+
