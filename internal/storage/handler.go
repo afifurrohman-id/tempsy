@@ -67,11 +67,7 @@ func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) 
 		return nil
 	})
 
-	if err = eg.Wait(); err != nil {
-		return nil, err
-	}
-
-	return *dataFiles, nil
+	return *dataFiles, eg.Wait()
 }
 
 // GetObject

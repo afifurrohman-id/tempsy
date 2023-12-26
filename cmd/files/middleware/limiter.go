@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
