@@ -4,7 +4,8 @@
   
 ## API Documentation
 
-> warning: **This API is not stable yet, maybe have some breaking changes in the future.**
+  > warning: **This API is not stable yet, maybe have some
+  > breaking changes in the future.**
 
 - [OpenAPI Specification](api/openapi-spec.yaml)
 
@@ -12,11 +13,13 @@
 
 ### Requirements
 
-- [x] WSL2 (Windows Subsystem for Linux) Only need if you use Windows OS
+- [x] WSL2 (Windows Subsystem for Linux)
+  > Only need if you use Windows OS
 - [x] Make (version >= 4.4.x)
 - [x] Go (version >= 1.21.x)
 - [x] Git (version >= 2.43.x)
-- [x] Docker (version >= 24.0.x)
+- [ ] Docker (version >= 24.0.x)
+  > Optional, only if you want to build image
 
 ### Installation
 
