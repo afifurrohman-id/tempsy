@@ -4,14 +4,16 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	"github.com/gofiber/fiber/v2"
 	"os"
 	"strings"
+	"sync"
 	"time"
 
 	"cloud.google.com/go/storage"
+	"github.com/afifurrohman-id/tempsy/internal"
+	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/gofiber/fiber/v2"
+	"golang.org/x/sync/errgroup"
 	"google.golang.org/api/iterator"
 )
 
@@ -27,33 +29,46 @@ func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) 
 		objects = bucket.Objects(ctx, &storage.Query{Prefix: path})
 	)
 
-	objectNames := new([]string)
+	var (
+		eg          = new(errgroup.Group)
+		mu          = new(sync.Mutex)
+		dataFiles   = new([]*models.DataFile)
+		objectNames = new([]string)
+	)
 
-	for {
-		obj, err := objects.Next()
-		if err != nil {
-			if errors.Is(err, iterator.Done) {
-				break
+	eg.Go(func() error {
+		defer mu.Unlock()
+		mu.Lock()
+		for {
+			obj, err := objects.Next()
+			if err != nil {
+				if errors.Is(err, iterator.Done) {
+					break
+				}
+				return err
 			}
-			return nil, err
+
+			*objectNames = append(*objectNames, obj.Name)
 		}
 
-		*objectNames = append(*objectNames, obj.Name)
-	}
+		for _, objectName := range *objectNames {
+			dataFile, err := GetObject(ctx, objectName)
+			if err != nil {
+				return err
+			}
 
-	dataFiles := new([]*models.DataFile)
-
-	for _, objectName := range *objectNames {
-		dataFile, err := GetObject(ctx, objectName)
-		if err != nil {
-			return nil, err
+			*dataFiles = append(*dataFiles, dataFile)
 		}
 
-		*dataFiles = append(*dataFiles, dataFile)
-	}
+		if len(*dataFiles) == 0 {
+			*dataFiles = make([]*models.DataFile, 0)
+		}
 
-	if len(*dataFiles) == 0 {
-		*dataFiles = make([]*models.DataFile, 0)
+		return nil
+	})
+
+	if err = eg.Wait(); err != nil {
+		return nil, err
 	}
 
 	return *dataFiles, nil
@@ -140,9 +155,6 @@ func DeleteObject(ctx context.Context, filePath string) error {
 	defer internal.LogErr(client.Close())
 
 	obj := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath)
-	if err != nil {
-		return err
-	}
 
 	attrs, err := obj.Attrs(ctx)
 	if err != nil {

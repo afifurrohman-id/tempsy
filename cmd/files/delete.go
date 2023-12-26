@@ -1,14 +1,18 @@
 package files
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
 	"fmt"
+	"sync"
+
+	"cloud.google.com/go/storage"
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/sync/errgroup"
+  "github.com/gofiber/fiber/v2/log"
 )
 
 func HandleDeleteFile(ctx *fiber.Ctx) error {
@@ -42,6 +46,8 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 	var (
 		username = ctx.Params("username")
 		storeCtx = context.Background()
+    eg = new(errgroup.Group)
+    mu = new(sync.Mutex)
 	)
 
 	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
@@ -57,10 +63,23 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 		})
 	}
 
-	//TODO: More efficient way to delete all files
+	
+  eg.Go(func() error {
+  defer mu.Unlock()
+
+  mu.Lock()
 	for _, fileData := range filesData {
-		internal.Check(store.DeleteObject(storeCtx, fileData.Name))
+		if err = store.DeleteObject(storeCtx, fileData.Name); err != nil {
+      return err
+    }
 	}
+
+    return nil
+  })
+
+  if err = eg.Wait(); err != nil {
+    log.Panic(err)
+  }
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }

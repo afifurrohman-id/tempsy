@@ -5,17 +5,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http/httptest"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"strings"
-	"testing"
-	"time"
 )
 
 func TestMapFileHeader(test *testing.T) {
@@ -104,7 +105,6 @@ func TestHandleUploadFile(test *testing.T) {
 		assert.Equal(test, fiber.StatusConflict, res.StatusCode)
 		assert.NotEmpty(test, apiErr)
 		assert.Equal(test, internal.ErrorTypeFileExists, apiErr.Type)
-
 	})
 
 	test.Run("TestOnInvalidEmptyFile", func(test *testing.T) {
@@ -218,10 +218,10 @@ func TestHandleUploadFile(test *testing.T) {
 
 func TestValidateExpiry(test *testing.T) {
 	tableTests := []struct {
+		err     any
 		name    string
 		urlExp  int
 		autoDel int64
-		err     any
 	}{
 		{
 			name:    "TestOkPrivateUrlNotLaterThanAutoDeletedAt",

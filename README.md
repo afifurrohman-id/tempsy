@@ -1,20 +1,25 @@
 # [Tempsy API](https://api.tempsy.afifurrohman.my.id)
+
 > Simple Temporary Files sharing RESTful API with oauth2
   
 ## API Documentation
-> :warning: **This API is not stable yet, maybe have some breaking changes in the future.**
+
+> warning: **This API is not stable yet, maybe have some breaking changes in the future.**
+
 - [OpenAPI Specification](api/openapi-spec.yaml)
 
 ## Usage
 
 ### Requirements
 
-- [x] Git Bash for Windows (version >= 2.41.x)
-  > only need if you're using windows OS
+- [x] WSL2 (Windows Subsystem for Linux) Only need if you use Windows OS
+- [x] Make (version >= 4.4.x)
 - [x] Go (version >= 1.21.x)
+- [x] Git (version >= 2.43.x)
 - [x] Docker (version >= 24.0.x)
 
 ### Installation
+
 - Clone this repository
 
 ```sh
@@ -62,31 +67,33 @@ go mod tidy
 ```
 
 ### Run
+
 - Run Docker Compose
 
 ```sh
-docker compose -f deployments/compose.yaml up -d
+make compose-up
 ```
 
 - Run Server
 
 ```sh
-go run main.go
+make run
 ```
 
 - Build
+
 ```sh
-go build -o tempsy main.go
+make build
 ```
 
 - Build Image
 
 ```sh
-docker build -f build/package/Containerfile -t tempsy .
+make build-image
 ```
 
 - Test (Unit Test)
 
 ```sh
-go test -v --cover ./...
+make test
 ```

@@ -1,19 +1,20 @@
 package store
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
+	"os"
+	"strings"
+	"testing"
+	"time"
+
+	"cloud.google.com/go/storage"
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"os"
-	"strings"
-	"testing"
-	"time"
 )
 
 func TestCreateStorageClient(test *testing.T) {
@@ -110,8 +111,8 @@ func TestGetObject(test *testing.T) {
 		assert.Equal(test, objByte, body)
 
 		Format(fileData)
-		//Local time is different with server time
-		//assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
+		// Local time is different with server time
+		// assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
 		assert.Equal(test, fileData.UpdatedAt, fileData.UploadedAt)
 		assert.Greater(test, fileData.AutoDeletedAt, time.Now().UnixMilli())
 		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, fileData.ContentType)
@@ -147,7 +148,6 @@ func TestUploadObject(test *testing.T) {
 			PrivateUrlExpires: 30, // 30 seconds
 			ContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
 		}))
-
 	})
 
 	test.Run("TestInvalidObjectPath", func(test *testing.T) {
@@ -164,7 +164,6 @@ func TestUploadObject(test *testing.T) {
 }
 
 func TestDeleteObject(test *testing.T) {
-
 	var (
 		filePath = strings.ToLower(test.Name()) + "/app.txt"
 		storeCtx = context.Background()

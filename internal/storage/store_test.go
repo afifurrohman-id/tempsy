@@ -2,15 +2,16 @@ package store
 
 import (
 	"fmt"
+	"path"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"path"
-	"testing"
-	"time"
 )
 
 func init() {
@@ -62,9 +63,7 @@ func TestUnmarshalMetadata(test *testing.T) {
 			require.Error(test, err)
 			assert.Contains(test, err.Error(), "expired_url_should_be_within_7_day_from_now")
 		})
-
 	})
-
 }
 
 func TestFormat(test *testing.T) {
@@ -89,7 +88,7 @@ func TestFormat(test *testing.T) {
 	})
 
 	test.Run("TestFormatPublic", func(test *testing.T) {
-		dataFile.Name = fmt.Sprintf("test/example.json")
+		dataFile.Name = "test/example.json"
 		dataFile.IsPublic = true
 
 		before := *dataFile
@@ -108,5 +107,4 @@ func TestFormat(test *testing.T) {
 
 		assert.Equal(test, &before, dataFile)
 	})
-
 }
