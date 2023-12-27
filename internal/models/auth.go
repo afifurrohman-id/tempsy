@@ -24,9 +24,9 @@ type GuestToken struct {
 // For unmarshal purpose
 type GOAuth2Token struct {
 	AccessToken  string `json:"access_token"`
-	ExpiresIn    int    `json:"expires_in"` // in seconds
 	TokenType    string `json:"token_type"`
-	Scopes       string `json:"scope"` // separated by space
+	Scopes       string `json:"scope"` // space-separated list of scopes
 	IdToken      string `json:"id_token"`
 	RefreshToken string `json:"refresh_token"`
+	ExpiresIn    int    `json:"expires_in"` // in seconds
 }

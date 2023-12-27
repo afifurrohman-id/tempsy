@@ -1,16 +1,18 @@
 package files
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
 	"fmt"
+	"sync"
+	"time"
+
+	"cloud.google.com/go/storage"
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"time"
 )
 
 func HandleGetPublicFile(ctx *fiber.Ctx) error {
@@ -88,6 +90,8 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	var (
 		username = ctx.Params("username")
 		storeCtx = context.Background()
+		mu       = new(sync.Mutex)
+		wg       = new(sync.WaitGroup)
 	)
 
 	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
@@ -96,10 +100,21 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	filesData, err := store.GetAllObject(storeCtx, username)
 	internal.Check(err)
 
-	for i, fileData := range filesData {
-		store.Format(fileData)
-		filesData[i] = fileData
-	}
+	wg.Add(1)
+	go func() {
+		defer func() {
+			mu.Unlock()
+			wg.Done()
+		}()
+		mu.Lock()
+
+		for i, fileData := range filesData {
+			store.Format(fileData)
+			filesData[i] = fileData
+		}
+	}()
+
+	wg.Wait()
 
 	return ctx.JSON(&filesData)
 }

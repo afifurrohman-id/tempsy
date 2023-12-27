@@ -1,9 +1,14 @@
 package main
 
 import (
+	"io"
+	"os"
+	"path"
+
 	"github.com/afifurrohman-id/tempsy/cmd/files"
 	"github.com/afifurrohman-id/tempsy/cmd/files/middleware"
 	"github.com/afifurrohman-id/tempsy/internal"
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -13,9 +18,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
-	"io"
-	"os"
-	"path"
 )
 
 func init() {
@@ -51,9 +53,13 @@ func main() {
 	}), recover.New(), favicon.New(), logger.New(logger.Config{
 		Output:        multiWriter,
 		DisableColors: true,
-	}), middleware.Cors, middleware.CheckHttpMethod)
+	}), middleware.Cors, middleware.CheckHttpMethod, swagger.New(swagger.Config{
+		FilePath: path.Join("api", "openapi-spec.yaml"),
+		Path:     "/",
+		Title:    "Tempsy API Documentation",
+	}))
 
-	app.Get("/", middleware.Cache, monitor.New(monitor.Config{
+	app.Get("/monitor", middleware.Cache, monitor.New(monitor.Config{
 		Title: "Tempsy API",
 	}))
 	app.Options("/*", func(ctx *fiber.Ctx) error {

@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
@@ -17,8 +18,9 @@ const (
 
 var RateLimiterProcessing = limiter.New(limiter.Config{
 	KeyGenerator: func(ctx *fiber.Ctx) string {
-		// Go fiber is immutable by default,
-		// need to copy the string to prevent unexpected behavior
+		/* Go fiber is immutable by default,
+		need to copy the string to prevent unexpected behavior
+		*/
 		return utils.CopyString(ctx.Get(fiber.HeaderAuthorization))
 	},
 	Max: MaxReqProcsPerSeconds,

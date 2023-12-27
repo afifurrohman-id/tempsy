@@ -1,17 +1,18 @@
 package store
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
 	"fmt"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	"github.com/gofiber/fiber/v2"
-	"google.golang.org/api/option"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"cloud.google.com/go/storage"
+	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/gofiber/fiber/v2"
+	"google.golang.org/api/option"
 )
 
 var AcceptedContentType = []string{
@@ -112,8 +113,8 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 			return err
 		}
 
-		switch {
-		case boolInt == 0:
+		switch boolInt {
+		case 0:
 			isPublic = false
 		default:
 			isPublic = true
