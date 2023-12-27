@@ -20,6 +20,7 @@ FROM scratch
 WORKDIR /app
 
 COPY --from=builder /src/tempsy .
+COPY --from=builder /src/api ./api
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 CMD [ "./tempsy" ]
