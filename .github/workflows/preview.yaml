@@ -48,7 +48,8 @@ jobs:
           -e GOOGLE_OAUTH2_REFRESH_TOKEN_TEST -e PORT \
           -e GOOGLE_OAUTH2_CLIENT_ID_TEST -e GOOGLE_OAUTH2_CLIENT_SECRET_TEST \
           ${{github.event.repository.name}} \
-          make test
+          go test --cover -race -v \
+          -ldflags "-w -s" ./...
 
       - name: Clean up Services
         if: always()
