@@ -70,8 +70,7 @@ func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) 
 	return *dataFiles, eg.Wait()
 }
 
-// GetObject
-// return Name object will be in format `username/filename` as standard format in upload file
+// GetObject return Name object will be in format `username/filename` as standard format in upload file
 func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 	client, err := createClient(ctx)
 	if err != nil {

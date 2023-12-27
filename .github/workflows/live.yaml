@@ -22,8 +22,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
 
       - uses: jbergstroem/hadolint-gh-action@v1
         with:
@@ -38,8 +36,6 @@ jobs:
           tags: ${{github.event.repository.name}}
 
       - name: Unit testing # Using staging environment
-        # need add host.docker.internal:host-gateway,
-        # for Connect to emulator if using it
         run: |
           docker run --rm \
           --name ${{github.event.repository.owner.login}} \
@@ -48,8 +44,7 @@ jobs:
           -e APP_ENV -e PORT \
           -e GOOGLE_OAUTH2_CLIENT_ID_TEST -e GOOGLE_OAUTH2_CLIENT_SECRET_TEST \
           ${{github.event.repository.name}} \
-          go test -v --cover \
-          -ldflags "-w -s" ./...
+          make test
 
   deploy:
     needs: [test]
@@ -64,9 +59,10 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+        
+      # Setup new docker builder and qemu for multi arch build
       - uses: docker/setup-qemu-action@v3
-      - uses: docker/setup-buildx-action@v3
-
+      - uses: docker/setup-buildx-action@v3 
       - uses: docker/login-action@v3
         with:
           registry: ${{env.REGISTRY}}

@@ -10,7 +10,7 @@ build: main.go
 	CGO_ENABLED=0 go build -o ${EXE_NAME} -ldflags "-w -s" main.go
 
 test: main.go
-	CGO_ENABLED=0 go test -v -ldflags "-w -s" ./...
+	CGO_ENABLED=1 go test --cover -race -v -ldflags "-w -s" ./...
 
 clean: deployments/compose.yaml
 	if [ -f ${EXE_NAME} ]; then rm ${EXE_NAME}; fi
@@ -18,7 +18,7 @@ clean: deployments/compose.yaml
 	docker compose -f deployments/compose.yaml down
 
 build-image: build/package/Containerfile
-	docker buildx build --platform linux/amd64,linux/arm64 -f build/package/Containerfile -t tempsy .
+	docker build -f build/package/Containerfile -t tempsy .
 
 lint-image: build/package/Containerfile
 	docker run --rm -i hadolint/hadolint:latest-alpine < build/package/Containerfile
