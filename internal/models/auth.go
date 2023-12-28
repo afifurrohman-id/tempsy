@@ -5,8 +5,7 @@ type User struct {
 	TotalFiles int    `json:"totalFiles"`
 }
 
-// GoogleAccountInfo
-// For unmarshal purpose
+// GoogleAccountInfo For unmarshal purpose
 type GoogleAccountInfo struct {
 	*User
 	Email         string `json:"email"`
@@ -20,8 +19,7 @@ type GuestToken struct {
 	ExpiresIn   int    `json:"expiresIn"` // in seconds
 }
 
-// GOAuth2Token
-// For unmarshal purpose
+// GOAuth2Token For unmarshal purpose
 type GOAuth2Token struct {
 	AccessToken  string `json:"access_token"`
 	TokenType    string `json:"token_type"`
