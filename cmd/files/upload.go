@@ -31,7 +31,8 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	var (
 		storeCtx = context.Background()
 		username = ctx.Params("username")
-		filePath = fmt.Sprintf("%s/%s", username, ctx.Get(store.HeaderFileName))
+    fileName = ctx.Get(store.HeaderFileName)
+		filePath = fmt.Sprintf("%s/%s", username, fileName)
 	)
 
 	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
@@ -44,7 +45,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 		})
 	}
 
-	match, err := regexp.MatchString(`^[a-zA-Z0-9_-]+\.+[a-zA-Z0-9_-]+$`, ctx.Get(store.HeaderFileName))
+	match, err := regexp.MatchString(`^[a-zA-Z0-9_-]+\.+[a-zA-Z0-9_-]+$`, fileName)
 	internal.Check(err)
 
 	if !match {
@@ -103,7 +104,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 	return ctx.Status(fiber.StatusConflict).JSON(&models.ApiError{
 		Type:        internal.ErrorTypeFileExists,
-		Description: fmt.Sprintf("File: %s Already Exists", ctx.Params("filename")),
+		Description: fmt.Sprintf("File: %s Already Exists", fileName),
 	})
 }
 
