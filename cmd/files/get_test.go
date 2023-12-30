@@ -4,6 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http/httptest"
+	"path"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
@@ -11,12 +18,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"path"
-	"strings"
-	"testing"
-	"time"
 )
 
 func init() {
@@ -276,5 +277,4 @@ func TestHandleGetPublicFile(test *testing.T) {
 			assert.Equal(test, internal.ErrorTypeFileNotPublic, apiErr.Type)
 		})
 	}
-
 }

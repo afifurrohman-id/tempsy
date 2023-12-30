@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
@@ -10,12 +12,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"golang.org/x/exp/slices"
-	"strings"
 )
 
 func CheckHttpMethod(ctx *fiber.Ctx) error {
 	if !slices.Contains(auth.AllowedHttpMethod, ctx.Method()) {
-
 		return ctx.Status(fiber.StatusMethodNotAllowed).JSON(&models.ApiError{
 			Type:        "method_not_allowed",
 			Description: fmt.Sprintf("Http Method: %s Is Not Allowed", ctx.Method()),

@@ -3,16 +3,17 @@ package oauth2
 import (
 	"errors"
 	"fmt"
+	"os"
+	"strings"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"os"
-	"strings"
-	"time"
 )
 
-var GOAuth2Error = errors.New("oauth2_error_response_code_not_ok")
+var ErrorGOAuth2 = errors.New("oauth2_error_response_code_not_ok")
 
 func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 	payloadFormUri := fmt.Sprintf("client_secret=%s&grant_type=refresh_token&refresh_token=%s&client_id=%s", os.Getenv("GOOGLE_OAUTH2_CLIENT_SECRET_TEST"), refreshToken, os.Getenv("GOOGLE_OAUTH2_CLIENT_ID_TEST"))
@@ -29,7 +30,7 @@ func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 	}
 	if statusCode != fiber.StatusOK {
 		log.Errorf("access_token_error_not_ok_status_code_%d_body_%s", statusCode, body)
-		return nil, GOAuth2Error
+		return nil, ErrorGOAuth2
 	}
 
 	return oToken, nil
@@ -51,7 +52,7 @@ func GetGoogleAccountInfo(accessToken string) (*models.GoogleAccountInfo, error)
 
 	if statusCode != fiber.StatusOK {
 		log.Errorf("response_from_%d_body_%s", statusCode, string(body))
-		return nil, GOAuth2Error
+		return nil, ErrorGOAuth2
 	}
 
 	userinfo.User = &models.User{

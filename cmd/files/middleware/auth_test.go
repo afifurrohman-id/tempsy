@@ -2,6 +2,11 @@ package middleware
 
 import (
 	"encoding/json"
+	"io"
+	"net/http/httptest"
+	"os"
+	"testing"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
@@ -9,10 +14,6 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"os"
-	"testing"
 )
 
 func TestCheckHttpMethod(test *testing.T) {
@@ -124,5 +125,4 @@ func TestCheckAuth(test *testing.T) {
 			require.Equal(test, fiber.StatusUnauthorized, res.StatusCode)
 		})
 	})
-
 }

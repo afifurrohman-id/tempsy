@@ -3,15 +3,16 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
+	"io"
+	"net/http/httptest"
+	"testing"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestErrorServer(test *testing.T) {

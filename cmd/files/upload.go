@@ -1,19 +1,20 @@
 package files
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
 	"fmt"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	"github.com/afifurrohman-id/tempsy/internal/storage"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
-	"golang.org/x/exp/slices"
 	"regexp"
 	"strings"
 	"time"
+
+	"cloud.google.com/go/storage"
+	"github.com/afifurrohman-id/tempsy/internal"
+	"github.com/afifurrohman-id/tempsy/internal/models"
+	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
+	"golang.org/x/exp/slices"
 )
 
 // TODO: Make parameter as pointer ??
@@ -27,15 +28,12 @@ func mapFileHeader(header map[string][]string) map[string]string {
 }
 
 func HandleUploadFile(ctx *fiber.Ctx) error {
-
 	var (
-		storeCtx = context.Background()
-		username = ctx.Params("username")
-    fileName = ctx.Get(store.HeaderFileName)
-		filePath = fmt.Sprintf("%s/%s", username, fileName)
+		fileName = ctx.Get(store.HeaderFileName)
+		filePath = fmt.Sprintf("%s/%s", ctx.Params("username"), fileName)
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	if len(ctx.Body()) < 1 {
@@ -63,7 +61,6 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 			fileMetadata := new(models.DataFile)
 			if !slices.Contains(store.AcceptedContentType, fileHeader[fiber.HeaderContentType]) {
-
 				return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(&models.ApiError{
 					Type:        internal.ErrorTypeUnsupportedType,
 					Description: fmt.Sprintf("Unsupported Content-Type: %s", fileHeader[fiber.HeaderContentType]),

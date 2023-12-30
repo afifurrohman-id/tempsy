@@ -4,20 +4,20 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http/httptest"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"testing"
-	"time"
 )
 
 func TestHandleDelete(test *testing.T) {
-
 	var (
 		app      = fiber.New()
 		storeCtx = context.Background()
@@ -36,7 +36,6 @@ func TestHandleDelete(test *testing.T) {
 		for _, dataFile := range dataFiles {
 			internal.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
 		}
-
 	})
 
 	for i := 1; i <= 3; i++ {

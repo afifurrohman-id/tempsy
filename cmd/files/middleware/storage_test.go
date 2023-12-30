@@ -4,6 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http/httptest"
+	"path"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
 	"github.com/afifurrohman-id/tempsy/internal/models"
@@ -11,12 +18,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"path"
-	"strings"
-	"testing"
-	"time"
 )
 
 func init() {

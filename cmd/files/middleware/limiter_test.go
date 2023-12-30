@@ -1,14 +1,15 @@
 package middleware
 
 import (
+	"net/http/httptest"
+	"testing"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"net/http/httptest"
-	"testing"
 )
 
 func TestLimitAuthTokenProcess(test *testing.T) {
@@ -118,6 +119,5 @@ func TestLimitGuestToken(test *testing.T) {
 				}
 			})
 		}
-
 	})
 }

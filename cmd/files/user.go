@@ -2,6 +2,8 @@ package files
 
 import (
 	"context"
+	"strings"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
@@ -10,26 +12,26 @@ import (
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"strings"
 )
 
 func HandleGetGuestToken(ctx *fiber.Ctx) error {
-	if _, err := guest.ParseToken(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
+	trimAuth := strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)
+
+	if _, err := guest.ParseToken(trimAuth); err == nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",
 		})
 	}
 
-	if _, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)); err == nil {
+	if _, err := oauth2.GetGoogleAccountInfo(trimAuth); err == nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        internal.ErrorTypeHaveToken,
 			Description: "You already have valid token",
 		})
 	}
 
-	username := guest.GenerateUsername()
-	token, err := guest.CreateToken(username)
+	token, err := guest.CreateToken(guest.GenerateUsername())
 	internal.Check(err)
 
 	return ctx.JSON(&models.GuestToken{
@@ -39,10 +41,8 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 }
 
 func HandleGetUserInfo(ctx *fiber.Ctx) error {
-	var (
-		storeCtx = context.Background()
-		userinfo = new(models.User)
-	)
+	userinfo := new(models.User)
+
 	token := strings.TrimPrefix(ctx.Get(fiber.HeaderAuthorization), auth.BearerPrefix)
 
 	if claims, err := guest.ParseToken(token); err == nil {
@@ -60,7 +60,7 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 		userinfo.UserName = goUser.UserName
 	}
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	files, err := store.GetAllObject(storeCtx, userinfo.UserName)

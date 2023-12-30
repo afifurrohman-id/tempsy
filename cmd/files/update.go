@@ -16,13 +16,11 @@ import (
 // HandleUpdateFile Updates single file by name
 func HandleUpdateFile(ctx *fiber.Ctx) error {
 	var (
-		username = ctx.Params("username")
 		fileName = ctx.Params("filename")
-		filePath = fmt.Sprintf("%s/%s", username, fileName)
-		storeCtx = context.Background()
+		filePath = fmt.Sprintf("%s/%s", ctx.Params("username"), fileName)
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	if len(ctx.Body()) < 1 {

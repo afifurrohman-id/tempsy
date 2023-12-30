@@ -2,17 +2,18 @@ package oauth2
 
 import (
 	"errors"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/joho/godotenv"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"math/big"
 	"os"
 	"path"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/afifurrohman-id/tempsy/internal"
+	"github.com/afifurrohman-id/tempsy/internal/auth"
+	"github.com/joho/godotenv"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func init() {
@@ -36,7 +37,7 @@ func TestOAuth2(test *testing.T) {
 			oToken, err := GetAccessToken("invalid")
 			require.Error(test, err)
 
-			assert.True(test, errors.Is(err, GOAuth2Error))
+			assert.True(test, errors.Is(err, ErrorGOAuth2))
 			assert.Nil(test, oToken)
 		})
 	})
@@ -65,6 +66,6 @@ func TestGetGoogleAccountInfo(test *testing.T) {
 		accountInfo, err := GetGoogleAccountInfo("invalid")
 		require.Error(test, err)
 		assert.Nil(test, accountInfo)
-		assert.True(test, errors.Is(err, GOAuth2Error))
+		assert.True(test, errors.Is(err, ErrorGOAuth2))
 	})
 }

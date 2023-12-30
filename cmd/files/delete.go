@@ -17,13 +17,11 @@ import (
 
 func HandleDeleteFile(ctx *fiber.Ctx) error {
 	var (
-		username = ctx.Params("username")
 		fileName = ctx.Params("filename")
-		storeCtx = context.Background()
-		filePath = fmt.Sprintf("%s/%s", username, fileName)
+		filePath = fmt.Sprintf("%s/%s", ctx.Params("username"), fileName)
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	if _, err := store.GetObject(storeCtx, filePath); err != nil {
@@ -43,12 +41,9 @@ func HandleDeleteFile(ctx *fiber.Ctx) error {
 }
 
 func HandleDeleteAllFile(ctx *fiber.Ctx) error {
-	var (
-		username = ctx.Params("username")
-		storeCtx = context.Background()
-	)
+	username := ctx.Params("username")
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, username)

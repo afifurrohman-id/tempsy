@@ -3,11 +3,12 @@ package guest
 import (
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"math/rand"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 const UsernamePrefix = "tempsyanonym-"
@@ -17,12 +18,12 @@ const UsernamePrefix = "tempsyanonym-"
 func GenerateUsername() string {
 	lettersLower := "abcdefghijklmnopqrstuvwxyz0123456789"
 
-	b := make([]rune, 18) //TODO: increase length as needed
-	for i := range b {
-		b[i] = rune(lettersLower[rand.Intn(len(lettersLower))])
+	charByte := make([]rune, 18) // TODO: increase length as needed
+	for i := range charByte {
+		charByte[i] = rune(lettersLower[rand.Intn(len(lettersLower))])
 	}
 
-	return fmt.Sprintf("%s%d-%s", UsernamePrefix, time.Now().Add(168*time.Hour).UnixMilli(), string(b))
+	return fmt.Sprintf("%s%d-%s", UsernamePrefix, time.Now().Add(168*time.Hour).UnixMilli(), string(charByte))
 }
 
 func CreateToken(username string) (string, error) {
@@ -45,7 +46,6 @@ func ParseToken(accessToken string) (jwt.MapClaims, error) {
 		}
 		return []byte(os.Getenv("JWT_SECRET_KEY")), nil
 	})
-
 	if err != nil {
 		return nil, err
 	}

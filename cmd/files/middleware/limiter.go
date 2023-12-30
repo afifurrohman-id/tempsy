@@ -35,12 +35,17 @@ var RateLimiterProcessing = limiter.New(limiter.Config{
 var RateLimiterGuestToken = limiter.New(limiter.Config{
 	Max: MaxReqGuestTokenPerSeconds,
 	KeyGenerator: func(ctx *fiber.Ctx) string {
-		if ctx.Get(auth.HeaderRealIp) != "" {
-			return utils.CopyString(ctx.Get(auth.HeaderRealIp))
+		var (
+			realIp  = ctx.Get(auth.HeaderRealIp)
+			xRealIp = ctx.Get(auth.HeaderXRealIp)
+		)
+
+		if realIp != "" {
+			return utils.CopyString(realIp)
 		}
 
-		if ctx.Get(auth.HeaderXRealIp) != "" {
-			return utils.CopyString(ctx.Get(auth.HeaderXRealIp))
+		if xRealIp != "" {
+			return utils.CopyString(xRealIp)
 		}
 
 		// ctx.IP() is copy by default

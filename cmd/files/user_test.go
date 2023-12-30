@@ -2,6 +2,12 @@ package files
 
 import (
 	"encoding/json"
+	"io"
+	"net/http/httptest"
+	"os"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
@@ -10,11 +16,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"os"
-	"testing"
-	"time"
 )
 
 func TestGetGuestToken(test *testing.T) {

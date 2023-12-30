@@ -5,17 +5,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http/httptest"
+	"strings"
+	"testing"
+	"time"
+
 	"github.com/afifurrohman-id/tempsy/internal"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	store "github.com/afifurrohman-id/tempsy/internal/storage"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"io"
-	"net/http/httptest"
-	"strings"
-	"testing"
-	"time"
 )
 
 func TestHandleUpdateFile(test *testing.T) {
@@ -196,5 +197,4 @@ func TestHandleUpdateFile(test *testing.T) {
 		require.NotEmpty(test, apiRes)
 		require.Equal(test, internal.ErrorTypeMismatchType, apiRes.Type)
 	})
-
 }

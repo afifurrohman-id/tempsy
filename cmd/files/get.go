@@ -20,9 +20,8 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	var (
-		username = ctx.Params("username")
 		fileName = ctx.Params("filename")
-		filePath = fmt.Sprintf("%s/%s", username, fileName)
+		filePath = fmt.Sprintf("%s/%s", ctx.Params("username"), fileName)
 	)
 
 	fileData, err := store.GetObject(storeCtx, filePath)
@@ -62,13 +61,11 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 
 func HandleGetFileData(ctx *fiber.Ctx) error {
 	var (
-		username = ctx.Params("username")
 		fileName = ctx.Params("filename")
-		filePath = fmt.Sprintf("%s/%s", username, fileName)
+		filePath = fmt.Sprintf("%s/%s", ctx.Params("username"), fileName)
 	)
 
-	storeCtx := context.Background()
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
 	fileData, err := store.GetObject(storeCtx, filePath)
@@ -88,16 +85,14 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 
 func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	var (
-		username = ctx.Params("username")
-		storeCtx = context.Background()
-		mu       = new(sync.Mutex)
-		wg       = new(sync.WaitGroup)
+		mu = new(sync.Mutex)
+		wg = new(sync.WaitGroup)
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
-	filesData, err := store.GetAllObject(storeCtx, username)
+	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"))
 	internal.Check(err)
 
 	wg.Add(1)

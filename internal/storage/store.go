@@ -133,11 +133,10 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 func Format(dataFile *models.DataFile) {
 	split := strings.SplitN(dataFile.Name, "/", 2)
 	if len(split) > 1 {
-		userName := split[0]
 		fileName := split[1]
 
 		if dataFile.IsPublic {
-			dataFile.Url = fmt.Sprintf("%s/files/%s/public/%s", os.Getenv("SERVER_URI"), userName, fileName)
+			dataFile.Url = fmt.Sprintf("%s/files/%s/public/%s", os.Getenv("SERVER_URI"), split[0], fileName)
 		}
 
 		dataFile.Name = fileName

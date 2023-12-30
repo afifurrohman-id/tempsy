@@ -3,6 +3,7 @@ package middleware
 import (
 	"errors"
 	"fmt"
+
 	"github.com/afifurrohman-id/tempsy/internal/auth"
 	"github.com/afifurrohman-id/tempsy/internal/models"
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +12,6 @@ import (
 )
 
 func CatchServerError(ctx *fiber.Ctx, err error) error {
-
 	fiberErr := new(fiber.Error)
 	if errors.As(err, &fiberErr) {
 		log.Error("Fiber - ", fiberErr)
@@ -41,5 +41,4 @@ func CatchServerError(ctx *fiber.Ctx, err error) error {
 		Type:        "unknown_server_error",
 		Description: "Unknown Internal Server Error",
 	})
-
 }
