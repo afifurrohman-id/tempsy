@@ -4,7 +4,7 @@
   
 ## API Documentation
 
-  > warning: **This API is not stable yet, maybe have some
+  > :warning: **This API is not stable yet, maybe have some
   > breaking changes in the future.**
 
 - [OpenAPI Specification](api/openapi-spec.yaml)
