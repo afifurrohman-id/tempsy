@@ -24,12 +24,11 @@ func TestHandleUpdateFile(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		fileName = fmt.Sprintf("%s.txt", strings.ToLower(test.Name()))
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 		fileByte = []byte(test.Name())
 	)
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -102,99 +101,86 @@ func TestHandleUpdateFile(test *testing.T) {
 		assert.NotContains(test, apiRes.Url, username+"/public/")
 	})
 
-	test.Run("TestOnFileNotFound", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodPut, fmt.Sprintf("/api/files/%s/notfound.json", username), bytes.NewReader(fileByte))
-		req.Header.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
-		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
-		req.Header.Set(store.HeaderPrivateUrlExpires, fmt.Sprintf("%d", 10)) // 10 seconds
+	tableErrs := []struct {
+		headers    map[string]string
+		fileName   string
+		name       string
+		errType    string
+		file       []byte
+		statusCode int
+	}{
+		{
+			name:     "TestOnFileNotFound",
+			file:     fileByte,
+			fileName: username + "/not-found.json",
+			headers: map[string]string{
+				fiber.HeaderContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
+				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+			},
+			errType:    internal.ErrorTypeFileNotFound,
+			statusCode: fiber.StatusNotFound,
+		},
+		{
+			name:     "TestOnInvalidEmptyFile",
+			file:     make([]byte, 0),
+			fileName: filePath,
+			headers: map[string]string{
+				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
+				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+			},
+			errType:    internal.ErrorTypeEmptyFile,
+			statusCode: fiber.StatusBadRequest,
+		},
+		{
+			name:     "TestOnInvalidHeaderFile",
+			file:     fileByte,
+			fileName: filePath,
+			headers: map[string]string{
+				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
+				store.HeaderAutoDeletedAt:     "test",
+				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+			},
+			errType:    internal.ErrorTypeInvalidHeaderFile,
+			statusCode: fiber.StatusUnprocessableEntity,
+		},
+		{
+			name:     "TestOnMismatchContentType",
+			file:     fileByte,
+			fileName: filePath,
+			headers: map[string]string{
+				fiber.HeaderContentType:       fiber.MIMETextXML,
+				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+			},
+			errType:    internal.ErrorTypeMismatchType,
+			statusCode: fiber.StatusBadRequest,
+		},
+	}
 
-		res, err := app.Test(req, 1500*10) // 15 seconds
-		require.NoError(test, err)
+	for _, table := range tableErrs {
+		test.Run(table.name, func(test *testing.T) {
+			req := httptest.NewRequest(fiber.MethodPut, "/api/files/"+table.fileName, bytes.NewReader(table.file))
+			for key, val := range table.headers {
+				req.Header.Set(key, val)
+			}
+			res, err := app.Test(req, 1500*10) // 15 seconds
+			require.NoError(test, err)
 
-		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			test.Cleanup(func() {
+				internal.LogErr(res.Body.Close())
+			})
+
+			body, err := io.ReadAll(res.Body)
+			require.NoError(test, err)
+
+			apiRes := new(models.ApiError)
+			require.NoError(test, json.Unmarshal(body, &apiRes))
+
+			require.Equal(test, table.statusCode, res.StatusCode)
+			require.NotEmpty(test, apiRes)
+			require.Equal(test, table.errType, apiRes.Type)
 		})
-
-		body, err := io.ReadAll(res.Body)
-		require.NoError(test, err)
-
-		apiRes := new(models.ApiError)
-		require.NoError(test, json.Unmarshal(body, &apiRes))
-
-		require.Equal(test, fiber.StatusNotFound, res.StatusCode)
-		require.NotEmpty(test, apiRes)
-		require.Equal(test, internal.ErrorTypeFileNotFound, apiRes.Type)
-	})
-
-	test.Run("TestOnEmptyFileUpdate", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodPut, "/api/files/"+filePath, nil)
-		req.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
-		req.Header.Set(store.HeaderPrivateUrlExpires, fmt.Sprintf("%d", 10)) // 10 seconds
-
-		res, err := app.Test(req, 1500*10) // 15 seconds
-		require.NoError(test, err)
-
-		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
-		})
-
-		body, err := io.ReadAll(res.Body)
-		require.NoError(test, err)
-
-		apiRes := new(models.ApiError)
-		require.NoError(test, json.Unmarshal(body, &apiRes))
-
-		require.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		require.NotEmpty(test, apiRes)
-		require.Equal(test, internal.ErrorTypeEmptyFile, apiRes.Type)
-	})
-
-	test.Run("TestOnInvalidHeaderFile", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodPut, "/api/files/"+filePath, bytes.NewReader([]byte("invalid")))
-		req.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
-		req.Header.Set(store.HeaderPrivateUrlExpires, fmt.Sprintf("%d", 10)) // 10 seconds
-
-		res, err := app.Test(req, 1500*10) // 15 seconds
-		require.NoError(test, err)
-
-		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
-		})
-
-		body, err := io.ReadAll(res.Body)
-		require.NoError(test, err)
-
-		apiRes := new(models.ApiError)
-		require.NoError(test, json.Unmarshal(body, &apiRes))
-
-		require.Equal(test, fiber.StatusUnprocessableEntity, res.StatusCode)
-		require.NotEmpty(test, apiRes)
-		require.Equal(test, internal.ErrorTypeInvalidHeaderFile, apiRes.Type)
-	})
-
-	test.Run("TestOnMismatchContentType", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodPut, "/api/files/"+filePath, bytes.NewReader(fileByte))
-		req.Header.Set(fiber.HeaderContentType, fiber.MIMETextXML)
-		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
-		req.Header.Set(store.HeaderPrivateUrlExpires, fmt.Sprintf("%d", 10)) // 10 seconds
-
-		res, err := app.Test(req, 1500*10) // 15 seconds
-		require.NoError(test, err)
-
-		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
-		})
-
-		body, err := io.ReadAll(res.Body)
-		require.NoError(test, err)
-
-		apiRes := new(models.ApiError)
-		require.NoError(test, json.Unmarshal(body, &apiRes))
-
-		require.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		require.NotEmpty(test, apiRes)
-		require.Equal(test, internal.ErrorTypeMismatchType, apiRes.Type)
-	})
+	}
 }

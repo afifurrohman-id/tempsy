@@ -32,10 +32,9 @@ func TestHandleGetAllFileData(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		fileByte = []byte(test.Name())
 	)
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
 	app.Get("/:username", HandleGetAllFileData)
 
@@ -67,6 +66,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
+
 		test.Cleanup(func() {
 			internal.LogErr(res.Body.Close())
 		})
@@ -110,12 +110,11 @@ func TestHandleGetFileData(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		fileName = fmt.Sprintf("%s.txt", strings.ToLower(test.Name()))
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 		fileByte = []byte(test.Name())
 	)
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
 	app.Get("/:username/:filename", HandleGetFileData)
 
@@ -181,13 +180,12 @@ func TestHandleGetPublicFile(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		fileByte = []byte(test.Name())
 	)
 
 	app.Get("/:username/public/:filename", HandleGetPublicFile)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()

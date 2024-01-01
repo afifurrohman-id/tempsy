@@ -1,12 +1,13 @@
 package guest
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGenerateUsername(test *testing.T) {
@@ -38,7 +39,6 @@ func TestCreateToken(test *testing.T) {
 
 		assert.Empty(test, token)
 	})
-
 }
 
 func TestParseToken(test *testing.T) {

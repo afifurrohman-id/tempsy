@@ -20,12 +20,11 @@ import (
 func TestHandleDelete(test *testing.T) {
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		username = "test-handle-delete"
 		fileByte = []byte(test.Name())
 	)
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, store.DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()

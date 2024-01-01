@@ -18,8 +18,7 @@ import (
 )
 
 func TestCreateStorageClient(test *testing.T) {
-	storeCtx := context.Background()
-	storeCtx, cancel := context.WithTimeout(storeCtx, 8*time.Second)
+	storeCtx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 
 	client, err := createClient(storeCtx)
 	require.NoError(test, err)
@@ -36,12 +35,9 @@ func TestCreateStorageClient(test *testing.T) {
 func TestGetAllObject(test *testing.T) {
 	const username = "try"
 
-	var (
-		fileNames = []string{username + "/app.txt", username + "/test.txt"}
-		storeCtx  = context.Background()
-	)
+	fileNames := []string{username + "/app.txt", username + "/test.txt"}
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -80,8 +76,7 @@ func TestGetObject(test *testing.T) {
 		objByte  = []byte("is ok")
 	)
 
-	storeCtx := context.Background()
-	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -111,8 +106,7 @@ func TestGetObject(test *testing.T) {
 		assert.Equal(test, objByte, body)
 
 		Format(fileData)
-		// Local time is different with server time
-		// assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
+		assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
 		assert.Equal(test, fileData.UpdatedAt, fileData.UploadedAt)
 		assert.Greater(test, fileData.AutoDeletedAt, time.Now().UnixMilli())
 		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, fileData.ContentType)
@@ -122,18 +116,15 @@ func TestGetObject(test *testing.T) {
 
 	test.Run("TestNotFound", func(test *testing.T) {
 		dataFile, err := GetObject(storeCtx, "not_found.txt")
-		assert.Error(test, err)
+		require.Error(test, err)
 		assert.Empty(test, dataFile)
 	})
 }
 
 func TestUploadObject(test *testing.T) {
-	var (
-		filePath = strings.ToLower(test.Name()) + "/up.txt"
-		storeCtx = context.Background()
-	)
+	filePath := strings.ToLower(test.Name()) + "/up.txt"
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), DefaultTimeoutCtx)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -142,7 +133,7 @@ func TestUploadObject(test *testing.T) {
 	})
 
 	test.Run("TestOk", func(test *testing.T) {
-		assert.NoError(test, UploadObject(storeCtx, filePath, []byte("is ok"), &models.DataFile{
+		require.NoError(test, UploadObject(storeCtx, filePath, []byte("is ok"), &models.DataFile{
 			AutoDeletedAt:     time.Now().Add(2 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 30, // 30 seconds
@@ -164,12 +155,9 @@ func TestUploadObject(test *testing.T) {
 }
 
 func TestDeleteObject(test *testing.T) {
-	var (
-		filePath = strings.ToLower(test.Name()) + "/app.txt"
-		storeCtx = context.Background()
-	)
+	filePath := strings.ToLower(test.Name()) + "/app.txt"
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, DefaultTimeoutCtx)
+	storeCtx, cancel := context.WithTimeout(context.Background(), DefaultTimeoutCtx)
 	client, err := createClient(storeCtx)
 	require.NoError(test, err)
 
@@ -180,21 +168,21 @@ func TestDeleteObject(test *testing.T) {
 		internal.LogErr(client.Close())
 	})
 
-	w := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).NewWriter(storeCtx)
+	writer := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).NewWriter(storeCtx)
 
-	_, err = w.Write([]byte(strings.Split(filePath, "/")[0]))
+	_, err = writer.Write([]byte(strings.Split(filePath, "/")[0]))
 	require.NoError(test, err)
 
-	require.NoError(test, w.Close())
+	require.NoError(test, writer.Close())
 
 	test.Run("TestOk", func(test *testing.T) {
 		err := DeleteObject(storeCtx, filePath)
-		assert.NoError(test, err)
+		require.NoError(test, err)
 	})
 
 	test.Run("TestNotFound", func(test *testing.T) {
 		err := DeleteObject(storeCtx, "not_found.txt")
-		assert.Error(test, err)
+		require.Error(test, err)
 		assert.True(test, errors.Is(err, storage.ErrObjectNotExist))
 	})
 }

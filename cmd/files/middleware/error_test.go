@@ -65,6 +65,7 @@ func TestErrorServer(test *testing.T) {
 		req := httptest.NewRequest(fiber.MethodPost, "/body-limit", bytes.NewReader(make([]byte, MaxBodyLimit+1)))
 
 		res, err := app.Test(req, 1500*10) // 15 seconds
+
 		require.Error(test, err)
 		require.Nil(test, res)
 	})

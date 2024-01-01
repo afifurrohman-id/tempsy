@@ -27,7 +27,6 @@ func init() {
 func TestPurgeAnonymousAccount(test *testing.T) {
 	var (
 		app      = fiber.New()
-		storeCtx = context.Background()
 		byteFile = []byte(test.Name())
 	)
 
@@ -53,7 +52,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 		},
 	}
 
-	storeCtx, cancel := context.WithTimeout(storeCtx, 25*time.Second)
+	storeCtx, cancel := context.WithTimeout(context.Background(), 25*time.Second)
 	test.Cleanup(func() {
 		defer cancel()
 

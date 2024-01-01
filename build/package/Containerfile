@@ -6,9 +6,8 @@ COPY . .
 
 ENV CGO_ENABLED=0
 
-# Need install ca-certificates for tls compatibility for go library
-RUN apk update && \
-  apk add --no-cache ca-certificates=20230506-r0 && \
+# Need install ca-certificates for tls compatibility for go library and tzdata for timezone
+RUN apk add --no-cache ca-certificates=20230506-r0 tzdata=2023d-r0 && \
   update-ca-certificates
 
 # Reduce binary size by removing debug information
@@ -21,6 +20,9 @@ WORKDIR /app
 
 COPY --from=builder /src/tempsy .
 COPY --from=builder /src/api ./api
+COPY --from=builder /usr/share/zoneinfo/Asia/Jakarta /usr/share/zoneinfo/Asia/Jakarta
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+ENV TZ=Asia/Jakarta
 
 CMD [ "./tempsy" ]

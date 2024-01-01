@@ -115,7 +115,7 @@ func TestHandleGetUserInfo(test *testing.T) {
 			require.NoError(test, json.Unmarshal(body, &apiRes))
 
 			assert.NotNil(test, apiRes)
-			if table.name != tablesOk[1].name {
+			if table.name != "TestGOAuth2" {
 				assert.Equal(test, username, apiRes.UserName)
 			}
 			assert.Empty(test, apiRes.TotalFiles)
