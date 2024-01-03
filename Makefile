@@ -11,7 +11,7 @@ endif
 build: ${MAIN_FILE}
 	CGO_ENABLED=0 go build -o ${EXE_NAME} -ldflags "-w -s" ${MAIN_FILE}
 
-test: **/*_test.go
+test: ${MAIN_FILE}
 	CGO_ENABLED=1 go test --cover -race -v -ldflags "-w -s" ./...
 
 clean: deployments/compose.yaml
