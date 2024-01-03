@@ -86,9 +86,7 @@ jobs:
           file: build/package/Containerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{env.IMAGE_NAME}}:${{github.sha}}
-            ${{env.IMAGE_NAME}}
+          tags: ${{env.IMAGE_NAME}}:beta-${{github.sha}}
 
       - uses: azure/login@v1
         with:
@@ -99,7 +97,7 @@ jobs:
           registryUrl: ${{env.REGISTRY}}
           containerAppName: ${{github.event.repository.name}}-staging
           resourceGroup: ${{secrets.AZURE_RESOURCE_GROUP}}
-          imageToDeploy: ${{env.IMAGE_NAME}}:${{github.sha}}
+          imageToDeploy: ${{env.IMAGE_NAME}}:beta-${{github.sha}}
           targetPort: ${{secrets.PORT}}
 
       - name: Job Successful Feedback
