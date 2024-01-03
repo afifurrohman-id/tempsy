@@ -136,7 +136,7 @@ func Format(dataFile *models.DataFile) {
 		fileName := split[1]
 
 		if dataFile.IsPublic {
-			dataFile.Url = fmt.Sprintf("%s/files/%s/public/%s", os.Getenv("SERVER_URI"), split[0], fileName)
+			dataFile.Url = fmt.Sprintf("%s/files/%s/public/%s", os.Getenv("SERVER_URL"), split[0], fileName)
 		}
 
 		dataFile.Name = fileName

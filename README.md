@@ -44,7 +44,7 @@ cat <<EOENV > configs/.env
 GOOGLE_CLOUD_STORAGE_BUCKET=example-google-cloud-storage-bucket
 APP_ENV=testing
 PORT=3210
-SERVER_URI=https://example.com
+SERVER_URL=https://example.com
 
 # Credentials
 GOOGLE_CLOUD_STORAGE_SERVICE_ACCOUNT=JSON_GCP_SERVICE_ACCOUNT_CREDENTIAL
