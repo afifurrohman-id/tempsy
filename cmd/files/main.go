@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/afifurrohman-id/tempsy/cmd/files"
-	"github.com/afifurrohman-id/tempsy/cmd/files/middleware"
 	"github.com/afifurrohman-id/tempsy/internal"
+	"github.com/afifurrohman-id/tempsy/pkg/files"
+	"github.com/afifurrohman-id/tempsy/pkg/files/middleware"
 	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"

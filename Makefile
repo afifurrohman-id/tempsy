@@ -1,15 +1,17 @@
-run: main.go
-	CGO_ENABLED=0 go run -ldflags "-w -s" main.go
+MAIN_FILE:=cmd/files/main.go
 
-EXE_NAME:="tempsy"
-ifeq ($(go env GOOS), "windows")
-		EXE_NAME="tempsy.exe"
+run: ${MAIN_FILE}
+	CGO_ENABLED=0 go run -ldflags "-w -s" ${MAIN_FILE}
+
+EXE_NAME:=tempsy
+ifeq ($(go env GOOS), windows)
+		EXE_NAME=tempsy.exe
 endif
 
-build: main.go
-	CGO_ENABLED=0 go build -o ${EXE_NAME} -ldflags "-w -s" main.go
+build: ${MAIN_FILE}
+	CGO_ENABLED=0 go build -o ${EXE_NAME} -ldflags "-w -s" ${MAIN_FILE}
 
-test: main.go
+test: **/*_test.go
 	CGO_ENABLED=1 go test --cover -race -v -ldflags "-w -s" ./...
 
 clean: deployments/compose.yaml
