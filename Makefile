@@ -1,8 +1,4 @@
 MAIN_FILE:=cmd/files/main.go
-
-run: ${MAIN_FILE}
-	CGO_ENABLED=0 go run -ldflags "-w -s" ${MAIN_FILE}
-
 EXE_NAME:=tempsy
 ifeq ($(go env GOOS), windows)
 		EXE_NAME=tempsy.exe
@@ -10,6 +6,9 @@ endif
 
 build: ${MAIN_FILE}
 	CGO_ENABLED=0 go build -o ${EXE_NAME} -ldflags "-w -s" ${MAIN_FILE}
+
+run: ${MAIN_FILE}
+	CGO_ENABLED=0 go run -ldflags "-w -s" ${MAIN_FILE}
 
 test: ${MAIN_FILE}
 	CGO_ENABLED=1 go test --cover -race -v -ldflags "-w -s" ./...
