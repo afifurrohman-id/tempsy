@@ -1,4 +1,4 @@
-# [Tempsy API](https://api.tempsy.afifurrohman.my.id)
+# [Tempsy API](https://tempsy.afifurrohman.my.id)
 
 > Simple Temporary Files sharing RESTful API with oauth2
   

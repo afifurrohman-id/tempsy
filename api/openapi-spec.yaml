@@ -11,9 +11,9 @@ info:
     url: https://afifurrohman.my.id
     email: afifurrohman.id@outlook.com
 servers:
-  - url: https://api.tempsy.afifurrohman.my.id
+  - url: https://tempsy.afifurrohman.my.id
     description: Production server
-  - url: https://api.tempsy.staging.afifurrohman.my.id
+  - url: https://tempsy.staging.afifurrohman.my.id
     description: Staging server
 paths:
   /files/{username}:
