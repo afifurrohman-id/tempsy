@@ -1,6 +1,6 @@
-[submodule "web"]
-	path = web
-	url = https://github.com/afifurrohman-id/tempsy-client.git
 [submodule "cmd/gateway"]
 	path = cmd/gateway
 	url = https://github.com/afifurrohman-id/tempsy-gateway.git
+[submodule "web"]
+	path = web
+	url = https://github.com/afifurrohman-id/tempsy-client.git
