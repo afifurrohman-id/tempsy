@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 0.3.0
+  version: 0.5.0
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -25,6 +25,7 @@ paths:
       summary: Get all files
       description: Get all files of the user
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
       responses:
         200:
@@ -82,6 +83,7 @@ paths:
       summary: Upload file
       description: Upload file on the server by the user
       parameters:
+        - $ref: '#/components/parameters/accept'
         - name: File-Name
           in: header
           description: File name of the file want to be uploaded
@@ -172,6 +174,7 @@ paths:
       summary: Delete all files
       description: Delete all files of the user
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
       responses:
         204:
@@ -205,6 +208,7 @@ paths:
       summary: Get public file
       description: Get public file by file name
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
         - $ref: '#/components/parameters/filename'
       responses:
@@ -244,6 +248,7 @@ paths:
       summary: Get file
       description: Get file by file name
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
         - $ref: '#/components/parameters/filename'
       responses:
@@ -282,6 +287,7 @@ paths:
       summary: Update file
       description: Update file by file name
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
         - $ref: '#/components/parameters/filename'
         - $ref: '#/components/parameters/fileMetaAutoDeletedAt'
@@ -349,6 +355,7 @@ paths:
       summary: Delete file
       description: Delete file by file name
       parameters:
+        - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
         - $ref: '#/components/parameters/filename'
       responses:
@@ -381,6 +388,8 @@ paths:
         - auth
       summary: Get user info
       description: Return total files and username
+      parameters:
+        - $ref: '#/components/parameters/accept'
       responses:
         200:
           description: Success
@@ -433,6 +442,8 @@ paths:
         - auth
       summary: Get guest token
       description: return guest token
+      parameters:
+        - $ref: '#/components/parameters/accept'
       responses:
         200:
           description: Success
@@ -503,7 +514,7 @@ components:
     fileMetaAutoDeletedAt:
       name: File-Auto-Deleted-At
       in: header
-      description: File will be deleted at
+      description: File will be deleted at, max is one year since now
       required: true
       schema:
         type: integer
@@ -525,6 +536,17 @@ components:
       schema:
         type: string
         format: name.ext
+    accept:
+      name: Accept
+      required: true
+      in: header
+      description: Accept Content-Type must be application/json if you want this response api
+      schema:
+        type: string
+        description: Accepted Content-Type by client
+        enum: 
+          - application/json
+          - application/json; charset=utf-8
     type:
       name: Content-Type
       required: true
