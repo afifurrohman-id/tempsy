@@ -95,10 +95,11 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 		return errors.New("auto_deleted_at_should_be_valid_integer")
 	}
 
-	privateUrlExpiredAt, err := strconv.ParseUint(metadata[HeaderPrivateUrlExpires], 10, 64)
+	privateUrlInt64, err := strconv.ParseInt(metadata[HeaderPrivateUrlExpires], 10, 0)
 	if err != nil {
 		return errors.New("private_url_expires_should_be_valid_positive_integer")
 	}
+	privateUrlExpiredAt := uint(privateUrlInt64)
 
 	// cutoff 7 days + 1 second from now
 	if cutoff := time.Now().Add(604801 * time.Second); !time.Now().Add(time.Duration(privateUrlExpiredAt) * time.Second).Before(cutoff) {
@@ -123,7 +124,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 	}
 
 	fileData.AutoDeletedAt = autoDeletedAt
-	fileData.PrivateUrlExpires = uint(privateUrlExpiredAt)
+	fileData.PrivateUrlExpires = privateUrlExpiredAt
 	fileData.IsPublic = isPublic
 
 	return nil
