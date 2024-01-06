@@ -183,7 +183,7 @@ func TestHandleUploadFile(test *testing.T) {
 
 func TestValidateExpiry(test *testing.T) {
 	tableTests := []struct {
-		err     any
+		err     string
 		name    string
 		urlExp  uint
 		autoDel int64
@@ -210,12 +210,25 @@ func TestValidateExpiry(test *testing.T) {
 			autoDel: time.Now().Add(8767 * time.Hour).UnixMilli(),
 			err:     "auto_deleted_at_cannot_be_later_than_1_year_from_now",
 		},
+		{
+			name:    "TestOnPrivateUrlNotWithin7DaysFromNow",
+			urlExp:  604801, // 7 days + 1 seconds (in seconds)
+			autoDel: time.Now().Add(1000 * time.Hour).UnixMilli(),
+			err:     "private_url_expires_must_be_less_than_7_days_in_seconds_and_more_than_2_seconds",
+		},
+		{
+			name:    "TestOnPrivateUrlLessThan2Seconds",
+			urlExp:  1, // 7 days + 1 seconds (in seconds)
+			autoDel: time.Now().Add(1000 * time.Hour).UnixMilli(),
+			err:     "private_url_expires_must_be_less_than_7_days_in_seconds_and_more_than_2_seconds",
+		},
 	}
 
 	for _, tt := range tableTests {
 		test.Run(tt.name, func(test *testing.T) {
 			err := validateExpiry(tt.urlExp, tt.autoDel)
-			if tt.err != nil {
+			if tt.err != "" {
+				require.Error(test, err)
 				assert.Equal(test, tt.err, err.Error())
 			} else {
 				assert.NoError(test, err)

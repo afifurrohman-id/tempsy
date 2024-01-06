@@ -510,7 +510,7 @@ components:
         description: Seconds, relative from now, Must be positive integer
         type: integer
         maximum: 604800 # 7 days
-        minimum: 0
+        minimum: 2
         format: int
     fileMetaAutoDeletedAt:
       name: File-Auto-Deleted-At

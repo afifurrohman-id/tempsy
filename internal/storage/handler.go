@@ -112,7 +112,7 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 // UploadObject filePath must be in format `username/filename`
 func UploadObject(ctx context.Context, filePath string, fileByte []byte, fileData *models.DataFile) error {
 	if !strings.Contains(filePath, "/") {
-		return errors.New("file_path_must_be_in_format_username_and_slash_filename")
+		return errors.New("invalid_file_path")
 	}
 
 	client, err := createClient(ctx)

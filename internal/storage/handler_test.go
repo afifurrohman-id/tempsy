@@ -150,7 +150,7 @@ func TestUploadObject(test *testing.T) {
 		})
 
 		require.Error(test, err)
-		assert.Contains(test, err.Error(), "file_path_must_be_in_format_username_and_slash_filename")
+		assert.Contains(test, err.Error(), "invalid_file_path")
 	})
 }
 

@@ -92,18 +92,12 @@ func createClient(ctx context.Context) (*storage.Client, error) {
 func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) error {
 	autoDeletedAt, err := strconv.ParseInt(metadata[HeaderAutoDeletedAt], 10, 64)
 	if err != nil {
-		return errors.New("auto_deleted_at_should_be_valid_integer")
+		return errors.New("auto_deleted_at_must_be_valid_integer")
 	}
 
 	privateUrlInt64, err := strconv.ParseInt(metadata[HeaderPrivateUrlExpires], 10, 0)
 	if err != nil {
-		return errors.New("private_url_expires_should_be_valid_positive_integer")
-	}
-	privateUrlExpiredAt := uint(privateUrlInt64)
-
-	// cutoff 7 days + 1 second from now
-	if cutoff := time.Now().Add(604801 * time.Second); !time.Now().Add(time.Duration(privateUrlExpiredAt) * time.Second).Before(cutoff) {
-		return errors.New("expired_url_should_be_within_7_day_from_now")
+		return errors.New("private_url_expires_must_be_valid_positive_integer")
 	}
 
 	// can be boolean string or number string 0 is false, otherwise true
@@ -111,7 +105,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 	if err != nil {
 		boolInt, err := strconv.Atoi(metadata[HeaderIsPublic])
 		if err != nil {
-			return errors.New("is_public_should_be_valid_boolean_or_integer")
+			return errors.New("is_public_must_be_valid_boolean_or_integer")
 		}
 
 		switch boolInt {
@@ -124,7 +118,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 	}
 
 	fileData.AutoDeletedAt = autoDeletedAt
-	fileData.PrivateUrlExpires = privateUrlExpiredAt
+	fileData.PrivateUrlExpires = uint(privateUrlInt64)
 	fileData.IsPublic = isPublic
 
 	return nil

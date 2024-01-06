@@ -22,7 +22,7 @@ func TestUnmarshalMetadata(test *testing.T) {
 	metadata := map[string]string{
 		HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(1*time.Minute).UnixMilli()),
 		HeaderIsPublic:          "1",
-		HeaderPrivateUrlExpires: "10", // 10 seconds
+		HeaderPrivateUrlExpires: "2", // 2 seconds
 	}
 	dataFile := new(models.DataFile)
 
@@ -52,16 +52,6 @@ func TestUnmarshalMetadata(test *testing.T) {
 			metadata[HeaderPrivateUrlExpires] = "invalid"
 
 			require.Error(test, UnmarshalMetadata(metadata, dataFile))
-		})
-
-		test.Run("TestOnPrivateUrlNotWithin7DaysFromNow", func(test *testing.T) {
-			metadata[HeaderPrivateUrlExpires] = "604801" // 7 days + 1 seconds
-			metadata[HeaderIsPublic] = "0"
-			metadata[HeaderAutoDeletedAt] = fmt.Sprintf("%d", time.Now().Add(8*time.Hour).UnixMilli())
-
-			err := UnmarshalMetadata(metadata, dataFile)
-			require.Error(test, err)
-			assert.Contains(test, err.Error(), "expired_url_should_be_within_7_day_from_now")
 		})
 	})
 }

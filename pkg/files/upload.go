@@ -115,5 +115,9 @@ func validateExpiry(urlExp uint, autoDel int64) error {
 		return errors.New("auto_deleted_at_cannot_be_later_than_1_year_from_now")
 	}
 
+	if urlExp > 604800 || urlExp < 2 {
+		return errors.New("private_url_expires_must_be_less_than_7_days_in_seconds_and_more_than_2_seconds")
+	}
+
 	return nil
 }
