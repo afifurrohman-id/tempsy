@@ -507,9 +507,10 @@ components:
       in: header
       description: Private url will be expires
       schema:
-        description: Seconds, relative from now
+        description: Seconds, relative from now, Must be positive integer
         type: integer
         maximum: 604800 # 7 days
+        minimum: 0
         format: int
     fileMetaAutoDeletedAt:
       name: File-Auto-Deleted-At

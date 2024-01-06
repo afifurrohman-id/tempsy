@@ -185,7 +185,7 @@ func TestValidateExpiry(test *testing.T) {
 	tableTests := []struct {
 		err     any
 		name    string
-		urlExp  int
+		urlExp  uint
 		autoDel int64
 	}{
 		{

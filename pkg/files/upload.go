@@ -105,7 +105,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	})
 }
 
-func validateExpiry(urlExp int, autoDel int64) error {
+func validateExpiry(urlExp uint, autoDel int64) error {
 	if time.Now().Add(time.Duration(urlExp)*time.Second).UnixMilli() > autoDel {
 		return errors.New("private_url_expires_cannot_be_later_than_auto_deleted_at_starting_from_now")
 	}

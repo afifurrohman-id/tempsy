@@ -92,12 +92,12 @@ func createClient(ctx context.Context) (*storage.Client, error) {
 func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) error {
 	autoDeletedAt, err := strconv.ParseInt(metadata[HeaderAutoDeletedAt], 10, 64)
 	if err != nil {
-		return err
+		return errors.New("auto_deleted_at_should_be_valid_integer")
 	}
 
-	privateUrlExpiredAt, err := strconv.Atoi(metadata[HeaderPrivateUrlExpires])
+	privateUrlExpiredAt, err := strconv.ParseUint(metadata[HeaderPrivateUrlExpires], 10, 64)
 	if err != nil {
-		return err
+		return errors.New("private_url_expires_should_be_valid_positive_integer")
 	}
 
 	// cutoff 7 days + 1 second from now
@@ -110,7 +110,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 	if err != nil {
 		boolInt, err := strconv.Atoi(metadata[HeaderIsPublic])
 		if err != nil {
-			return err
+			return errors.New("is_public_should_be_valid_boolean_or_integer")
 		}
 
 		switch boolInt {
@@ -123,7 +123,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 	}
 
 	fileData.AutoDeletedAt = autoDeletedAt
-	fileData.PrivateUrlExpires = privateUrlExpiredAt
+	fileData.PrivateUrlExpires = uint(privateUrlExpiredAt)
 	fileData.IsPublic = isPublic
 
 	return nil
