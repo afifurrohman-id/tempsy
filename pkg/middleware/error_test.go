@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +34,7 @@ func TestErrorServer(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		require.Equal(test, fiber.StatusInternalServerError, res.StatusCode)
@@ -47,7 +47,7 @@ func TestErrorServer(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)

@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,10 +30,10 @@ func TestHandleDelete(test *testing.T) {
 		defer cancel()
 
 		dataFiles, err := store.GetAllObject(storeCtx, username)
-		internal.Check(err)
+		utils.Check(err)
 
 		for _, dataFile := range dataFiles {
-			internal.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
+			utils.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
 		}
 	})
 
@@ -60,7 +60,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			assert.Equal(test, fiber.StatusNoContent, res.StatusCode)
@@ -72,7 +72,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			assert.Equal(test, fiber.StatusNotFound, res.StatusCode)
@@ -86,7 +86,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			assert.Equal(test, fiber.StatusNoContent, res.StatusCode)
@@ -98,7 +98,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			apiErr := new(models.ApiError)
@@ -110,7 +110,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, json.Unmarshal(body, &apiErr))
 
 			assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-			assert.Equal(test, internal.ErrorTypeEmptyData, apiErr.Type)
+			assert.Equal(test, utils.ErrorTypeEmptyData, apiErr.Type)
 		})
 	})
 }

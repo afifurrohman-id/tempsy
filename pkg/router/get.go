@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 )
@@ -28,7 +28,7 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        internal.ErrorTypeFileNotPublic,
+				Type:        utils.ErrorTypeFileNotPublic,
 				Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
 			})
 		}
@@ -36,7 +36,7 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 	}
 	if !fileData.IsPublic {
 		return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeFileNotPublic,
+			Type:        utils.ErrorTypeFileNotPublic,
 			Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
 		})
 	}
@@ -46,7 +46,7 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 
 	statusCode, fileByte, errs := agent.Bytes()
 	if len(errs) > 0 {
-		internal.Check(errs[0])
+		utils.Check(errs[0])
 	}
 
 	if statusCode != fiber.StatusOK {
@@ -72,7 +72,7 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        internal.ErrorTypeFileNotFound,
+				Type:        utils.ErrorTypeFileNotFound,
 				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
 			})
 		}
@@ -93,7 +93,7 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"))
-	internal.Check(err)
+	utils.Check(err)
 
 	wg.Add(1)
 	go func() {

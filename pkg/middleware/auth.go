@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
-	"github.com/afifurrohman-id/tempsy/internal/auth/oauth2"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/oauth2"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"golang.org/x/exp/slices"
@@ -38,14 +38,14 @@ func CheckAuth(ctx *fiber.Ctx) error {
 			if err == nil && tokenMap["jti"] == username {
 				return ctx.Next()
 			}
-			internal.LogErr(err)
+			utils.LogErr(err)
 		} else {
 			accountInfo, err := oauth2.GetGoogleAccountInfo(strings.TrimPrefix(authToken, auth.BearerPrefix))
 
 			if err == nil && username == accountInfo.UserName && accountInfo.VerifiedEmail {
 				return ctx.Next()
 			}
-			internal.LogErr(err)
+			utils.LogErr(err)
 		}
 	}
 

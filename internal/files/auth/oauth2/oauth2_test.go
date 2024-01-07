@@ -9,15 +9,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
 func init() {
-	internal.LogErr(godotenv.Load(path.Join("..", "..", "..", "configs", ".env")))
+	utils.LogErr(godotenv.Load(path.Join("..", "..", "..", "..", "configs", ".env")))
 }
 
 func TestOAuth2(test *testing.T) {

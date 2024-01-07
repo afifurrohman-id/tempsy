@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 )

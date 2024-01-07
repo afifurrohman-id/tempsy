@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
@@ -15,7 +15,7 @@ import (
 )
 
 func init() {
-	internal.LogErr(godotenv.Load(path.Join("..", "..", "configs", ".env")))
+	utils.LogErr(godotenv.Load(path.Join("..", "..", "..", "configs", ".env")))
 }
 
 func TestUnmarshalMetadata(test *testing.T) {

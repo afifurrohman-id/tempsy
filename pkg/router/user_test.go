@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"encoding/json"
@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
-	"github.com/afifurrohman-id/tempsy/internal/auth/oauth2"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/oauth2"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -28,7 +28,7 @@ func TestGetGuestToken(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -54,7 +54,7 @@ func TestGetGuestToken(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -65,7 +65,7 @@ func TestGetGuestToken(test *testing.T) {
 
 		assert.NotNil(test, apiErr)
 		assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		assert.Equal(test, internal.ErrorTypeHaveToken, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeHaveToken, apiErr.Type)
 	})
 }
 
@@ -105,7 +105,7 @@ func TestHandleGetUserInfo(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			body, err := io.ReadAll(res.Body)
@@ -131,7 +131,7 @@ func TestHandleGetUserInfo(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -142,6 +142,6 @@ func TestHandleGetUserInfo(test *testing.T) {
 
 		assert.NotNil(test, apiErr)
 		assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		assert.Equal(test, internal.ErrorTypeInvalidToken, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeInvalidToken, apiErr.Type)
 	})
 }

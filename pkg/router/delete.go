@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"context"
@@ -7,9 +7,9 @@ import (
 	"sync"
 
 	"cloud.google.com/go/storage"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"golang.org/x/sync/errgroup"
@@ -28,14 +28,14 @@ func HandleDeleteFile(ctx *fiber.Ctx) error {
 
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        internal.ErrorTypeFileNotFound,
+				Type:        utils.ErrorTypeFileNotFound,
 				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
 			})
 		}
-		internal.Check(err)
+		utils.Check(err)
 	}
 
-	internal.Check(store.DeleteObject(storeCtx, filePath))
+	utils.Check(store.DeleteObject(storeCtx, filePath))
 
 	return ctx.SendStatus(fiber.StatusNoContent)
 }
@@ -47,11 +47,11 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	filesData, err := store.GetAllObject(storeCtx, username)
-	internal.Check(err)
+	utils.Check(err)
 
 	if len(filesData) == 0 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeEmptyData,
+			Type:        utils.ErrorTypeEmptyData,
 			Description: fmt.Sprintf("Cannot delete empty data files, no data for user: %s", username),
 		})
 	}

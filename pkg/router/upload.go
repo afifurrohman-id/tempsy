@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"context"
@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"golang.org/x/exp/slices"
@@ -38,18 +38,18 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 	if len(ctx.Body()) < 1 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeEmptyFile,
+			Type:        utils.ErrorTypeEmptyFile,
 			Description: "Cannot Upload Empty File",
 		})
 	}
 
 	match, err := regexp.MatchString(`^[a-zA-Z0-9_-]+\.+[a-zA-Z0-9_-]+$`, fileName)
-	internal.Check(err)
+	utils.Check(err)
 
 	if !match {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeInvalidFileName,
-			Description: "File name must be alphanumeric and contain extension separated by dot, underscore, or dash",
+			Type:        utils.ErrorTypeInvalidFileName,
+			Description: "File name must be alphanumeric lowercase or uppercase split by underscore, or dash and contain extension separated by dot",
 		})
 	}
 
@@ -62,7 +62,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 			fileMetadata := new(models.DataFile)
 			if !slices.Contains(store.AcceptedContentType, fileHeader[fiber.HeaderContentType]) {
 				return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(&models.ApiError{
-					Type:        internal.ErrorTypeUnsupportedType,
+					Type:        utils.ErrorTypeUnsupportedType,
 					Description: fmt.Sprintf("Unsupported Content-Type: %s", fileHeader[fiber.HeaderContentType]),
 				})
 			}
@@ -73,7 +73,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 				log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-					Type:        internal.ErrorTypeInvalidHeaderFile,
+					Type:        utils.ErrorTypeInvalidHeaderFile,
 					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 				})
 			}
@@ -82,15 +82,15 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 				log.Errorf("Error Validate Expiry: %s", err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-					Type:        internal.ErrorTypeInvalidHeaderFile,
+					Type:        utils.ErrorTypeInvalidHeaderFile,
 					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 				})
 			}
 
-			internal.Check(store.UploadObject(storeCtx, filePath, ctx.Body(), fileMetadata))
+			utils.Check(store.UploadObject(storeCtx, filePath, ctx.Body(), fileMetadata))
 
 			dataFile, err = store.GetObject(storeCtx, filePath)
-			internal.Check(err)
+			utils.Check(err)
 
 			store.Format(dataFile)
 			return ctx.Status(fiber.StatusCreated).JSON(&dataFile)
@@ -100,7 +100,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusConflict).JSON(&models.ApiError{
-		Type:        internal.ErrorTypeFileExists,
+		Type:        utils.ErrorTypeFileExists,
 		Description: fmt.Sprintf("File: %s Already Exists", fileName),
 	})
 }

@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"context"
@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
@@ -21,7 +21,7 @@ import (
 )
 
 func init() {
-	internal.LogErr(godotenv.Load(path.Join("..", "..", "configs", ".env")))
+	utils.LogErr(godotenv.Load(path.Join("..", "..", "configs", ".env")))
 }
 
 func TestHandleGetAllFileData(test *testing.T) {
@@ -42,10 +42,10 @@ func TestHandleGetAllFileData(test *testing.T) {
 		defer cancel()
 
 		dataFiles, err := store.GetAllObject(storeCtx, username)
-		internal.Check(err)
+		utils.Check(err)
 
 		for _, dataFile := range dataFiles {
-			internal.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
+			utils.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
 		}
 	})
 
@@ -68,7 +68,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -90,7 +90,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -121,7 +121,7 @@ func TestHandleGetFileData(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.Check(store.DeleteObject(storeCtx, filePath))
+		utils.Check(store.DeleteObject(storeCtx, filePath))
 	})
 
 	require.NoError(test, store.UploadObject(storeCtx, filePath, fileByte, &models.DataFile{
@@ -138,7 +138,7 @@ func TestHandleGetFileData(test *testing.T) {
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -159,7 +159,7 @@ func TestHandleGetFileData(test *testing.T) {
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -170,7 +170,7 @@ func TestHandleGetFileData(test *testing.T) {
 		require.NoError(test, json.Unmarshal(body, &apiErr))
 
 		assert.NotNil(test, apiErr)
-		assert.Equal(test, internal.ErrorTypeFileNotFound, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeFileNotFound, apiErr.Type)
 		assert.Equal(test, fiber.StatusNotFound, res.StatusCode)
 	})
 }
@@ -191,10 +191,10 @@ func TestHandleGetPublicFile(test *testing.T) {
 		defer cancel()
 
 		dataFiles, err := store.GetAllObject(storeCtx, username)
-		internal.Check(err)
+		utils.Check(err)
 
 		for _, dataFile := range dataFiles {
-			internal.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
+			utils.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
 		}
 	})
 
@@ -225,7 +225,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -260,7 +260,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 			res, err := app.Test(req, 1500*10) // 15 seconds
 			require.NoError(test, err)
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			body, err := io.ReadAll(res.Body)
@@ -272,7 +272,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 
 			assert.NotNil(test, apiErr)
 			assert.Equal(test, fiber.StatusNotFound, res.StatusCode)
-			assert.Equal(test, internal.ErrorTypeFileNotPublic, apiErr.Type)
+			assert.Equal(test, utils.ErrorTypeFileNotPublic, apiErr.Type)
 		})
 	}
 }

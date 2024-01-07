@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"bytes"
@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -33,7 +33,7 @@ func TestHandleUpdateFile(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.Check(store.DeleteObject(storeCtx, filePath))
+		utils.Check(store.DeleteObject(storeCtx, filePath))
 	})
 
 	app.Put("/api/files/:username/:filename", HandleUpdateFile)
@@ -57,7 +57,7 @@ func TestHandleUpdateFile(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -85,7 +85,7 @@ func TestHandleUpdateFile(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -118,7 +118,7 @@ func TestHandleUpdateFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeFileNotFound,
+			errType:    utils.ErrorTypeFileNotFound,
 			statusCode: fiber.StatusNotFound,
 		},
 		{
@@ -130,7 +130,7 @@ func TestHandleUpdateFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeEmptyFile,
+			errType:    utils.ErrorTypeEmptyFile,
 			statusCode: fiber.StatusBadRequest,
 		},
 		{
@@ -142,7 +142,7 @@ func TestHandleUpdateFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     "test",
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeInvalidHeaderFile,
+			errType:    utils.ErrorTypeInvalidHeaderFile,
 			statusCode: fiber.StatusUnprocessableEntity,
 		},
 		{
@@ -154,7 +154,7 @@ func TestHandleUpdateFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeMismatchType,
+			errType:    utils.ErrorTypeMismatchType,
 			statusCode: fiber.StatusBadRequest,
 		},
 	}
@@ -169,7 +169,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			body, err := io.ReadAll(res.Body)

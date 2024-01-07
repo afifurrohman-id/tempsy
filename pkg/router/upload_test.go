@@ -1,4 +1,4 @@
-package files
+package router
 
 import (
 	"bytes"
@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -45,7 +45,7 @@ func TestHandleUploadFile(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.Check(store.DeleteObject(storeCtx, fmt.Sprintf("%s/%s", username, fileName)))
+		utils.Check(store.DeleteObject(storeCtx, fmt.Sprintf("%s/%s", username, fileName)))
 	})
 
 	app.Post("/api/files/:username", HandleUploadFile)
@@ -63,7 +63,7 @@ func TestHandleUploadFile(test *testing.T) {
 		require.NotEmpty(test, res)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -97,7 +97,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeFileExists,
+			errType:    utils.ErrorTypeFileExists,
 			statusCode: fiber.StatusConflict,
 		},
 		{
@@ -110,7 +110,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeEmptyFile,
+			errType:    utils.ErrorTypeEmptyFile,
 			statusCode: fiber.StatusBadRequest,
 		},
 		{
@@ -123,7 +123,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeInvalidFileName,
+			errType:    utils.ErrorTypeInvalidFileName,
 			statusCode: fiber.StatusBadRequest,
 		},
 		{
@@ -136,7 +136,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeUnsupportedType,
+			errType:    utils.ErrorTypeUnsupportedType,
 			statusCode: fiber.StatusUnsupportedMediaType,
 		},
 		{
@@ -148,7 +148,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderIsPublic:          "1",
 				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
 			},
-			errType:    internal.ErrorTypeInvalidHeaderFile,
+			errType:    utils.ErrorTypeInvalidHeaderFile,
 			statusCode: fiber.StatusUnprocessableEntity,
 		},
 	}
@@ -164,7 +164,7 @@ func TestHandleUploadFile(test *testing.T) {
 			require.NotEmpty(test, res)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			body, err := io.ReadAll(res.Body)
@@ -218,7 +218,7 @@ func TestValidateExpiry(test *testing.T) {
 		},
 		{
 			name:    "TestOnPrivateUrlLessThan2Seconds",
-			urlExp:  1, // 7 days + 1 seconds (in seconds)
+			urlExp:  1,
 			autoDel: time.Now().Add(1000 * time.Hour).UnixMilli(),
 			err:     "private_url_expires_must_be_less_than_7_days_in_seconds_and_more_than_2_seconds",
 		},

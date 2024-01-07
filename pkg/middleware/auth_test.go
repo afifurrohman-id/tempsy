@@ -7,11 +7,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
-	"github.com/afifurrohman-id/tempsy/internal/auth/oauth2"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/oauth2"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/require"
 )
@@ -30,7 +30,7 @@ func TestCheckHttpMethod(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			require.Equal(test, fiber.StatusOK, res.StatusCode)
@@ -43,7 +43,7 @@ func TestCheckHttpMethod(test *testing.T) {
 		require.NoError(test, err)
 
 		test.Cleanup(func() {
-			internal.LogErr(res.Body.Close())
+			utils.LogErr(res.Body.Close())
 		})
 
 		body, err := io.ReadAll(res.Body)
@@ -79,7 +79,7 @@ func TestCheckAuth(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			require.Equal(test, fiber.StatusOK, res.StatusCode)
@@ -90,7 +90,7 @@ func TestCheckAuth(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			require.Equal(test, fiber.StatusUnauthorized, res.StatusCode)
@@ -110,7 +110,7 @@ func TestCheckAuth(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 		})
 		test.Run("TestUnauthorized", func(test *testing.T) {
@@ -119,7 +119,7 @@ func TestCheckAuth(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			require.Equal(test, fiber.StatusUnauthorized, res.StatusCode)

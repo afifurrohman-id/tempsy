@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/api/iterator"
@@ -22,7 +22,7 @@ func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) 
 	if err != nil {
 		return nil, err
 	}
-	defer internal.LogErr(client.Close())
+	defer utils.LogErr(client.Close())
 
 	var (
 		bucket  = client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET"))
@@ -105,7 +105,7 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 
 	fileData.Url = url
 
-	defer internal.LogErr(client.Close())
+	defer utils.LogErr(client.Close())
 	return fileData, nil
 }
 
@@ -119,7 +119,7 @@ func UploadObject(ctx context.Context, filePath string, fileByte []byte, fileDat
 	if err != nil {
 		return err
 	}
-	defer internal.LogErr(client.Close())
+	defer utils.LogErr(client.Close())
 
 	obj := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath)
 
@@ -147,7 +147,7 @@ func DeleteObject(ctx context.Context, filePath string) error {
 	if err != nil {
 		return err
 	}
-	defer internal.LogErr(client.Close())
+	defer utils.LogErr(client.Close())
 
 	obj := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath)
 

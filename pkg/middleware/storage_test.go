@@ -11,17 +11,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/require"
 )
 
 func init() {
-	internal.LogErr(godotenv.Load(path.Join("..", "..", "..", "configs", ".env")))
+	utils.LogErr(godotenv.Load(path.Join("..", "..", "configs", ".env")))
 }
 
 func TestPurgeAnonymousAccount(test *testing.T) {
@@ -58,10 +58,10 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 
 		for _, table := range testsTables {
 			dataFiles, err := store.GetAllObject(storeCtx, table.username)
-			internal.Check(err)
+			utils.Check(err)
 
 			for _, dataFile := range dataFiles {
-				internal.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
+				utils.LogErr(store.DeleteObject(storeCtx, dataFile.Name))
 			}
 
 		}
@@ -69,7 +69,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 
 	app.Get("/purge/:username", PurgeAnonymousAccount, func(ctx *fiber.Ctx) error {
 		files, err := store.GetAllObject(storeCtx, ctx.Params("username"))
-		internal.Check(err)
+		utils.Check(err)
 
 		return ctx.JSON(&files)
 	})
@@ -92,7 +92,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			body, err := io.ReadAll(res.Body)

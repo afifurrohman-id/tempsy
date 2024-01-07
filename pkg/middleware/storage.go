@@ -9,9 +9,9 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
-	store "github.com/afifurrohman-id/tempsy/internal/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/gofiber/fiber/v2/middleware/cache"
@@ -52,7 +52,7 @@ func PurgeAnonymousAccount(ctx *fiber.Ctx) error {
 						return nil
 					})
 
-					internal.LogErr(eg.Wait())
+					utils.LogErr(eg.Wait())
 
 				}
 			} else {
@@ -93,7 +93,7 @@ func AutoDeleteScheduler(ctx *fiber.Ctx) error {
 		return nil
 	})
 
-	internal.LogErr(eg.Wait())
+	utils.LogErr(eg.Wait())
 
 	return ctx.Next()
 }

@@ -5,9 +5,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/pkg/files"
-	"github.com/afifurrohman-id/tempsy/pkg/files/middleware"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
+	"github.com/afifurrohman-id/tempsy/pkg/middleware"
+	"github.com/afifurrohman-id/tempsy/pkg/router"
 	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
@@ -22,20 +22,20 @@ import (
 
 func init() {
 	if os.Getenv("APP_ENV") != "production" {
-		internal.LogErr(godotenv.Load(path.Join("configs", ".env")))
+		utils.LogErr(godotenv.Load(path.Join("configs", ".env")))
 	}
 }
 
 func main() {
 	loggerFile, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0200)
-	internal.Check(err)
+	utils.Check(err)
 
 	fileInfo, err := loggerFile.Stat()
-	internal.Check(err)
+	utils.Check(err)
 
 	// truncate file, if size more than 15KB
 	if fileInfo.Size() > int64(15<<10) {
-		internal.LogErr(os.Truncate(loggerFile.Name(), 0))
+		utils.LogErr(os.Truncate(loggerFile.Name(), 0))
 	}
 
 	multiWriter := io.MultiWriter(loggerFile, os.Stdout)
@@ -69,21 +69,21 @@ func main() {
 	})
 
 	routeAuthApi := app.Group("/auth")
-	routeAuthApi.Get("/userinfo/me", middleware.RateLimiterProcessing, etag.New(), files.HandleGetUserInfo)
-	routeAuthApi.Get("/guest/token", middleware.RateLimiterGuestToken, files.HandleGetGuestToken)
+	routeAuthApi.Get("/userinfo/me", middleware.RateLimiterProcessing, etag.New(), router.HandleGetUserInfo)
+	routeAuthApi.Get("/guest/token", middleware.RateLimiterGuestToken, router.HandleGetGuestToken)
 
 	routeFilesByUsername := app.Group("/files/:username", middleware.PurgeAnonymousAccount, middleware.AutoDeleteScheduler)
-	routeFilesByUsername.Get("/public/:filename", middleware.Cache, files.HandleGetPublicFile)
-	routeFilesByUsername.Get("/", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), files.HandleGetAllFileData)
-	routeFilesByUsername.Get("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), files.HandleGetFileData)
-	routeFilesByUsername.Post("/", middleware.CheckAuth, middleware.RateLimiterProcessing, files.HandleUploadFile)
-	routeFilesByUsername.Put("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, files.HandleUpdateFile)
-	routeFilesByUsername.Delete("/", middleware.CheckAuth, middleware.RateLimiterProcessing, files.HandleDeleteAllFile)
-	routeFilesByUsername.Delete("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, files.HandleDeleteFile)
+	routeFilesByUsername.Get("/public/:filename", middleware.Cache, router.HandleGetPublicFile)
+	routeFilesByUsername.Get("/", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), router.HandleGetAllFileData)
+	routeFilesByUsername.Get("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), router.HandleGetFileData)
+	routeFilesByUsername.Post("/", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleUploadFile)
+	routeFilesByUsername.Put("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleUpdateFile)
+	routeFilesByUsername.Delete("/", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleDeleteAllFile)
+	routeFilesByUsername.Delete("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleDeleteFile)
 
 	if err := app.Listen(":" + os.Getenv("PORT")); err != nil {
 		log.Panic(err)
 	}
 
-	defer internal.LogErr(loggerFile.Close())
+	defer utils.LogErr(loggerFile.Close())
 }

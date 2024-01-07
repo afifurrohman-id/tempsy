@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/stretchr/testify/assert"
@@ -26,7 +26,7 @@ func TestCreateStorageClient(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.LogErr(client.Close())
+		utils.LogErr(client.Close())
 	})
 
 	assert.NotEmpty(test, client)
@@ -43,7 +43,7 @@ func TestGetAllObject(test *testing.T) {
 		defer cancel()
 
 		for _, fileName := range fileNames {
-			internal.LogErr(DeleteObject(storeCtx, fileName))
+			utils.LogErr(DeleteObject(storeCtx, fileName))
 		}
 	})
 
@@ -81,7 +81,7 @@ func TestGetObject(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.LogErr(DeleteObject(storeCtx, filePath))
+		utils.LogErr(DeleteObject(storeCtx, filePath))
 	})
 
 	require.NoError(test, UploadObject(storeCtx, filePath, objByte, &models.DataFile{
@@ -129,7 +129,7 @@ func TestUploadObject(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.LogErr(DeleteObject(storeCtx, filePath))
+		utils.LogErr(DeleteObject(storeCtx, filePath))
 	})
 
 	test.Run("TestOk", func(test *testing.T) {
@@ -164,8 +164,8 @@ func TestDeleteObject(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		internal.LogErr(client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).Delete(storeCtx))
-		internal.LogErr(client.Close())
+		utils.LogErr(client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).Delete(storeCtx))
+		utils.LogErr(client.Close())
 	})
 
 	writer := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).NewWriter(storeCtx)

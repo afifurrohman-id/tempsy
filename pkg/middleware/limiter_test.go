@@ -4,9 +4,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/auth"
-	"github.com/afifurrohman-id/tempsy/internal/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth"
+	"github.com/afifurrohman-id/tempsy/internal/files/auth/guest"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -27,7 +27,7 @@ func TestLimitAuthTokenProcess(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			if i < MaxReqProcsPerSeconds {
@@ -47,7 +47,7 @@ func TestLimitAuthTokenProcess(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			assert.Equal(test, fiber.StatusOK, res.StatusCode)
@@ -69,7 +69,7 @@ func TestLimitGuestToken(test *testing.T) {
 			require.NoError(test, err)
 
 			test.Cleanup(func() {
-				internal.LogErr(res.Body.Close())
+				utils.LogErr(res.Body.Close())
 			})
 
 			if i < MaxReqGuestTokenPerSeconds {
@@ -108,7 +108,7 @@ func TestLimitGuestToken(test *testing.T) {
 					require.NoError(test, err)
 
 					test.Cleanup(func() {
-						internal.LogErr(res.Body.Close())
+						utils.LogErr(res.Body.Close())
 					})
 
 					if i < MaxReqGuestTokenPerSeconds {

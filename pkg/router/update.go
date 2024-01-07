@@ -1,16 +1,17 @@
-package files
+package router
 
 import (
-	"cloud.google.com/go/storage"
 	"context"
 	"errors"
 	"fmt"
-	"github.com/afifurrohman-id/tempsy/internal"
-	"github.com/afifurrohman-id/tempsy/internal/models"
-	"github.com/afifurrohman-id/tempsy/internal/storage"
+	"strings"
+
+	"cloud.google.com/go/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/models"
+	store "github.com/afifurrohman-id/tempsy/internal/files/storage"
+	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"strings"
 )
 
 // HandleUpdateFile Updates single file by name
@@ -25,7 +26,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 	if len(ctx.Body()) < 1 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeEmptyFile,
+			Type:        utils.ErrorTypeEmptyFile,
 			Description: "Cannot Update File with Empty File",
 		})
 	}
@@ -35,7 +36,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        internal.ErrorTypeFileNotFound,
+				Type:        utils.ErrorTypeFileNotFound,
 				Description: fmt.Sprintf("File %s Is Not Found", fileName),
 			})
 		}
@@ -44,7 +45,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 	if !strings.Contains(file.ContentType, ctx.Get(fiber.HeaderContentType)) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeMismatchType,
+			Type:        utils.ErrorTypeMismatchType,
 			Description: "Please use the same content type as the original file",
 		})
 	}
@@ -58,7 +59,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeInvalidHeaderFile,
+			Type:        utils.ErrorTypeInvalidHeaderFile,
 			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 		})
 	}
@@ -67,18 +68,18 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		log.Errorf("Error Validate Expiry: %s", err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-			Type:        internal.ErrorTypeInvalidHeaderFile,
+			Type:        utils.ErrorTypeInvalidHeaderFile,
 			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 		})
 	}
 
 	fileMetadata.Name = fileName // Bypass file name, for preventing file name change
 
-	internal.Check(store.DeleteObject(storeCtx, filePath))
-	internal.Check(store.UploadObject(storeCtx, filePath, ctx.Body(), fileMetadata))
+	utils.Check(store.DeleteObject(storeCtx, filePath))
+	utils.Check(store.UploadObject(storeCtx, filePath, ctx.Body(), fileMetadata))
 
 	fileData, err := store.GetObject(storeCtx, filePath)
-	internal.Check(err)
+	utils.Check(err)
 
 	store.Format(fileData)
 	return ctx.JSON(&fileData)
