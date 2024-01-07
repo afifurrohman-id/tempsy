@@ -56,7 +56,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
 
 	if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
-		log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
+		log.Error("Error Unmarshal File Metadata: " + err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Type:        utils.ErrorTypeInvalidHeaderFile,
@@ -65,7 +65,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	}
 
 	if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
-		log.Errorf("Error Validate Expiry: %s", err.Error())
+		log.Error("Error Validate Expiry: " + err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Type:        utils.ErrorTypeInvalidHeaderFile,

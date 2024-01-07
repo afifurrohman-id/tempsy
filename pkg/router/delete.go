@@ -52,7 +52,7 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 	if len(filesData) == 0 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Type:        utils.ErrorTypeEmptyData,
-			Description: fmt.Sprintf("Cannot delete empty data files, no data for user: %s", username),
+			Description: "Cannot delete empty data files, no data for user: " + username,
 		})
 	}
 

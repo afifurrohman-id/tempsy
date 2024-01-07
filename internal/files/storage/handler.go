@@ -77,7 +77,9 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 		return nil, err
 	}
 
-	attrs, err := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath).Attrs(ctx)
+	bucket := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET"))
+
+	attrs, err := bucket.Object(filePath).Attrs(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +95,7 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 		return nil, err
 	}
 
-	url, err := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).SignedURL(filePath, &storage.SignedURLOptions{
+	url, err := bucket.SignedURL(filePath, &storage.SignedURLOptions{
 		Method:   fiber.MethodGet,
 		Scheme:   storage.SigningSchemeV4,
 		Expires:  time.Now().Add(time.Duration(fileData.PrivateUrlExpires) * time.Second),

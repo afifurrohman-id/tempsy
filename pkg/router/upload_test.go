@@ -36,7 +36,7 @@ func TestHandleUploadFile(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		fileName = fmt.Sprintf("%s.txt", strings.ToLower(test.Name()))
+		fileName = strings.ToLower(test.Name()) + ".txt"
 		fileByte = []byte(test.Name())
 	)
 
@@ -56,7 +56,7 @@ func TestHandleUploadFile(test *testing.T) {
 		req.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 		req.Header.Set(store.HeaderIsPublic, "1")
 		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
-		req.Header.Set(store.HeaderPrivateUrlExpires, fmt.Sprintf("%d", 10)) // 10 seconds
+		req.Header.Set(store.HeaderPrivateUrlExpires, "10") // 10 seconds
 
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
@@ -95,7 +95,7 @@ func TestHandleUploadFile(test *testing.T) {
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeFileExists,
 			statusCode: fiber.StatusConflict,
@@ -108,7 +108,7 @@ func TestHandleUploadFile(test *testing.T) {
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeEmptyFile,
 			statusCode: fiber.StatusBadRequest,
@@ -121,7 +121,7 @@ func TestHandleUploadFile(test *testing.T) {
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidFileName,
 			statusCode: fiber.StatusBadRequest,
@@ -134,7 +134,7 @@ func TestHandleUploadFile(test *testing.T) {
 				fiber.HeaderContentType:       fiber.MIMEOctetStream,
 				store.HeaderIsPublic:          "1",
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeUnsupportedType,
 			statusCode: fiber.StatusUnsupportedMediaType,
@@ -146,7 +146,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          "test.json",
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidHeaderFile,
 			statusCode: fiber.StatusUnprocessableEntity,

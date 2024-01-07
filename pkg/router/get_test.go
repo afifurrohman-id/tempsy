@@ -110,7 +110,7 @@ func TestHandleGetFileData(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		fileName = fmt.Sprintf("%s.txt", strings.ToLower(test.Name()))
+		fileName = strings.ToLower(test.Name()) + ".txt"
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 		fileByte = []byte(test.Name())
 	)
@@ -133,7 +133,7 @@ func TestHandleGetFileData(test *testing.T) {
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {
-		req := httptest.NewRequest(fiber.MethodGet, fmt.Sprintf("/%s", filePath), nil)
+		req := httptest.NewRequest(fiber.MethodGet, "/"+filePath, nil)
 
 		res, err := app.Test(req, 1500*10) // 15 seconds
 		require.NoError(test, err)
@@ -200,7 +200,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 
 	filesToUpload := []*models.DataFile{
 		{
-			Name:              fmt.Sprintf("%s/app.txt", username),
+			Name:              username + "/app.txt",
 			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          true,

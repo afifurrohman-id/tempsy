@@ -86,7 +86,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 
 	for _, table := range testsTables {
 		test.Run(table.name, func(test *testing.T) {
-			req := httptest.NewRequest(fiber.MethodGet, fmt.Sprintf("/purge/%s", table.username), nil)
+			req := httptest.NewRequest(fiber.MethodGet, "/purge/"+table.username, nil)
 
 			res, err := app.Test(req, 1500*10) // 15 seconds
 			require.NoError(test, err)

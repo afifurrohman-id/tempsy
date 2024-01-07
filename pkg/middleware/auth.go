@@ -15,10 +15,11 @@ import (
 )
 
 func CheckHttpMethod(ctx *fiber.Ctx) error {
-	if !slices.Contains(auth.AllowedHttpMethod, ctx.Method()) {
+	method := ctx.Method()
+	if !slices.Contains(auth.AllowedHttpMethod, method) {
 		return ctx.Status(fiber.StatusMethodNotAllowed).JSON(&models.ApiError{
 			Type:        "method_not_allowed",
-			Description: fmt.Sprintf("Http Method: %s Is Not Allowed", ctx.Method()),
+			Description: fmt.Sprintf("Http Method: %s Is Not Allowed", method),
 		})
 	}
 

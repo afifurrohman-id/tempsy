@@ -16,10 +16,11 @@ func CatchServerError(ctx *fiber.Ctx, err error) error {
 	if errors.As(err, &fiberErr) {
 		log.Error("Fiber - ", fiberErr)
 
-		if fiberErr.Code == fiber.StatusMethodNotAllowed && slices.Contains[[]string](auth.AllowedHttpMethod, ctx.Method()) || fiberErr.Code == fiber.StatusNotFound {
+		method := ctx.Method()
+		if fiberErr.Code == fiber.StatusMethodNotAllowed && slices.Contains[[]string](auth.AllowedHttpMethod, method) || fiberErr.Code == fiber.StatusNotFound {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 				Type:        "resource_not_found",
-				Description: fmt.Sprintf("Path %s for Http Method %s Is Not Found", ctx.Path(), ctx.Method()),
+				Description: fmt.Sprintf("Path %s for Http Method %s Is Not Found", ctx.Path(), method),
 			})
 		}
 

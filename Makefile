@@ -21,6 +21,12 @@ clean: deployments/compose.yaml
 build-image: build/package/Containerfile
 	docker build -f build/package/Containerfile -t tempsy .
 
+git-mod-update:
+	git submodule update --remote --merge
+
+fmt:
+	go fix ./... && go fmt ./... && go vet ./...
+
 lint-image: build/package/Containerfile
 	docker run --rm -i hadolint/hadolint:latest-alpine < build/package/Containerfile
 	docker run --rm -i hadolint/hadolint:latest-alpine < build/package/test.Containerfile

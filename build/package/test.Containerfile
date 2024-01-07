@@ -12,5 +12,7 @@ RUN apk add --no-cache \
     ca-certificates=20230506-r0 && \
     update-ca-certificates
 
-RUN go fmt ./... && \
+RUN go fix ./... && \
+    go fmt ./... && \
+    go vet ./... && \
     go mod tidy

@@ -24,7 +24,7 @@ func TestHandleUpdateFile(test *testing.T) {
 
 	var (
 		app      = fiber.New()
-		fileName = fmt.Sprintf("%s.txt", strings.ToLower(test.Name()))
+		fileName = strings.ToLower(test.Name()) + ".txt"
 		filePath = fmt.Sprintf("%s/%s", username, fileName)
 		fileByte = []byte(test.Name())
 	)
@@ -116,7 +116,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeFileNotFound,
 			statusCode: fiber.StatusNotFound,
@@ -128,7 +128,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeEmptyFile,
 			statusCode: fiber.StatusBadRequest,
@@ -140,7 +140,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderAutoDeletedAt:     "test",
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidHeaderFile,
 			statusCode: fiber.StatusUnprocessableEntity,
@@ -152,7 +152,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextXML,
 				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
-				store.HeaderPrivateUrlExpires: fmt.Sprintf("%d", 10), // 10 seconds
+				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeMismatchType,
 			statusCode: fiber.StatusBadRequest,

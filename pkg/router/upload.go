@@ -63,14 +63,14 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 			if !slices.Contains(store.AcceptedContentType, fileHeader[fiber.HeaderContentType]) {
 				return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(&models.ApiError{
 					Type:        utils.ErrorTypeUnsupportedType,
-					Description: fmt.Sprintf("Unsupported Content-Type: %s", fileHeader[fiber.HeaderContentType]),
+					Description: "Unsupported Content-Type: " + fileHeader[fiber.HeaderContentType],
 				})
 			}
 
 			fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
 
 			if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
-				log.Errorf("Error Unmarshal File Metadata: %s", err.Error())
+				log.Error("Error Unmarshal File Metadata: " + err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 					Type:        utils.ErrorTypeInvalidHeaderFile,
@@ -79,7 +79,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 			}
 
 			if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
-				log.Errorf("Error Validate Expiry: %s", err.Error())
+				log.Error("Error Validate Expiry: " + err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 					Type:        utils.ErrorTypeInvalidHeaderFile,
