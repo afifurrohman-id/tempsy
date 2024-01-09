@@ -3,9 +3,9 @@ module github.com/afifurrohman-id/tempsy
 go 1.20
 
 require (
-	cloud.google.com/go/storage v1.35.1
+	cloud.google.com/go/storage v1.36.0
 	github.com/gofiber/contrib/swagger v1.1.1
-	github.com/gofiber/fiber/v2 v2.51.0
+	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
