@@ -1,5 +1,5 @@
-MAIN_FILE:=cmd/files/main.go
-EXE_NAME:=tempsy
+MAIN_FILE=cmd/files/main.go
+EXE_NAME=tempsy
 ifeq ($(go env GOOS), windows)
 		EXE_NAME=tempsy.exe
 endif
