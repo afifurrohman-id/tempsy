@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -92,8 +93,27 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
-	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"))
+	// TODO: Filter unit test
+	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"), func(data *models.DataFile) bool {
+		if size := ctx.QueryInt("size"); size > 0 && int64(size) != data.Size {
+			return false
+		}
+
+		if name := ctx.Query("name"); name != "" && !strings.Contains(data.Name, name) {
+			return false
+		}
+
+		if mimeType := ctx.Query("type"); mimeType != "" && !strings.Contains(data.ContentType, mimeType) {
+			return false
+		}
+
+		return true
+	})
 	utils.Check(err)
+
+	if limitMax := ctx.QueryInt("limit"); limitMax > 0 && limitMax < len(filesData) {
+		filesData = filesData[:limitMax]
+	}
 
 	wg.Add(1)
 	go func() {

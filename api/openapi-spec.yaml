@@ -27,6 +27,34 @@ paths:
       parameters:
         - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
+        - name: type
+          in: query
+          description: Filter by file mime type, using like equalization not strict equalization
+          required: false
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: Filter by name, using like equalization not strict equalization
+          required: false
+          schema:
+            type: string
+        - name: size
+          in: query
+          required: false
+          description: Filter by file size
+          schema:
+            type: integer
+            format: int64
+        - name: limit
+          required: false
+          in: query
+          description: Limit List file
+          schema:
+            type: integer
+            format: int64
+              
+
       responses:
         200:
           description: Success

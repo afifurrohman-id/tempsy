@@ -17,7 +17,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) {
+func GetAllObject(ctx context.Context, path string, filter ...func(data *models.DataFile) bool) ([]*models.DataFile, error) {
 	client, err := createClient(ctx)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,14 @@ func GetAllObject(ctx context.Context, path string) ([]*models.DataFile, error) 
 				return err
 			}
 
-			*dataFiles = append(*dataFiles, dataFile)
+			if len(filter) > 0 && filter[0] != nil {
+				if filter[0](dataFile) {
+					*dataFiles = append(*dataFiles, dataFile)
+				}
+			} else {
+				*dataFiles = append(*dataFiles, dataFile)
+			}
+
 		}
 
 		if len(*dataFiles) == 0 {
