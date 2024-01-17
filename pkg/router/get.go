@@ -94,7 +94,7 @@ func HandleGetAllFileData(ctx *fiber.Ctx) error {
 	defer cancel()
 
 	// TODO: Filter unit test
-	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"), func(data *models.DataFile) bool {
+	filesData, err := store.ListObjects(storeCtx, ctx.Params("username"), func(data *models.DataFile) bool {
 		if size := ctx.QueryInt("size"); size > 0 && int64(size) != data.Size {
 			return false
 		}

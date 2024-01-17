@@ -46,7 +46,7 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
-	filesData, err := store.GetAllObject(storeCtx, username)
+	filesData, err := store.ListObjects(storeCtx, username)
 	utils.Check(err)
 
 	if len(filesData) == 0 {

@@ -41,7 +41,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		dataFiles, err := store.GetAllObject(storeCtx, username)
+		dataFiles, err := store.ListObjects(storeCtx, username)
 		utils.Check(err)
 
 		for _, dataFile := range dataFiles {
@@ -190,7 +190,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		dataFiles, err := store.GetAllObject(storeCtx, username)
+		dataFiles, err := store.ListObjects(storeCtx, username)
 		utils.Check(err)
 
 		for _, dataFile := range dataFiles {

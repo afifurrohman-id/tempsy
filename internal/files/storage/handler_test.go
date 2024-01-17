@@ -57,14 +57,14 @@ func TestGetAllObject(test *testing.T) {
 	}
 
 	test.Run("TestOk", func(test *testing.T) {
-		dataFiles, err := GetAllObject(storeCtx, username)
+		dataFiles, err := ListObjects(storeCtx, username)
 		require.NoError(test, err)
 		assert.NotEmpty(test, dataFiles)
 		assert.Len(test, dataFiles, len(fileNames))
 	})
 
 	test.Run("TestNotFound", func(test *testing.T) {
-		dataFiles, err := GetAllObject(storeCtx, "not_found")
+		dataFiles, err := ListObjects(storeCtx, "not_found")
 		require.NoError(test, err)
 		assert.Empty(test, dataFiles)
 	})

@@ -29,7 +29,7 @@ func PurgeAnonymousAccount(ctx *fiber.Ctx) error {
 					storeCtx, cancel := context.WithTimeout(context.Background(), timeout)
 					defer cancel()
 
-					filesData, err := store.GetAllObject(storeCtx, username)
+					filesData, err := store.ListObjects(storeCtx, username)
 					if err != nil {
 						log.Error(err)
 						return ctx.Next()
@@ -68,7 +68,7 @@ func AutoDeleteScheduler(ctx *fiber.Ctx) error {
 	storeCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	filesData, err := store.GetAllObject(storeCtx, ctx.Params("username"))
+	filesData, err := store.ListObjects(storeCtx, ctx.Params("username"))
 	if err != nil {
 		log.Error(err)
 		return ctx.Next()

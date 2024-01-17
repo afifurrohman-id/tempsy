@@ -17,7 +17,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func GetAllObject(ctx context.Context, path string, filter ...func(data *models.DataFile) bool) ([]*models.DataFile, error) {
+func ListObjects(ctx context.Context, path string, filter ...func(data *models.DataFile) bool) ([]*models.DataFile, error) {
 	client, err := createClient(ctx)
 	if err != nil {
 		return nil, err

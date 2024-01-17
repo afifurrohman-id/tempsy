@@ -63,7 +63,7 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 	defer cancel()
 
-	files, err := store.GetAllObject(storeCtx, userinfo.UserName)
+	files, err := store.ListObjects(storeCtx, userinfo.UserName)
 	utils.Check(err)
 
 	userinfo.TotalFiles = len(files)

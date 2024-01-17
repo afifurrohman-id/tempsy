@@ -29,7 +29,7 @@ func TestHandleDelete(test *testing.T) {
 	test.Cleanup(func() {
 		defer cancel()
 
-		dataFiles, err := store.GetAllObject(storeCtx, username)
+		dataFiles, err := store.ListObjects(storeCtx, username)
 		utils.Check(err)
 
 		for _, dataFile := range dataFiles {

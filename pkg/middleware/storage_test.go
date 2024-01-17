@@ -57,7 +57,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 		defer cancel()
 
 		for _, table := range testsTables {
-			dataFiles, err := store.GetAllObject(storeCtx, table.username)
+			dataFiles, err := store.ListObjects(storeCtx, table.username)
 			utils.Check(err)
 
 			for _, dataFile := range dataFiles {
@@ -68,7 +68,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 	})
 
 	app.Get("/purge/:username", PurgeAnonymousAccount, func(ctx *fiber.Ctx) error {
-		files, err := store.GetAllObject(storeCtx, ctx.Params("username"))
+		files, err := store.ListObjects(storeCtx, ctx.Params("username"))
 		utils.Check(err)
 
 		return ctx.JSON(&files)
