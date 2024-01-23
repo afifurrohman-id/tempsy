@@ -27,8 +27,8 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	if len(ctx.Body()) < 1 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeEmptyFile,
-			Description: "Cannot Update File with Empty File",
+				Kind:        utils.ErrorTypeEmptyFile,
+				Description: "Cannot Update File with Empty File",
 			},
 		})
 	}
@@ -39,8 +39,8 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 				Error: &models.Error{
-				Kind:        utils.ErrorTypeFileNotFound,
-				Description: fmt.Sprintf("File %s Is Not Found", fileName),
+					Kind:        utils.ErrorTypeFileNotFound,
+					Description: fmt.Sprintf("File %s Is Not Found", fileName),
 				},
 			})
 		}
@@ -50,8 +50,8 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	if !strings.Contains(file.ContentType, ctx.Get(fiber.HeaderContentType)) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeMismatchType,
-			Description: "Please use the same content type as the original file",
+				Kind:        utils.ErrorTypeMismatchType,
+				Description: "Please use the same content type as the original file",
 			},
 		})
 	}
@@ -66,8 +66,8 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeInvalidHeaderFile,
-			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+				Kind:        utils.ErrorTypeInvalidHeaderFile,
+				Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 			},
 		})
 	}
@@ -77,8 +77,8 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeInvalidHeaderFile,
-			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+				Kind:        utils.ErrorTypeInvalidHeaderFile,
+				Description: strings.Join(strings.Split(err.Error(), "_"), " "),
 			},
 		})
 	}

@@ -29,8 +29,8 @@ func HandleDeleteFile(ctx *fiber.Ctx) error {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 				Error: &models.Error{
-				Kind:        utils.ErrorTypeFileNotFound,
-				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
+					Kind:        utils.ErrorTypeFileNotFound,
+					Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
 				},
 			})
 		}
@@ -54,8 +54,8 @@ func HandleDeleteAllFile(ctx *fiber.Ctx) error {
 	if len(filesData) == 0 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeEmptyData,
-			Description: "Cannot delete empty data files, no data for user: " + username,
+				Kind:        utils.ErrorTypeEmptyData,
+				Description: "Cannot delete empty data files, no data for user: " + username,
 			},
 		})
 	}

@@ -19,7 +19,7 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 
 	if _, err := guest.ParseToken(trimAuth); err == nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Error: &models.Error {
+			Error: &models.Error{
 				Kind:        utils.ErrorTypeHaveToken,
 				Description: "You already have valid token",
 			},
@@ -28,7 +28,7 @@ func HandleGetGuestToken(ctx *fiber.Ctx) error {
 
 	if _, err := oauth2.GetGoogleAccountInfo(trimAuth); err == nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Error: &models.Error {
+			Error: &models.Error{
 				Kind:        utils.ErrorTypeHaveToken,
 				Description: "You already have valid token",
 			},
@@ -57,7 +57,7 @@ func HandleGetUserInfo(ctx *fiber.Ctx) error {
 		goUser, err := oauth2.GetGoogleAccountInfo(token)
 		if err != nil {
 			return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-				Error: &models.Error {
+				Error: &models.Error{
 					Kind:        utils.ErrorTypeInvalidToken,
 					Description: "GuestToken is not valid, Cannot get user info",
 				},

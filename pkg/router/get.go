@@ -30,8 +30,8 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 				Error: &models.Error{
-				Kind:        utils.ErrorTypeFileNotPublic,
-				Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
+					Kind:        utils.ErrorTypeFileNotPublic,
+					Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
 				},
 			})
 		}
@@ -40,8 +40,8 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 	if !fileData.IsPublic {
 		return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 			Error: &models.Error{
-			Kind:        utils.ErrorTypeFileNotPublic,
-			Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
+				Kind:        utils.ErrorTypeFileNotPublic,
+				Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
 			},
 		})
 	}
@@ -78,8 +78,8 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
 				Error: &models.Error{
-				Kind:        utils.ErrorTypeFileNotFound,
-				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
+					Kind:        utils.ErrorTypeFileNotFound,
+					Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
 				},
 			})
 		}
