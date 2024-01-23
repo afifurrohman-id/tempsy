@@ -71,7 +71,7 @@ var AcceptedContentType = []string{
 }
 
 const (
-	HeaderAutoDeletedAt     = "File-Auto-Deleted-At"
+	HeaderAutoDeleteAt     = "File-Auto-Delete-At"
 	HeaderPrivateUrlExpires = "File-Private-Url-Expires"
 	HeaderIsPublic          = "File-Is-Public"
 	HeaderFileName          = "File-Name"
@@ -90,7 +90,7 @@ func createClient(ctx context.Context) (*storage.Client, error) {
 }
 
 func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) error {
-	autoDeletedAt, err := strconv.ParseInt(metadata[HeaderAutoDeletedAt], 10, 64)
+	autoDeleteAt, err := strconv.ParseInt(metadata[HeaderAutoDeleteAt], 10, 64)
 	if err != nil {
 		return errors.New("auto_deleted_at_must_be_valid_integer")
 	}
@@ -117,7 +117,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 
 	}
 
-	fileData.AutoDeleteAt = autoDeletedAt
+	fileData.AutoDeleteAt = autoDeleteAt
 	fileData.PrivateUrlExpires = uint(privateUrlInt64)
 	fileData.IsPublic = isPublic
 

@@ -55,7 +55,7 @@ func TestHandleUploadFile(test *testing.T) {
 		req.Header.Set(store.HeaderFileName, fileName)
 		req.Header.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 		req.Header.Set(store.HeaderIsPublic, "1")
-		req.Header.Set(store.HeaderAutoDeletedAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
+		req.Header.Set(store.HeaderAutoDeleteAt, fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()))
 		req.Header.Set(store.HeaderPrivateUrlExpires, "10") // 10 seconds
 
 		res, err := app.Test(req, 1500*10) // 15 seconds
@@ -94,7 +94,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          fileName,
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeFileExists,
@@ -107,7 +107,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          fileName,
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeEmptyFile,
@@ -120,7 +120,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          "example",
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidFileName,
@@ -133,7 +133,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          "1.json",
 				fiber.HeaderContentType:       fiber.MIMEOctetStream,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeUnsupportedType,
@@ -189,23 +189,23 @@ func TestValidateExpiry(test *testing.T) {
 		autoDel int64
 	}{
 		{
-			name:    "TestOkPrivateUrlNotLaterThanAutoDeletedAt",
+			name:    "TestOkPrivateUrlNotLaterThanAutoDeleteAt",
 			urlExp:  10,
 			autoDel: time.Now().Add(1 * time.Minute).UnixMilli(),
 		},
 		{
-			name:    "TestOKAutoDeletedAtNotLaterThan1YearFromNow",
+			name:    "TestOKAutoDeleteAtNotLaterThan1YearFromNow",
 			urlExp:  10,
 			autoDel: time.Now().Add(8766 * time.Hour).UnixMilli(),
 		},
 		{
-			name:    "TestOnPrivateUrlLaterThanAutoDeletedAt",
+			name:    "TestOnPrivateUrlLaterThanAutoDeleteAt",
 			urlExp:  10,
 			autoDel: time.Now().Add(9 * time.Second).UnixMilli(),
 			err:     "private_url_expires_cannot_be_later_than_auto_deleted_at_starting_from_now",
 		},
 		{
-			name:    "TestOnAutoDeletedAtLaterThan1YearFromNow",
+			name:    "TestOnAutoDeleteAtLaterThan1YearFromNow",
 			urlExp:  10,
 			autoDel: time.Now().Add(8767 * time.Hour).UnixMilli(),
 			err:     "auto_deleted_at_cannot_be_later_than_1_year_from_now",

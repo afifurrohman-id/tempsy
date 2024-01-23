@@ -20,7 +20,7 @@ func init() {
 
 func TestUnmarshalMetadata(test *testing.T) {
 	metadata := map[string]string{
-		HeaderAutoDeletedAt:     fmt.Sprintf("%d", time.Now().Add(1*time.Minute).UnixMilli()),
+		HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(1*time.Minute).UnixMilli()),
 		HeaderIsPublic:          "1",
 		HeaderPrivateUrlExpires: "2", // 2 seconds
 	}
@@ -37,8 +37,8 @@ func TestUnmarshalMetadata(test *testing.T) {
 	})
 
 	test.Run("TestInvalid", func(test *testing.T) {
-		test.Run("TestInvalidAutoDeletedAt", func(test *testing.T) {
-			metadata[HeaderAutoDeletedAt] = "invalid"
+		test.Run("TestInvalidAutoDeleteAt", func(test *testing.T) {
+			metadata[HeaderAutoDeleteAt] = "invalid"
 			require.Error(test, UnmarshalMetadata(metadata, dataFile))
 		})
 
