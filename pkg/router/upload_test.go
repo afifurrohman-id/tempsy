@@ -94,7 +94,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          fileName,
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeFileExists,
@@ -107,7 +107,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          fileName,
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeEmptyFile,
@@ -120,7 +120,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          "example",
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidFileName,
@@ -133,7 +133,7 @@ func TestHandleUploadFile(test *testing.T) {
 				store.HeaderFileName:          "1.json",
 				fiber.HeaderContentType:       fiber.MIMEOctetStream,
 				store.HeaderIsPublic:          "1",
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeUnsupportedType,

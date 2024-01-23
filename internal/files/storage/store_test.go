@@ -20,7 +20,7 @@ func init() {
 
 func TestUnmarshalMetadata(test *testing.T) {
 	metadata := map[string]string{
-		HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(1*time.Minute).UnixMilli()),
+		HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(1*time.Minute).UnixMilli()),
 		HeaderIsPublic:          "1",
 		HeaderPrivateUrlExpires: "2", // 2 seconds
 	}

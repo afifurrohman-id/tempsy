@@ -115,7 +115,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			fileName: username + "/not-found.json",
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeFileNotFound,
@@ -127,7 +127,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			fileName: filePath,
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeEmptyFile,
@@ -139,7 +139,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			fileName: filePath,
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextPlainCharsetUTF8,
-				store.HeaderAutoDeleteAt:     "test",
+				store.HeaderAutoDeleteAt:      "test",
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeInvalidHeaderFile,
@@ -151,7 +151,7 @@ func TestHandleUpdateFile(test *testing.T) {
 			fileName: filePath,
 			headers: map[string]string{
 				fiber.HeaderContentType:       fiber.MIMETextXML,
-				store.HeaderAutoDeleteAt:     fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
+				store.HeaderAutoDeleteAt:      fmt.Sprintf("%d", time.Now().Add(3*time.Minute).UnixMilli()),
 				store.HeaderPrivateUrlExpires: "10", // 10 seconds
 			},
 			errType:    utils.ErrorTypeMismatchType,
