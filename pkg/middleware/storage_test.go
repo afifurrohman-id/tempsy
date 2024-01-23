@@ -76,7 +76,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 
 	for i, table := range testsTables {
 		err := store.UploadObject(storeCtx, fmt.Sprintf("%s/%s-%d.txt", table.username, strings.ToLower(test.Name()), i), byteFile, &models.DataFile{
-			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 25,
 			IsPublic:          false,
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,

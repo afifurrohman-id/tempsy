@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 0.5.0
+  version: 0.6.0
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -61,17 +61,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/fileData'
-
-                  error:
-                    nullable: true
-                    description: "null"
-                    default: null
+                type: array
+                items:
+                  $ref: '#/components/schemas/fileData'
               examples:
                 ok:
                   value:
@@ -148,8 +140,9 @@ paths:
                 invalidFileName:
                   summary: Bad Request invalid file name
                   value:
-                    errorType: invalid_file_name
-                    errorDescription: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
+                    apiError:
+                      kind: invalid_file_name
+                      description: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
                 errorEmptyFileUpload:
                   $ref: '#/components/examples/invalidEmptyFile'
         422:
@@ -171,8 +164,9 @@ paths:
                 error:
                   summary: Unsupported Media Type
                   value:
-                    errorType: unsupported_content_type
-                    errorDescription: 'Unsupported Content-Type: application/octet-stream'
+                    apiError:
+                      kind: unsupported_content_type
+                      description: 'Unsupported Content-Type: application/octet-stream'
         409:
           description: Conflict
           content:
@@ -183,8 +177,9 @@ paths:
                 error:
                   summary: File name Conflict
                   value:
-                    errorType: file_already_exists
-                    errorDescription: 'File: hello.txt already exists'
+                    apiError:
+                      kind: file_already_exists
+                      description: 'File: hello.txt already exists'
         500:
           description: Unknown Internal Server Error
           content:
@@ -217,8 +212,9 @@ paths:
                 error:
                   summary: Bad Request delete empty files
                   value:
-                    errorType: delete_empty_data
-                    errorDescription: 'Cannot delete empty data files, no data for user: afif'
+                    apiError:
+                      kind: delete_empty_data
+                      description: 'Cannot delete empty data files, no data for user: afif'
 
         500:
           description: Unknown Internal Server Error
@@ -344,8 +340,9 @@ paths:
                 errorMismatchContentType:
                   summary: Bad Request mismatch content type
                   value:
-                    errorType: mismatch_content_type
-                    errorDescription: Please use the same content type as the original file
+                    apiError:
+                      kind: mismatch_content_type
+                      description: Please use the same content type as the original file
                 errorUpdateWithEmptyFile:
                   $ref: '#/components/examples/invalidEmptyFile'
         422:
@@ -452,8 +449,9 @@ paths:
                         summary: Bad Request invalid token
                         description: Invalid Token cause by authorization header have invalid token, maybe expires or have been revoked
                         value:
-                            errorType: invalid_token
-                            errorDescription: Invalid Token, cannot get user info
+                          apiError:
+                              kind: invalid_token
+                              description: Invalid Token, cannot get user info
 
         500:
             description: Unknown Internal Server Error
@@ -500,8 +498,9 @@ paths:
                         summary: Bad Request already have token
                         description: Already have a token
                         value:
-                            errorType: already_have_token
-                            errorDescription: You already have token
+                          apiError:
+                              kind: already_have_token
+                              description: You already have token
         500:
             description: Unknown Internal Server Error
             content:
@@ -618,12 +617,17 @@ components:
       description: Error Response body, without data
       type: object
       properties:
-        errorType:
-          type: string
-          description: 'Error type: unknown_server_error'
-        errorDescription:
-          type: string
-          description: Error message description
+        apiError: 
+          type: object
+          properties:
+            kind:
+              type: string
+              description: Error type
+              example: invalid_file_name
+            description:
+              type: string
+              description: Error description
+              example: File name must be alphanumeric and contain extension separated by dot, underscore, or dash
     fileData:
       description: File Data Response
       type: object
@@ -666,14 +670,16 @@ components:
       summary: File Not Found
       description: File Not Found Error Response
       value:
-        errorType: file_not_found
-        errorDescription: 'File: hello.txt Not Found'
+        apiError:
+          kind: file_not_found
+          description: 'File: hello.txt not found'
     missingHeaderMetadata:
       summary: Missing Header Metadata
       description: Error Missing file metadata
       value:
-        errorType: invalid_header_file
-        errorDescription: Cannot Parse NaN as int64
+        apiError:
+          kind: invalid_header_file
+          description: Cannot Parse NaN as int64
     dataResponse:
       summary: Data Response Body
       description: Single File Data for Response Body
@@ -691,14 +697,16 @@ components:
       summary: Internal Server Error
       description: Internal Server Error for Response Body
       value:
-        errorType: unknown_server_error
-        errorDescription: Unknown Internal Server Error. Unexpected Error
+        apiError:
+          kind: unknown_server_error
+          description: Unknown Internal Server Error. Unexpected Error
     invalidEmptyFile:
-        summary: Invalid Empty File
-        description: Invalid Empty File Upload Error Response
-        value:
-            errorType: invalid_empty_file
-            errorDescription: File cannot be empty
+      summary: Invalid Empty File
+      description: Invalid Empty File Upload Error Response
+      value:
+        apiError:
+          kind: invalid_empty_file
+          description: File cannot be empty
   requestBodies:
     uploadFile:
       required: true

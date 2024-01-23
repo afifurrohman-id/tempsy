@@ -74,7 +74,7 @@ func main() {
 
 	routeFilesByUsername := app.Group("/files/:username", middleware.PurgeAnonymousAccount, middleware.AutoDeleteScheduler)
 	routeFilesByUsername.Get("/public/:filename", middleware.Cache, router.HandleGetPublicFile)
-	routeFilesByUsername.Get("/", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), router.HandleGetAllFileData)
+	routeFilesByUsername.Get("/", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), router.HandleListFilesData)
 	routeFilesByUsername.Get("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, etag.New(), router.HandleGetFileData)
 	routeFilesByUsername.Post("/", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleUploadFile)
 	routeFilesByUsername.Put("/:filename", middleware.CheckAuth, middleware.RateLimiterProcessing, router.HandleUpdateFile)

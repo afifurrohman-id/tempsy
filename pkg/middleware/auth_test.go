@@ -54,7 +54,7 @@ func TestCheckHttpMethod(test *testing.T) {
 		require.NoError(test, json.Unmarshal(body, &apiErr))
 
 		require.Equal(test, fiber.StatusMethodNotAllowed, res.StatusCode)
-		require.Equal(test, "method_not_allowed", apiErr.Type)
+		require.Equal(test, "method_not_allowed", apiErr.Error.Kind)
 	})
 }
 

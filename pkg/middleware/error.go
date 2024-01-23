@@ -19,27 +19,35 @@ func CatchServerError(ctx *fiber.Ctx, err error) error {
 		method := ctx.Method()
 		if fiberErr.Code == fiber.StatusMethodNotAllowed && slices.Contains[[]string](auth.AllowedHttpMethod, method) || fiberErr.Code == fiber.StatusNotFound {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        "resource_not_found",
-				Description: fmt.Sprintf("Path %s for Http Method %s Is Not Found", ctx.Path(), method),
+				Error: &models.Error{
+					Kind:        "resource_not_found",
+					Description: fmt.Sprintf("Path %s for Http Method %s Is Not Found", ctx.Path(), method),
+				},
 			})
 		}
 
 		if fiberErr.Code == fiber.StatusRequestEntityTooLarge {
 			return ctx.Status(fiberErr.Code).JSON(&models.ApiError{
-				Type:        "request_entity_too_large",
-				Description: "Maximum Entity Exceeded, Max Request Body is 30MB For File",
+				Error: &models.Error{
+					Kind:        "request_entity_too_large",
+					Description: "Maximum Entity Exceeded, Max Request Body is 30MB For File",
+				},
 			})
 		}
 
 		return ctx.Status(fiberErr.Code).JSON(&models.ApiError{
-			Type:        fmt.Sprintf("%d", fiberErr.Code),
-			Description: fiberErr.Message,
+			Error: &models.Error{
+				Kind:        fmt.Sprintf("%d", fiberErr.Code),
+				Description: fiberErr.Message,
+			},
 		})
 	}
 
 	log.Error("Server - ", err)
 	return ctx.Status(fiber.StatusInternalServerError).JSON(&models.ApiError{
-		Type:        "unknown_server_error",
-		Description: "Unknown Internal Server Error",
+		Error: &models.Error{
+			Kind:        "unknown_server_error",
+			Description: "Unknown Internal Server Error",
+		},
 	})
 }

@@ -4,7 +4,7 @@ type DataFile struct {
 	Name              string `json:"name"`
 	Url               string `json:"url"`
 	ContentType       string `json:"type"`
-	AutoDeletedAt     int64  `json:"autoDeletedAt"`     // in milliseconds
+	AutoDeleteAt      int64  `json:"autoDeleteAt"`      // in milliseconds
 	PrivateUrlExpires uint   `json:"privateUrlExpires"` // in seconds
 	UploadedAt        int64  `json:"uploadedAt"`        // in milliseconds
 	UpdatedAt         int64  `json:"updatedAt"`         // in milliseconds

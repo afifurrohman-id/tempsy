@@ -40,7 +40,7 @@ func TestHandleUpdateFile(test *testing.T) {
 
 	require.NoError(test, store.UploadObject(storeCtx, filePath, fileByte, &models.DataFile{
 		Name:              filePath,
-		AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		IsPublic:          true,
 		ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -180,7 +180,7 @@ func TestHandleUpdateFile(test *testing.T) {
 
 			require.Equal(test, table.statusCode, res.StatusCode)
 			require.NotEmpty(test, apiRes)
-			require.Equal(test, table.errType, apiRes.Type)
+			require.Equal(test, table.errType, apiRes.Error.Kind)
 		})
 	}
 }

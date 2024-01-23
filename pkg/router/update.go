@@ -26,8 +26,10 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 	if len(ctx.Body()) < 1 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeEmptyFile,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeEmptyFile,
 			Description: "Cannot Update File with Empty File",
+			},
 		})
 	}
 
@@ -36,8 +38,10 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        utils.ErrorTypeFileNotFound,
+				Error: &models.Error{
+				Kind:        utils.ErrorTypeFileNotFound,
 				Description: fmt.Sprintf("File %s Is Not Found", fileName),
+				},
 			})
 		}
 		log.Panic(err)
@@ -45,8 +49,10 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 
 	if !strings.Contains(file.ContentType, ctx.Get(fiber.HeaderContentType)) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeMismatchType,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeMismatchType,
 			Description: "Please use the same content type as the original file",
+			},
 		})
 	}
 
@@ -59,17 +65,21 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		log.Error("Error Unmarshal File Metadata: " + err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeInvalidHeaderFile,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeInvalidHeaderFile,
 			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+			},
 		})
 	}
 
-	if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
+	if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeleteAt); err != nil {
 		log.Error("Error Validate Expiry: " + err.Error())
 
 		return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeInvalidHeaderFile,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeInvalidHeaderFile,
 			Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+			},
 		})
 	}
 

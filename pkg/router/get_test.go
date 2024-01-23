@@ -36,7 +36,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 	)
 	storeCtx, cancel := context.WithTimeout(context.Background(), store.DefaultTimeoutCtx)
 
-	app.Get("/:username", HandleGetAllFileData)
+	app.Get("/:username", HandleListFilesData)
 
 	test.Cleanup(func() {
 		defer cancel()
@@ -54,7 +54,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 
 		require.NoError(test, store.UploadObject(storeCtx, filePath, fileByte, &models.DataFile{
 			Name:              filePath,
-			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          true,
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -126,7 +126,7 @@ func TestHandleGetFileData(test *testing.T) {
 
 	require.NoError(test, store.UploadObject(storeCtx, filePath, fileByte, &models.DataFile{
 		Name:              filePath,
-		AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		IsPublic:          false,
 		ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -170,7 +170,7 @@ func TestHandleGetFileData(test *testing.T) {
 		require.NoError(test, json.Unmarshal(body, &apiErr))
 
 		assert.NotNil(test, apiErr)
-		assert.Equal(test, utils.ErrorTypeFileNotFound, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeFileNotFound, apiErr.Error.Kind)
 		assert.Equal(test, fiber.StatusNotFound, res.StatusCode)
 	})
 }
@@ -201,14 +201,14 @@ func TestHandleGetPublicFile(test *testing.T) {
 	filesToUpload := []*models.DataFile{
 		{
 			Name:              username + "/app.txt",
-			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          true,
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,
 		},
 		{
 			Name:              fmt.Sprintf("%s/%s.txt", username, strings.ToLower(test.Name())),
-			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          false,
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -272,7 +272,7 @@ func TestHandleGetPublicFile(test *testing.T) {
 
 			assert.NotNil(test, apiErr)
 			assert.Equal(test, fiber.StatusNotFound, res.StatusCode)
-			assert.Equal(test, utils.ErrorTypeFileNotPublic, apiErr.Type)
+			assert.Equal(test, utils.ErrorTypeFileNotPublic, apiErr.Error.Kind)
 		})
 	}
 }

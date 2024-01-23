@@ -26,8 +26,10 @@ var RateLimiterProcessing = limiter.New(limiter.Config{
 	Max: MaxReqProcsPerSeconds,
 	LimitReached: func(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusTooManyRequests).JSON(&models.ApiError{
-			Type:        "too_many_request",
+			Error: &models.Error{
+			Kind:        "too_many_request",
 			Description: fmt.Sprintf("Maximum Request Exceeded, Maximum %d Request per seconds for user", MaxReqProcsPerSeconds),
+			},
 		})
 	},
 })
@@ -53,8 +55,10 @@ var RateLimiterGuestToken = limiter.New(limiter.Config{
 	},
 	LimitReached: func(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusTooManyRequests).JSON(&models.ApiError{
-			Type:        "too_many_request_token",
+			Error: &models.Error{
+			Kind:        "too_many_request_token",
 			Description: fmt.Sprintf("Maximum Request Exceeded, Maximum %d Request per seconds for guest token", MaxReqGuestTokenPerSeconds),
+			},
 		})
 	},
 })

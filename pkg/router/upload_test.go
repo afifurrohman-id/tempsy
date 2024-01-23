@@ -176,7 +176,7 @@ func TestHandleUploadFile(test *testing.T) {
 
 			assert.Equal(test, tableE.statusCode, res.StatusCode)
 			assert.NotEmpty(test, apiRes)
-			assert.Equal(test, tableE.errType, apiRes.Type)
+			assert.Equal(test, tableE.errType, apiRes.Error.Kind)
 		})
 	}
 }

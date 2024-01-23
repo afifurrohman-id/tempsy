@@ -18,8 +18,10 @@ func CheckHttpMethod(ctx *fiber.Ctx) error {
 	method := ctx.Method()
 	if !slices.Contains(auth.AllowedHttpMethod, method) {
 		return ctx.Status(fiber.StatusMethodNotAllowed).JSON(&models.ApiError{
-			Type:        "method_not_allowed",
-			Description: fmt.Sprintf("Http Method: %s Is Not Allowed", method),
+			Error: &models.Error{
+				Kind:        "method_not_allowed",
+				Description: fmt.Sprintf("Method %s is not allowed", method),
+			},
 		})
 	}
 
@@ -50,7 +52,10 @@ func CheckAuth(ctx *fiber.Ctx) error {
 		}
 	}
 
-	return ctx.Status(fiber.StatusUnauthorized).JSON(&models.ApiError{Type: "unauthorized", Description: "You don't have right access to this resources"})
+	return ctx.Status(fiber.StatusUnauthorized).JSON(&models.ApiError{Error: &models.Error{
+		Kind:        "unauthorized",
+		Description: "You don't have right access to this resources",
+	}})
 }
 
 var Cors = cors.New(cors.Config{

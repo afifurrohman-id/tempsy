@@ -42,7 +42,7 @@ func TestHandleDelete(test *testing.T) {
 
 		require.NoError(test, store.UploadObject(storeCtx, fileName, fileByte, &models.DataFile{
 			Name:              fileName,
-			AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          false,
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -110,7 +110,7 @@ func TestHandleDelete(test *testing.T) {
 			require.NoError(test, json.Unmarshal(body, &apiErr))
 
 			assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-			assert.Equal(test, utils.ErrorTypeEmptyData, apiErr.Type)
+			assert.Equal(test, utils.ErrorTypeEmptyData, apiErr.Error.Kind)
 		})
 	})
 }

@@ -84,7 +84,7 @@ func AutoDeleteScheduler(ctx *fiber.Ctx) error {
 
 		mu.Lock()
 		for _, fileData := range filesData {
-			if fileData.AutoDeletedAt < time.Now().UnixMilli() {
+			if fileData.AutoDeleteAt < time.Now().UnixMilli() {
 				if err = store.DeleteObject(storeCtx, fileData.Name); err != nil {
 					return err
 				}

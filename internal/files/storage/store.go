@@ -117,7 +117,7 @@ func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) er
 
 	}
 
-	fileData.AutoDeletedAt = autoDeletedAt
+	fileData.AutoDeleteAt = autoDeletedAt
 	fileData.PrivateUrlExpires = uint(privateUrlInt64)
 	fileData.IsPublic = isPublic
 

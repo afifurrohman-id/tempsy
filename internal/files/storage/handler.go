@@ -137,7 +137,7 @@ func UploadObject(ctx context.Context, filePath string, fileByte []byte, fileDat
 	writer := obj.NewWriter(ctx)
 
 	writer.Metadata = map[string]string{
-		HeaderAutoDeletedAt:     fmt.Sprintf("%d", fileData.AutoDeletedAt),
+		HeaderAutoDeletedAt:     fmt.Sprintf("%d", fileData.AutoDeleteAt),
 		HeaderIsPublic:          fmt.Sprintf("%t", fileData.IsPublic),
 		HeaderPrivateUrlExpires: fmt.Sprintf("%d", fileData.PrivateUrlExpires),
 	}

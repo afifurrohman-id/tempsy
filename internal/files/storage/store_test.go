@@ -30,8 +30,8 @@ func TestUnmarshalMetadata(test *testing.T) {
 		require.NoError(test, UnmarshalMetadata(metadata, dataFile))
 
 		assert.NotEmpty(test, dataFile)
-		assert.Greater(test, dataFile.AutoDeletedAt, time.Now().UnixMilli())
-		assert.Less(test, time.Now().Add(time.Duration(dataFile.PrivateUrlExpires)*time.Second).UnixMilli(), dataFile.AutoDeletedAt)
+		assert.Greater(test, dataFile.AutoDeleteAt, time.Now().UnixMilli())
+		assert.Less(test, time.Now().Add(time.Duration(dataFile.PrivateUrlExpires)*time.Second).UnixMilli(), dataFile.AutoDeleteAt)
 		assert.Greater(test, time.Now().Add(time.Duration(dataFile.PrivateUrlExpires)*time.Second).UnixMilli(), time.Now().UnixMilli())
 		assert.True(test, dataFile.IsPublic)
 	})
@@ -58,7 +58,7 @@ func TestUnmarshalMetadata(test *testing.T) {
 
 func TestFormat(test *testing.T) {
 	dataFile := &models.DataFile{
-		AutoDeletedAt:     time.Now().Add(1 * time.Minute).UnixMilli(),
+		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		ContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
 	}

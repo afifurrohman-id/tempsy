@@ -49,7 +49,7 @@ func TestGetAllObject(test *testing.T) {
 
 	for _, fileName := range fileNames {
 		require.NoError(test, UploadObject(storeCtx, fileName, []byte(strings.Split(fileName, "/")[0]), &models.DataFile{
-			AutoDeletedAt:     time.Now().Add(2 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 30, // 30 seconds
 			ContentType:       fiber.MIMETextPlainCharsetUTF8,
@@ -85,7 +85,7 @@ func TestGetObject(test *testing.T) {
 	})
 
 	require.NoError(test, UploadObject(storeCtx, filePath, objByte, &models.DataFile{
-		AutoDeletedAt:     time.Now().Add(2 * time.Minute).UnixMilli(),
+		AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 30, // 30 seconds
 		ContentType:       fiber.MIMETextPlainCharsetUTF8,
 	}))
@@ -108,9 +108,9 @@ func TestGetObject(test *testing.T) {
 		Format(fileData)
 		assert.Less(test, fileData.UploadedAt, time.Now().UnixMilli())
 		assert.Equal(test, fileData.UpdatedAt, fileData.UploadedAt)
-		assert.Greater(test, fileData.AutoDeletedAt, time.Now().UnixMilli())
+		assert.Greater(test, fileData.AutoDeleteAt, time.Now().UnixMilli())
 		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, fileData.ContentType)
-		assert.Less(test, time.Now().Add(time.Duration(fileData.PrivateUrlExpires)*time.Second).UnixMilli(), fileData.AutoDeletedAt)
+		assert.Less(test, time.Now().Add(time.Duration(fileData.PrivateUrlExpires)*time.Second).UnixMilli(), fileData.AutoDeleteAt)
 		assert.Greater(test, time.Now().Add(time.Duration(fileData.PrivateUrlExpires)*time.Second).UnixMilli(), time.Now().UnixMilli())
 	})
 
@@ -134,7 +134,7 @@ func TestUploadObject(test *testing.T) {
 
 	test.Run("TestOk", func(test *testing.T) {
 		require.NoError(test, UploadObject(storeCtx, filePath, []byte("is ok"), &models.DataFile{
-			AutoDeletedAt:     time.Now().Add(2 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 30, // 30 seconds
 			ContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
@@ -143,7 +143,7 @@ func TestUploadObject(test *testing.T) {
 
 	test.Run("TestInvalidObjectPath", func(test *testing.T) {
 		err := UploadObject(storeCtx, "invalid", []byte("hello"), &models.DataFile{
-			AutoDeletedAt:     time.Now().Add(5 * time.Minute).UnixMilli(),
+			AutoDeleteAt:      time.Now().Add(5 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 5, // 5 seconds
 			ContentType:       fiber.MIMEApplicationJSONCharsetUTF8,

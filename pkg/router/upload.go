@@ -38,8 +38,10 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 	if len(ctx.Body()) < 1 {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeEmptyFile,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeEmptyFile,
 			Description: "Cannot Upload Empty File",
+			},
 		})
 	}
 
@@ -48,8 +50,10 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 	if !match {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeInvalidFileName,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeInvalidFileName,
 			Description: "File name must be alphanumeric lowercase or uppercase split by underscore, or dash and contain extension separated by dot",
+			},
 		})
 	}
 
@@ -62,8 +66,10 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 			fileMetadata := new(models.DataFile)
 			if !slices.Contains(store.AcceptedContentType, fileHeader[fiber.HeaderContentType]) {
 				return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(&models.ApiError{
-					Type:        utils.ErrorTypeUnsupportedType,
+					Error: &models.Error{
+					Kind:        utils.ErrorTypeUnsupportedType,
 					Description: "Unsupported Content-Type: " + fileHeader[fiber.HeaderContentType],
+					},
 				})
 			}
 
@@ -73,17 +79,21 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 				log.Error("Error Unmarshal File Metadata: " + err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-					Type:        utils.ErrorTypeInvalidHeaderFile,
+					Error: &models.Error{
+					Kind:        utils.ErrorTypeInvalidHeaderFile,
 					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+					},
 				})
 			}
 
-			if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeletedAt); err != nil {
+			if err = validateExpiry(fileMetadata.PrivateUrlExpires, fileMetadata.AutoDeleteAt); err != nil {
 				log.Error("Error Validate Expiry: " + err.Error())
 
 				return ctx.Status(fiber.StatusUnprocessableEntity).JSON(&models.ApiError{
-					Type:        utils.ErrorTypeInvalidHeaderFile,
+					Error: &models.Error{
+					Kind:        utils.ErrorTypeInvalidHeaderFile,
 					Description: strings.Join(strings.Split(err.Error(), "_"), " "),
+					},
 				})
 			}
 
@@ -100,8 +110,10 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	}
 
 	return ctx.Status(fiber.StatusConflict).JSON(&models.ApiError{
-		Type:        utils.ErrorTypeFileExists,
+		Error: &models.Error{
+		Kind:        utils.ErrorTypeFileExists,
 		Description: fmt.Sprintf("File: %s Already Exists", fileName),
+		},
 	})
 }
 

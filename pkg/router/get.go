@@ -29,16 +29,20 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        utils.ErrorTypeFileNotPublic,
+				Error: &models.Error{
+				Kind:        utils.ErrorTypeFileNotPublic,
 				Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
+				},
 			})
 		}
 		log.Panic(err)
 	}
 	if !fileData.IsPublic {
 		return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-			Type:        utils.ErrorTypeFileNotPublic,
+			Error: &models.Error{
+			Kind:        utils.ErrorTypeFileNotPublic,
 			Description: fmt.Sprintf("File: %s, Is Not Found Or Not Public", fileName),
+			},
 		})
 	}
 
@@ -73,8 +77,10 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
 			return ctx.Status(fiber.StatusNotFound).JSON(&models.ApiError{
-				Type:        utils.ErrorTypeFileNotFound,
+				Error: &models.Error{
+				Kind:        utils.ErrorTypeFileNotFound,
 				Description: fmt.Sprintf("File: %s, Is Not Found", fileName),
+				},
 			})
 		}
 		log.Panic(err)
@@ -84,7 +90,7 @@ func HandleGetFileData(ctx *fiber.Ctx) error {
 	return ctx.JSON(&fileData)
 }
 
-func HandleGetAllFileData(ctx *fiber.Ctx) error {
+func HandleListFilesData(ctx *fiber.Ctx) error {
 	var (
 		mu = new(sync.Mutex)
 		wg = new(sync.WaitGroup)

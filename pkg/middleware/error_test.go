@@ -58,7 +58,7 @@ func TestErrorServer(test *testing.T) {
 		require.NoError(test, json.Unmarshal(body, &apiErr))
 
 		require.Equal(test, fiber.StatusNotFound, res.StatusCode)
-		assert.Equal(test, "resource_not_found", apiErr.Type)
+		assert.Equal(test, "resource_not_found", apiErr.Error.Kind)
 	})
 
 	test.Run("TestBodyLimit", func(test *testing.T) {

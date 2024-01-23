@@ -65,7 +65,7 @@ func TestGetGuestToken(test *testing.T) {
 
 		assert.NotNil(test, apiErr)
 		assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		assert.Equal(test, utils.ErrorTypeHaveToken, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeHaveToken, apiErr.Error.Kind)
 	})
 }
 
@@ -142,6 +142,6 @@ func TestHandleGetUserInfo(test *testing.T) {
 
 		assert.NotNil(test, apiErr)
 		assert.Equal(test, fiber.StatusBadRequest, res.StatusCode)
-		assert.Equal(test, utils.ErrorTypeInvalidToken, apiErr.Type)
+		assert.Equal(test, utils.ErrorTypeInvalidToken, apiErr.Error.Kind)
 	})
 }
