@@ -94,7 +94,7 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 		Name:        attrs.Name,
 		UploadedAt:  attrs.Created.UnixMilli(),
 		UpdatedAt:   attrs.Updated.UnixMilli(),
-		ContentType: attrs.ContentType,
+		MimeType: attrs.ContentType,
 		Size:        attrs.Size,
 	}
 
@@ -142,7 +142,7 @@ func UploadObject(ctx context.Context, filePath string, fileByte []byte, fileDat
 		HeaderPrivateUrlExpires: fmt.Sprintf("%d", fileData.PrivateUrlExpires),
 	}
 
-	writer.ContentType = fileData.ContentType
+	writer.ContentType = fileData.MimeType
 
 	if _, err = writer.Write(fileByte); err != nil {
 		return err

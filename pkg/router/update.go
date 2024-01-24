@@ -47,7 +47,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		log.Panic(err)
 	}
 
-	if !strings.Contains(file.ContentType, ctx.Get(fiber.HeaderContentType)) {
+	if !strings.Contains(file.MimeType, ctx.Get(fiber.HeaderContentType)) {
 		return ctx.Status(fiber.StatusBadRequest).JSON(&models.ApiError{
 			Error: &models.Error{
 				Kind:        utils.ErrorTypeMismatchType,
@@ -59,7 +59,7 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 	fileHeader := mapFileHeader(ctx.GetReqHeaders())
 
 	fileMetadata := new(models.DataFile)
-	fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
+	fileMetadata.MimeType = fileHeader[fiber.HeaderContentType]
 
 	if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
 		log.Error("Error Unmarshal File Metadata: " + err.Error())

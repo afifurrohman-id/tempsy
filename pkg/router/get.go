@@ -58,7 +58,7 @@ func HandleGetPublicFile(ctx *fiber.Ctx) error {
 		log.Panic("Unknown Error in Service File")
 	}
 
-	ctx.Set(fiber.HeaderContentType, fileData.ContentType)
+	ctx.Set(fiber.HeaderContentType, fileData.MimeType)
 	ctx.Set(fiber.HeaderContentLength, fmt.Sprintf("%d", len(fileByte))) // maybe unnecessary
 
 	return ctx.Send(fileByte)
@@ -109,7 +109,7 @@ func HandleListFilesData(ctx *fiber.Ctx) error {
 			return false
 		}
 
-		if mimeType := ctx.Query("type"); mimeType != "" && !strings.Contains(data.ContentType, mimeType) {
+		if mimeType := ctx.Query("mime_type"); mimeType != "" && !strings.Contains(data.MimeType, mimeType) {
 			return false
 		}
 

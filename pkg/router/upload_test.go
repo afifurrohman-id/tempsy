@@ -75,7 +75,7 @@ func TestHandleUploadFile(test *testing.T) {
 
 		assert.Equal(test, fiber.StatusCreated, res.StatusCode)
 		assert.NotEmpty(test, apiRes)
-		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.ContentType)
+		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.MimeType)
 		assert.Equal(test, fileName, apiRes.Name)
 		assert.Contains(test, apiRes.Url, fmt.Sprintf("%s/public/%s", username, fileName))
 	})

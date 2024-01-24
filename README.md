@@ -84,7 +84,7 @@ make run
 - Build
 
 ```sh
-make build
+make
 ```
 
 - Build Image

@@ -79,7 +79,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 25,
 			IsPublic:          false,
-			ContentType:       fiber.MIMETextPlainCharsetUTF8,
+			MimeType:       fiber.MIMETextPlainCharsetUTF8,
 		})
 		require.NoError(test, err)
 	}

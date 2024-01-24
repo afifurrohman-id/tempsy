@@ -43,7 +43,7 @@ func TestHandleUpdateFile(test *testing.T) {
 		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		IsPublic:          true,
-		ContentType:       fiber.MIMETextPlainCharsetUTF8,
+		MimeType:       fiber.MIMETextPlainCharsetUTF8,
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {
@@ -68,7 +68,7 @@ func TestHandleUpdateFile(test *testing.T) {
 
 		require.Equal(test, fiber.StatusOK, res.StatusCode)
 		require.NotEmpty(test, apiRes)
-		require.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.ContentType)
+		require.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.MimeType)
 		require.Equal(test, fileName, apiRes.Name)
 		require.Contains(test, apiRes.Url, username+"/public/"+fileName)
 	})
@@ -96,7 +96,7 @@ func TestHandleUpdateFile(test *testing.T) {
 
 		require.Equal(test, fiber.StatusOK, res.StatusCode)
 		require.NotEmpty(test, apiRes)
-		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.ContentType)
+		assert.Equal(test, fiber.MIMETextPlainCharsetUTF8, apiRes.MimeType)
 		assert.Equal(test, fileName, apiRes.Name)
 		assert.NotContains(test, apiRes.Url, username+"/public/")
 	})

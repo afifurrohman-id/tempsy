@@ -60,7 +60,7 @@ func TestFormat(test *testing.T) {
 	dataFile := &models.DataFile{
 		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
-		ContentType:       fiber.MIMEApplicationJSONCharsetUTF8,
+		MimeType:       fiber.MIMEApplicationJSONCharsetUTF8,
 	}
 
 	test.Run("TestFormatPrivate", func(test *testing.T) {

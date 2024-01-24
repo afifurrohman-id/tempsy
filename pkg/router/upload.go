@@ -73,7 +73,7 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 				})
 			}
 
-			fileMetadata.ContentType = fileHeader[fiber.HeaderContentType]
+			fileMetadata.MimeType = fileHeader[fiber.HeaderContentType]
 
 			if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
 				log.Error("Error Unmarshal File Metadata: " + err.Error())

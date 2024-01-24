@@ -2,18 +2,18 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 0.6.0
+  version: 0.7.0
   license:
     name: MIT
     url: https://opensource.org/license/mit
   contact:
     name: Afifurrohman
-    url: https://afifurrohman.my.id
+    url: https://www.afifurrohman.my.id
     email: afifurrohman.id@outlook.com
 servers:
   - url: https://tempsy.afifurrohman.my.id
     description: Production server
-  - url: https://tempsy.staging.afifurrohman.my.id
+  - url: https://staging.tempsy.afifurrohman.my.id
     description: Staging server
 paths:
   /files/{username}:
@@ -27,7 +27,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/accept'
         - $ref: '#/components/parameters/username'
-        - name: type
+        - name: mime_type
           in: query
           description: Filter by file mime type, using like equalization not strict equalization
           required: false
@@ -68,24 +68,24 @@ paths:
                 ok:
                   value:
                       - name: hello.txt
-                        url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.txt
+                        url: https://tempsy.afifurrohman.my.id/files/afif/hello.txt
                         autoDeleteAt: 1634179200000
                         privateUrlExpires: 100
                         isPublic: false
                         uploadedAt: 1634179200000
                         updatedAt: 1634179200000
                         size: 100
-                        type: text/plain; charset=utf-8
+                        mimeType: text/plain; charset=utf-8
 
                       - name: example.png
-                        url: https://api.tempsy.afifurrohman.my.id/files/afif/public/example.png
+                        url: https://tempsy.afifurrohman.my.id/files/afif/public/example.png
                         autoDeleteAt: 1634179200000
                         privateUrlExpires: 100
                         isPublic: true
                         uploadedAt: 1634179200000
                         updatedAt: 1634179200000
                         size: 100
-                        type: image/png
+                        mimeType: image/png
         500:
           description: Unknown Internal Server Error
           content:
@@ -384,7 +384,7 @@ paths:
         - $ref: '#/components/parameters/username'
         - $ref: '#/components/parameters/filename'
       responses:
-        '204':
+        204:
           description: Success
         404:
           description: File Not Found
@@ -637,7 +637,7 @@ components:
         url:
           type: string
           format: uri
-          example: https://api.tempsy.afifurrohman.my.id/files/afif/hello.txt
+          example: https://tempsy.afifurrohman.my.id/files/afif/hello.txt
         autoDeleteAt:
           type: integer
           format: int64
@@ -661,9 +661,9 @@ components:
           type: integer
           format: int64
           description: File size in bytes
-        type:
+        mimeType:
           type: string
-          description: MIME type of file
+          description: MIME type of file, IANA Standard
           example: text/plain; charset=utf-8
   examples:
     fileNotFound:
@@ -685,14 +685,14 @@ components:
       description: Single File Data for Response Body
       value:
         name: hello.webp
-        url: https://api.tempsy.afifurrohman.my.id/files/afif/hello.webp
+        url: https://tempsy.afifurrohman.my.id/files/afif/hello.webp
         autoDeleteAt: 1634179200000
         privateUrlExpires: 100
         isPublic: false
         uploadedAt: 1634179200000
         updatedAt: 1634179200000
         size: 100
-        type: text/plain; charset=utf-8
+        mimeType: text/plain; charset=utf-8
     internalServer:
       summary: Internal Server Error
       description: Internal Server Error for Response Body
