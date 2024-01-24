@@ -68,7 +68,7 @@ paths:
                 ok:
                   value:
                       - name: hello.txt
-                        url: https://tempsy.afifurrohman.my.id/files/afif/hello.txt
+                        url: https://storage.googleapis.com/...
                         autoDeleteAt: 1634179200000
                         privateUrlExpires: 100
                         isPublic: false
@@ -637,7 +637,7 @@ components:
         url:
           type: string
           format: uri
-          example: https://tempsy.afifurrohman.my.id/files/afif/hello.txt
+          example: https://tempsy.afifurrohman.my.id/files/afif/public/hello.txt
         autoDeleteAt:
           type: integer
           format: int64
@@ -685,7 +685,7 @@ components:
       description: Single File Data for Response Body
       value:
         name: hello.webp
-        url: https://tempsy.afifurrohman.my.id/files/afif/hello.webp
+        url: https://storage.googleapis.com/...
         autoDeleteAt: 1634179200000
         privateUrlExpires: 100
         isPublic: false
