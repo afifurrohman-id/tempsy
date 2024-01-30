@@ -12,8 +12,7 @@ import (
 )
 
 func CatchServerError(ctx *fiber.Ctx, err error) error {
-	fiberErr := new(fiber.Error)
-	if errors.As(err, &fiberErr) {
+	if fiberErr := new(fiber.Error); errors.As(err, &fiberErr) {
 		log.Error("Fiber - ", fiberErr)
 
 		method := ctx.Method()

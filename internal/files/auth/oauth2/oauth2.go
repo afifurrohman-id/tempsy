@@ -20,6 +20,7 @@ func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 
 	agent := fiber.Post("https://oauth2.googleapis.com/token")
 
+	agent.Timeout(20 * time.Second)
 	agent.Body([]byte(payloadFormUri))
 	agent.Set(fiber.HeaderContentType, "application/x-www-form-urlencoded")
 
@@ -39,9 +40,8 @@ func GetAccessToken(refreshToken string) (*models.GOAuth2Token, error) {
 func GetGoogleAccountInfo(accessToken string) (*models.GoogleAccountInfo, error) {
 	agent := fiber.Get("https://www.googleapis.com/userinfo/v2/me")
 
-	agent.Set(fiber.HeaderAuthorization, auth.BearerPrefix+accessToken)
-
 	agent.Timeout(10 * time.Second)
+	agent.Set(fiber.HeaderAuthorization, auth.BearerPrefix+accessToken)
 
 	userinfo := new(models.GoogleAccountInfo)
 
