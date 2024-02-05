@@ -7,8 +7,8 @@ ENV CGO_ENABLED=0
 
 # Need install ca-certificates for tls compatibility for go library and tzdata for timezone
 RUN apk add --no-cache \
-  ca-certificates=20230506-r0 \
-  tzdata=2023d-r0 && \
+  ca-certificates=20230506-r1 \
+  tzdata=2024a-r0 && \
   update-ca-certificates
 
 # Reduce binary size by removing debug information
