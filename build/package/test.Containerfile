@@ -8,8 +8,9 @@ ENV CGO_ENABLED=0
 ENV TZ=Asia/Jakarta
 
 # Need install ca-certificates for tls compatibility for go library
+# hadolint ignore=DL3018
 RUN apk add --no-cache \
-    ca-certificates=20230506-r1 && \
+    ca-certificates && \
     update-ca-certificates
 
 RUN go fix ./... && \
