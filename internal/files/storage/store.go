@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"os"
@@ -79,8 +80,12 @@ const (
 )
 
 func createClient(ctx context.Context) (*storage.Client, error) {
+	serviceAccountByte, err := base64.StdEncoding.DecodeString(os.Getenv("GOOGLE_CLOUD_STORAGE_SERVICE_ACCOUNT"))
+	if err != nil {
+		return nil, err
+	}
 	opt := []option.ClientOption{
-		option.WithCredentialsJSON([]byte(os.Getenv("GOOGLE_CLOUD_STORAGE_SERVICE_ACCOUNT"))),
+		option.WithCredentialsJSON(serviceAccountByte),
 	}
 	if os.Getenv("APP_ENV") != "production" {
 		opt = append(opt, option.WithEndpoint(os.Getenv("GOOGLE_CLOUD_STORAGE_EMULATOR_ENDPOINT")))
