@@ -57,7 +57,7 @@ func TestHandleGetAllFileData(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          true,
-			MimeType:       fiber.MIMETextPlainCharsetUTF8,
+			MimeType:          fiber.MIMETextPlainCharsetUTF8,
 		}))
 	}
 
@@ -129,7 +129,7 @@ func TestHandleGetFileData(test *testing.T) {
 		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		IsPublic:          false,
-		MimeType:       fiber.MIMETextPlainCharsetUTF8,
+		MimeType:          fiber.MIMETextPlainCharsetUTF8,
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {
@@ -204,14 +204,14 @@ func TestHandleGetPublicFile(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          true,
-			MimeType:       fiber.MIMETextPlainCharsetUTF8,
+			MimeType:          fiber.MIMETextPlainCharsetUTF8,
 		},
 		{
 			Name:              fmt.Sprintf("%s/%s.txt", username, strings.ToLower(test.Name())),
 			AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 			PrivateUrlExpires: 10, // 10 seconds
 			IsPublic:          false,
-			MimeType:       fiber.MIMETextPlainCharsetUTF8,
+			MimeType:          fiber.MIMETextPlainCharsetUTF8,
 		},
 	}
 

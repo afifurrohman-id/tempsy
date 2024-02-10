@@ -43,7 +43,7 @@ func TestHandleUpdateFile(test *testing.T) {
 		AutoDeleteAt:      time.Now().Add(1 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 10, // 10 seconds
 		IsPublic:          true,
-		MimeType:       fiber.MIMETextPlainCharsetUTF8,
+		MimeType:          fiber.MIMETextPlainCharsetUTF8,
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {

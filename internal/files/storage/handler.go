@@ -91,11 +91,11 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 		return nil, err
 	}
 	fileData := &models.DataFile{
-		Name:        attrs.Name,
-		UploadedAt:  attrs.Created.UnixMilli(),
-		UpdatedAt:   attrs.Updated.UnixMilli(),
-		MimeType: attrs.ContentType,
-		Size:        attrs.Size,
+		Name:       attrs.Name,
+		UploadedAt: attrs.Created.UnixMilli(),
+		UpdatedAt:  attrs.Updated.UnixMilli(),
+		MimeType:   attrs.ContentType,
+		Size:       attrs.Size,
 	}
 
 	if err = UnmarshalMetadata(attrs.Metadata, fileData); err != nil {

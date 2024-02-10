@@ -13,6 +13,11 @@ services:
       - tempsy_data:/root/.cache/firebase
       - ../configs/firebase.json:/firebase/firebase.json
       - ../configs/storage.rules:/firebase/storage.rules
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 300M
 
 volumes:
   tempsy_data:

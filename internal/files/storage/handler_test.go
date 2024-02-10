@@ -52,7 +52,7 @@ func TestGetAllObject(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 30, // 30 seconds
-			MimeType:       fiber.MIMETextPlainCharsetUTF8,
+			MimeType:          fiber.MIMETextPlainCharsetUTF8,
 		}))
 	}
 
@@ -87,7 +87,7 @@ func TestGetObject(test *testing.T) {
 	require.NoError(test, UploadObject(storeCtx, filePath, objByte, &models.DataFile{
 		AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 		PrivateUrlExpires: 30, // 30 seconds
-		MimeType:       fiber.MIMETextPlainCharsetUTF8,
+		MimeType:          fiber.MIMETextPlainCharsetUTF8,
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {
@@ -137,7 +137,7 @@ func TestUploadObject(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(2 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 30, // 30 seconds
-			MimeType:       fiber.MIMEApplicationJSONCharsetUTF8,
+			MimeType:          fiber.MIMEApplicationJSONCharsetUTF8,
 		}))
 	})
 
@@ -146,7 +146,7 @@ func TestUploadObject(test *testing.T) {
 			AutoDeleteAt:      time.Now().Add(5 * time.Minute).UnixMilli(),
 			IsPublic:          true,
 			PrivateUrlExpires: 5, // 5 seconds
-			MimeType:       fiber.MIMEApplicationJSONCharsetUTF8,
+			MimeType:          fiber.MIMEApplicationJSONCharsetUTF8,
 		})
 
 		require.Error(test, err)
