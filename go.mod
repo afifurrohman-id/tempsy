@@ -10,7 +10,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
-	google.golang.org/api v0.162.0
+	google.golang.org/api v0.163.0
 )
 
 require (
