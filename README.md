@@ -2,6 +2,7 @@
 [![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/afifurrohman-id/tempsy)](go.mod)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/afifurrohman-id/tempsy/live.yaml)](https://github.com/afifurrohman-id/tempsy/actions)
 [![Swagger Validator](https://img.shields.io/swagger/valid/3.0?specUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fafifurrohman-id%2Ftempsy%2Fmain%2Fapi%2Fopenapi-spec.yaml)](api/openapi-spec.yaml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/afifurrohman-id/tempsy)](https://goreportcard.com/report/github.com/afifurrohman-id/tempsy)
 > Simple Temporary Files sharing RESTful API with oauth2
 
 ## API Documentation
