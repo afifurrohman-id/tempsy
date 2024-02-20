@@ -28,7 +28,7 @@ LABEL org.opencontainers.image.licenses="MIT"
 WORKDIR /app
 
 COPY --from=builder /src/tempsy .
-COPY --from=builder /src/api ./api
+COPY --from=builder /src/api api
 COPY --from=builder /usr/share/zoneinfo/Asia/Jakarta /usr/share/zoneinfo/Asia/
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
