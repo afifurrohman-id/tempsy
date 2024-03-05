@@ -56,8 +56,8 @@ github.com/go-openapi/validate v0.22.4 h1:5v3jmMyIPKTR8Lv9syBAIRxG6lY0RqeBPB1LKE
 github.com/go-openapi/validate v0.22.4/go.mod h1:qm6O8ZIcPVdSY5219468Jv7kBdGvkiZLPOmqnqTUZ2A=
 github.com/gofiber/contrib/swagger v1.1.1 h1:on+D2fbXkvm0H0lur1rx69mpxLdX1wIH/FrTRZ99b9Y=
 github.com/gofiber/contrib/swagger v1.1.1/go.mod h1:pa9awsFSz/3BbSnyTe/drNZaiFfnhC4hk3m9BVet7Co=
-github.com/gofiber/fiber/v2 v2.52.1 h1:1RoU2NS+b98o1L77sdl5mboGPiW+0Ypsi5oLmcYlgHI=
-github.com/gofiber/fiber/v2 v2.52.1/go.mod h1:KEOE+cXMhXG0zHc9d8+E38hoX+ZN7bhOtgeF2oT6jrQ=
+github.com/gofiber/fiber/v2 v2.52.2 h1:b0rYH6b06Df+4NyrbdptQL8ifuxw/Tf2DgfkZkDaxEo=
+github.com/gofiber/fiber/v2 v2.52.2/go.mod h1:KEOE+cXMhXG0zHc9d8+E38hoX+ZN7bhOtgeF2oT6jrQ=
 github.com/golang-jwt/jwt/v5 v5.2.0 h1:d/ix8ftRUorsN+5eMIlF4T6J8CAt9rch3My2winC1Jw=
 github.com/golang-jwt/jwt/v5 v5.2.0/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
