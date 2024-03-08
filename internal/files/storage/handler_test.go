@@ -91,10 +91,13 @@ func TestGetObject(test *testing.T) {
 	}))
 
 	test.Run("TestOk", func(test *testing.T) {
+		defer log.SetOutput(os.Stderr)
+
 		fileData, err := GetObject(storeCtx, filePath)
 		require.NoError(test, err)
 		require.NotEmpty(test, fileData)
 
+		log.SetOutput(os.Stdout)
 		log.Info(fileData.Url)
 
 		agent := fiber.Get(fileData.Url)

@@ -63,6 +63,9 @@ func main() {
 		Title: "Tempsy API",
 	}))
 	app.Options("/*", func(ctx *fiber.Ctx) error {
+		defer log.SetOutput(os.Stderr)
+
+		log.SetOutput(os.Stdout)
 		log.Info("Options Method from browser")
 
 		return ctx.SendStatus(fiber.StatusNoContent)
