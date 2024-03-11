@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.39.0
 	github.com/gofiber/contrib/swagger v1.1.1
 	github.com/gofiber/fiber/v2 v2.52.2
-	github.com/golang-jwt/jwt/v5 v5.2.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/exp v0.0.0-20231206192017-f3f8817b8deb
