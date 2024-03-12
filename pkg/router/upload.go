@@ -119,12 +119,12 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 
 func validateExpiry(urlExp uint, autoDel int64) error {
 	if time.Now().Add(time.Duration(urlExp)*time.Second).UnixMilli() > autoDel {
-		return errors.New("private_url_expires_cannot_be_later_than_auto_deleted_at_starting_from_now")
+		return errors.New("private_url_expires_cannot_be_later_than_auto_delete_at_starting_from_now")
 	}
 
 	// cutoff one year from now
 	if cutoff := time.Now().Add(8766 * time.Hour); !time.UnixMilli(autoDel).Before(cutoff) {
-		return errors.New("auto_deleted_at_cannot_be_later_than_1_year_from_now")
+		return errors.New("auto_delete_at_cannot_be_later_than_1_year_from_now")
 	}
 
 	if urlExp > 604800 || urlExp < 2 {

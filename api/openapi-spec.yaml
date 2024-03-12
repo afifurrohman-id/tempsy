@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: Tempsy RESTful API
   description: Temporary Files Storage API Documentation
-  version: 0.7.0
+  version: 0.7.1
   license:
     name: MIT
     url: https://opensource.org/license/mit
@@ -540,9 +540,9 @@ components:
         minimum: 2
         format: int
     fileMetaAutoDeleteAt:
-      name: File-Auto-Deleted-At
+      name: File-Auto-Delete-At
       in: header
-      description: File will be deleted at, max is one year since now
+      description: File will be delete at, max is one year since now
       required: true
       schema:
         type: integer

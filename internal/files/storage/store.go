@@ -97,7 +97,7 @@ func createClient(ctx context.Context) (*storage.Client, error) {
 func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) error {
 	autoDeleteAt, err := strconv.ParseInt(metadata[HeaderAutoDeleteAt], 10, 64)
 	if err != nil {
-		return errors.New("auto_deleted_at_must_be_valid_integer")
+		return errors.New("auto_delete_at_must_be_valid_integer")
 	}
 
 	privateUrlInt64, err := strconv.ParseInt(metadata[HeaderPrivateUrlExpires], 10, 0)

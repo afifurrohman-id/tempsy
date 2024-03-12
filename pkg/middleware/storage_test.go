@@ -46,7 +46,7 @@ func TestPurgeAnonymousAccount(test *testing.T) {
 			false,
 		},
 		{
-			"TestNotDeletedNow",
+			"TestNotDeleteNow",
 			fmt.Sprintf("%s%d-%s", guest.UsernamePrefix, time.Now().Add(1*time.Minute).UnixMilli(), strings.ToLower(test.Name())),
 			false,
 		},

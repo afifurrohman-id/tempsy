@@ -202,13 +202,13 @@ func TestValidateExpiry(test *testing.T) {
 			name:    "TestOnPrivateUrlLaterThanAutoDeleteAt",
 			urlExp:  10,
 			autoDel: time.Now().Add(9 * time.Second).UnixMilli(),
-			err:     "private_url_expires_cannot_be_later_than_auto_deleted_at_starting_from_now",
+			err:     "private_url_expires_cannot_be_later_than_auto_delete_at_starting_from_now",
 		},
 		{
 			name:    "TestOnAutoDeleteAtLaterThan1YearFromNow",
 			urlExp:  10,
 			autoDel: time.Now().Add(8767 * time.Hour).UnixMilli(),
-			err:     "auto_deleted_at_cannot_be_later_than_1_year_from_now",
+			err:     "auto_delete_at_cannot_be_later_than_1_year_from_now",
 		},
 		{
 			name:    "TestOnPrivateUrlNotWithin7DaysFromNow",
