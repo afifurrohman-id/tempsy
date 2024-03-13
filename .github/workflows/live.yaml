@@ -26,6 +26,9 @@ jobs:
       - uses: jbergstroem/hadolint-gh-action@v1
         with:
           dockerfile: build/package/**Containerfile
+      
+      # Setup new docker builder for cache
+      - uses: docker/setup-buildx-action@v3
 
       - name: Build Image Test
         uses: docker/build-push-action@v5
