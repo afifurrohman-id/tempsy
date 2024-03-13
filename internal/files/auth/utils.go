@@ -7,7 +7,8 @@ import (
 var AllowedHttpMethod = []string{fiber.MethodGet, fiber.MethodDelete, fiber.MethodOptions, fiber.MethodPut, fiber.MethodPost}
 
 const (
-	BearerPrefix  = "Bearer "
-	HeaderRealIp  = "Real-IP"
-	HeaderXRealIp = "X-Real-IP" // Backward compatibility purpose
+	BearerPrefix = "Bearer "
+	// follow HTTP 2.0 (lowercase), but still backward compatible with HTTP 1.1 because it's case insensitive
+	HeaderRealIp  = "real-IP"
+	HeaderXRealIp = "x-real-ip" // Backward compatibility purpose
 )

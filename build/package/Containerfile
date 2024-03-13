@@ -1,9 +1,6 @@
 FROM golang:1.20-alpine AS builder
 
 WORKDIR /src
-COPY . .
-
-ENV CGO_ENABLED=0
 
 # Need install ca-certificates for tls compatibility for go library and tzdata for timezone
 # hadolint ignore=DL3018
@@ -12,6 +9,13 @@ RUN apk add --no-cache \
   tzdata && \
   update-ca-certificates
 
+ENV CGO_ENABLED=0
+
+# Cache layer for go dependencies
+COPY go.* .
+RUN go mod download
+
+COPY . .
 # Reduce binary size by removing debug information
 RUN go fix ./... && \
   go fmt ./... && \

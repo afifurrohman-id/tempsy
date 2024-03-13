@@ -19,18 +19,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMapFileHeader(test *testing.T) {
-	fileHeader := mapFileHeader(map[string][]string{
-		fiber.HeaderContentType: {fiber.MIMEApplicationJSONCharsetUTF8},
-	})
-	require.NotEmpty(test, fileHeader)
-
-	for key, value := range fileHeader {
-		assert.Equal(test, fiber.HeaderContentType, key)
-		assert.Equal(test, fiber.MIMEApplicationJSONCharsetUTF8, value)
-	}
-}
-
 func TestHandleUploadFile(test *testing.T) {
 	const username = "upload-test"
 

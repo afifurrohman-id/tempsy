@@ -3,6 +3,7 @@ package store
 import (
 	"fmt"
 	"path"
+	"strings"
 	"testing"
 	"time"
 
@@ -97,4 +98,22 @@ func TestFormat(test *testing.T) {
 
 		assert.Equal(test, &before, dataFile)
 	})
+}
+
+func TestMapFileHeader(test *testing.T) {
+	tName := "unknown"
+
+	fileHeader := MapFileHeader(map[string][]string{
+		fiber.HeaderContentType: {fiber.MIMEApplicationJSONCharsetUTF8},
+		HeaderFileName:          {tName},
+		"UPPER":                 {"test"},
+	})
+
+	require.NotEmpty(test, fileHeader)
+
+	for key, val := range fileHeader {
+		assert.Equal(test, strings.ToLower(key), key)
+		assert.Equal(test, val, fileHeader.Get(key))
+		assert.Equal(test, val, fileHeader.Get(strings.ToUpper(key)))
+	}
 }

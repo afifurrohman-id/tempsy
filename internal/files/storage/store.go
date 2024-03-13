@@ -71,11 +71,12 @@ var AcceptedContentType = []string{
 	"application/zip",              // standard
 }
 
+// Since HTTP 1.1 is case insensitive, but we follow HTTP 2.0 standard which is lowercase
 const (
-	HeaderAutoDeleteAt      = "File-Auto-Delete-At"
-	HeaderPrivateUrlExpires = "File-Private-Url-Expires"
-	HeaderIsPublic          = "File-Is-Public"
-	HeaderFileName          = "File-Name"
+	HeaderAutoDeleteAt      = "file-auto-delete-at"
+	HeaderPrivateUrlExpires = "file-private-url-expires"
+	HeaderIsPublic          = "file-is-public"
+	HeaderFileName          = "file-name"
 	DefaultTimeoutCtx       = 25 * time.Second
 )
 
@@ -94,6 +95,7 @@ func createClient(ctx context.Context) (*storage.Client, error) {
 	return storage.NewClient(ctx, opt...)
 }
 
+// should guarantee metadata use lowercase as file header follow HTTP 2.0 standard
 func UnmarshalMetadata(metadata map[string]string, fileData *models.DataFile) error {
 	autoDeleteAt, err := strconv.ParseInt(metadata[HeaderAutoDeleteAt], 10, 64)
 	if err != nil {
@@ -141,4 +143,22 @@ func Format(dataFile *models.DataFile) {
 
 		dataFile.Name = fileName
 	}
+}
+
+type FileHeader map[string]string
+
+// map http header to file header
+// return new map and key is lowercase
+func MapFileHeader(header map[string][]string) FileHeader {
+	fileHeader := make(map[string]string)
+	for key, value := range header {
+		fileHeader[strings.ToLower(key)] = value[0]
+	}
+
+	return fileHeader
+}
+
+// a safe way to get value
+func (fh *FileHeader) Get(key string) string {
+	return (*fh)[strings.ToLower(key)]
 }

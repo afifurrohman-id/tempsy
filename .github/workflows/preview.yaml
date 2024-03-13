@@ -86,6 +86,8 @@ jobs:
           file: build/package/Containerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{env.IMAGE_NAME}}:beta-${{github.sha}}
 
       - uses: azure/login@v1

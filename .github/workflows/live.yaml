@@ -33,6 +33,8 @@ jobs:
           context: .
           load: true
           file: build/package/test.Containerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{github.event.repository.name}}
 
       - name: Unit testing # Using staging environment
@@ -77,6 +79,8 @@ jobs:
           file: build/package/Containerfile
           platforms: linux/amd64,linux/arm64
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ${{env.IMAGE_NAME}}:${{github.sha}}
             ${{env.IMAGE_NAME}}

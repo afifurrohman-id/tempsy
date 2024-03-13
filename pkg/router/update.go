@@ -56,10 +56,10 @@ func HandleUpdateFile(ctx *fiber.Ctx) error {
 		})
 	}
 
-	fileHeader := mapFileHeader(ctx.GetReqHeaders())
+	fileHeader := store.MapFileHeader(ctx.GetReqHeaders())
 
 	fileMetadata := new(models.DataFile)
-	fileMetadata.MimeType = fileHeader[fiber.HeaderContentType]
+	fileMetadata.MimeType = fileHeader.Get(fiber.HeaderContentType)
 
 	if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
 		log.Error("Error Unmarshal File Metadata: " + err.Error())

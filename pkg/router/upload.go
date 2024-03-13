@@ -17,16 +17,6 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// TODO: Make parameter as pointer ??
-func mapFileHeader(header map[string][]string) map[string]string {
-	fileHeader := make(map[string]string)
-	for key, value := range header {
-		fileHeader[key] = value[0]
-	}
-
-	return fileHeader
-}
-
 func HandleUploadFile(ctx *fiber.Ctx) error {
 	var (
 		fileName = ctx.Get(store.HeaderFileName)
@@ -61,19 +51,21 @@ func HandleUploadFile(ctx *fiber.Ctx) error {
 	dataFile, err := store.GetObject(storeCtx, filePath)
 	if err != nil {
 		if errors.Is(err, storage.ErrObjectNotExist) {
-			fileHeader := mapFileHeader(ctx.GetReqHeaders())
-
+			var (
+				fileHeader  = store.MapFileHeader(ctx.GetReqHeaders())
+				contentType = fileHeader.Get(fiber.HeaderContentType)
+			)
 			fileMetadata := new(models.DataFile)
-			if !slices.Contains(store.AcceptedContentType, fileHeader[fiber.HeaderContentType]) {
+			if !slices.Contains(store.AcceptedContentType, contentType) {
 				return ctx.Status(fiber.StatusUnsupportedMediaType).JSON(&models.ApiError{
 					Error: &models.Error{
 						Kind:        utils.ErrorTypeUnsupportedType,
-						Description: "Unsupported Content-Type: " + fileHeader[fiber.HeaderContentType],
+						Description: "Unsupported Content-Type: " + contentType,
 					},
 				})
 			}
 
-			fileMetadata.MimeType = fileHeader[fiber.HeaderContentType]
+			fileMetadata.MimeType = contentType
 
 			if err = store.UnmarshalMetadata(fileHeader, fileMetadata); err != nil {
 				log.Error("Error Unmarshal File Metadata: " + err.Error())
