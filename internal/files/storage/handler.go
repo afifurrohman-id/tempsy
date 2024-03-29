@@ -22,7 +22,9 @@ func ListObjects(ctx context.Context, path string, filter ...func(data *models.D
 	if err != nil {
 		return nil, err
 	}
-	defer utils.LogErr(client.Close())
+	defer func() {
+		utils.LogErr(client.Close())
+	}()
 
 	var (
 		bucket  = client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET"))
@@ -83,6 +85,9 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		utils.LogErr(client.Close())
+	}()
 
 	bucket := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET"))
 
@@ -114,7 +119,6 @@ func GetObject(ctx context.Context, filePath string) (*models.DataFile, error) {
 
 	fileData.Url = url
 
-	defer utils.LogErr(client.Close())
 	return fileData, nil
 }
 
@@ -128,7 +132,9 @@ func UploadObject(ctx context.Context, filePath string, fileByte []byte, fileDat
 	if err != nil {
 		return err
 	}
-	defer utils.LogErr(client.Close())
+	defer func() {
+		utils.LogErr(client.Close())
+	}()
 
 	obj := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath)
 
@@ -156,7 +162,9 @@ func DeleteObject(ctx context.Context, filePath string) error {
 	if err != nil {
 		return err
 	}
-	defer utils.LogErr(client.Close())
+	defer func() {
+		utils.LogErr(client.Close())
+	}()
 
 	obj := client.Bucket(os.Getenv("GOOGLE_CLOUD_STORAGE_BUCKET")).Object(filePath)
 

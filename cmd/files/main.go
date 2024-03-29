@@ -29,6 +29,9 @@ func init() {
 func main() {
 	loggerFile, err := os.OpenFile("app.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0200)
 	utils.Check(err)
+	defer func() {
+		utils.LogErr(loggerFile.Close())
+	}()
 
 	fileInfo, err := loggerFile.Stat()
 	utils.Check(err)
@@ -87,6 +90,4 @@ func main() {
 	if err := app.Listen(":" + os.Getenv("PORT")); err != nil {
 		log.Panic(err)
 	}
-
-	defer utils.LogErr(loggerFile.Close())
 }
