@@ -6,7 +6,6 @@ on:
           type: string
       outputs:
         key:
-            description: ok
             value: ${{jobs.test.outputs.key}}
 
 jobs:
@@ -20,5 +19,5 @@ jobs:
               run: | 
                 echo Foo: ${{inputs.foo}}
                 echo Run on: ${{secrets.OK}}
-                echo "key=oooooooooooooooo" >> $GITHUB_OUTPUT 
+                echo key=oooooooooooooooo >> $GITHUB_OUTPUT 
 
