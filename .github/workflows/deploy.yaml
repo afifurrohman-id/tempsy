@@ -10,7 +10,7 @@ on:
 
 jobs:
     test:
-        environment: production
+        environment: staging
         runs-on: ubuntu-latest
         outputs:
           key: ${{steps.ok.outputs.key}}
