@@ -20,5 +20,5 @@ jobs:
               run: | 
                 echo Foo: ${{inputs.foo}}
                 echo Run on: ${{secrets.OK}}
-                echo "key=foo bar" >> $GITHUB_OUTPUT 
+                echo "key=oooooooooooooooo" >> $GITHUB_OUTPUT 
 
