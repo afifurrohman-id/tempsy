@@ -8,6 +8,7 @@ jobs:
   try:
     runs-on: ubuntu-latest
     strategy:
+      max-parallel: 2
       matrix:
         a: ['${{github.repository}}',a1]
         b: [b1, b2]
