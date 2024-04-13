@@ -6,14 +6,8 @@ on:
 
 jobs:
   try:
-    runs-on: ubuntu-latest
-      
-    steps:
-      - uses: actions/checkout@v4
-      - id: run
-        uses: ./.github/workflows/deploy.yaml
-        with:
-          foo: bar
-      - run: echo ${{steps.run.outputs}}
+    uses: ./.github/workflows/deploy.yaml
+    with:
+      foo: bar
 
           
