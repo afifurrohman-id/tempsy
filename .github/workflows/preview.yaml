@@ -6,9 +6,20 @@ on:
 
 jobs:
   try:
+    strategy:
+      matrix:
+        foo:
+          - bar: 1
+            id: 1
+            a: 1
+            b: 1
+          - ok: 2
+            id: 2
+            a: 2
+            b: 2
     uses: ./.github/workflows/deploy.yaml
     with:
-      foo: bar
+      foo: ${{matrix.foo.id}}-${{matrix.foo.a}}
     secrets: inherit
   out:
     runs-on: ubuntu-latest
