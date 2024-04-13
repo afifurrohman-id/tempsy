@@ -7,15 +7,10 @@ on:
 jobs:
   try:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 2
-      matrix:
-        a: ['${{github.repository}}',a1]
-        b: [b1, b2]
-        c: [c1,c2]
       
     steps:
-      - run: |
-          echo A: ${{matrix.a}}
-          echo B: ${{matrix.b}}
-          echo C: ${{matrix.c}}
+      - uses: ./.github/workflows/deploy.yaml
+        with:
+          foo: bar
+
+          

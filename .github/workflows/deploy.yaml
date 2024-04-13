@@ -1,0 +1,23 @@
+on: 
+    workflow_call:
+      inputs:
+        foo: 
+          required: true
+          type: string
+      outputs:
+        key:
+            value: ${{jobs.test.outputs.key}}
+
+jobs:
+    test:
+        environment: production
+        runs-on: ubuntu-latest
+        outputs:
+          key: ${{steps.ok.outputs.key}}
+        steps:
+            - id: ok
+              run: | 
+                echo Foo: ${{inputs.foo}}
+                echo Run on: ${{secrets.APP_ENV}}
+                echo key=foo bar >> $GITHUB_OUTPUT 
+
