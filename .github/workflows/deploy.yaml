@@ -6,6 +6,7 @@ on:
           type: string
       outputs:
         key:
+            description: ok
             value: ${{jobs.test.outputs.key}}
 
 jobs:
