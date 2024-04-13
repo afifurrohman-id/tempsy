@@ -10,6 +10,14 @@ on:
 
 jobs:
     test:
+        strategy:
+          matrix:
+            foo:
+              - bar: 1
+                id: 1
+              - ok: 2
+                id: 2
+
         environment: staging
         runs-on: ubuntu-latest
         outputs:
