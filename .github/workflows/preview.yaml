@@ -9,8 +9,9 @@ jobs:
     uses: ./.github/workflows/deploy.yaml
     with:
       foo: bar
+    secrets: inherit
   out:
     runs-on: ubuntu-latest
     needs: try
     steps:
-        - run: echo ${{needs.try.outputs}}          
+        - run: echo ${{needs.try.outputs.key}}          
