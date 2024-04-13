@@ -18,6 +18,6 @@ jobs:
             - id: ok
               run: | 
                 echo Foo: ${{inputs.foo}}
-                echo Run on: ${{secrets.APP_ENV}}
+                echo Run on: ${{secrets.OK}}
                 echo key=foo bar >> $GITHUB_OUTPUT 
 
