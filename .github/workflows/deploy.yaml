@@ -32,4 +32,6 @@ jobs:
                 echo Foo: ${{inputs.foo}}
                 echo Run on: ${{secrets.OK}}
                 echo key=oooooooooooooooo >> $GITHUB_OUTPUT 
+                echo ${{matrix.foo.a}}
+                echo ${{matrix.foo.ok}}
 
