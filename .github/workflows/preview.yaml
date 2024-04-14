@@ -29,8 +29,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: staging
     env:
-      
       IMAGE_NAME: ghcr.io/afifurrohman-id/grpc
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
