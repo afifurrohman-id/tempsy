@@ -35,6 +35,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: aarch64
       - uses: docker/setup-buildx-action@v3 
       - uses: docker/login-action@v3
         with:
@@ -60,16 +62,17 @@ jobs:
           inlineScript: |
             az extension add --allow-preview -n containerapp --upgrade -y
 
-            ENV_ID=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].id)
+            ENV_NAME=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].name)
 
             az deployment group create  \
             -g ${{secrets.AZURE_RESOURCE_GROUP}} \
-            -f deployments/main.bicep \
-            -p containerAppsName=grpc \
+            -f deployments/grpc/main.bicep \
+            -p containerAppName=grpc \
             -p image=${{env.IMAGE_NAME}} \
             -p targetPort=${{secrets.PORT}} \
             -p externalIngress=true \
             -p transportProtocol=http2 \
-            -p memory 0.5Gi
-            -p cpuCores 0.25
-            -p environmentId=${ENV_ID//\"}
+            -p memory=0.5Gi \
+            -p cpuCores=0.25 \
+            -p envName=${ENV_NAME//\"}
+            # -p environmentId=${ENV_ID//\"}
