@@ -58,9 +58,10 @@ jobs:
       - uses: azure/cli@v2
         with:
           inlineScript: |
+            az extension add -n containerapp --upgrade -y
+
             ENV_ID=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].id)
 
-            az extension add -n containerapp --upgrade -y
             # az provider register -n Microsoft.App
 
             az deployment group create  \
