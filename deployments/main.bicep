@@ -10,7 +10,7 @@ resource containerApps 'Microsoft.App/containerApps@2023-11-02-preview' = {
   name: containerAppsName
   location: location
   properties: {
-    environmentId: subscriptionResourceId('managedEnvironment', environmentId)
+    environmentId: environmentId
     configuration: {
       ingress: {
         external: externalIngress

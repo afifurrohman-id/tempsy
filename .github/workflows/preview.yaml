@@ -58,14 +58,17 @@ jobs:
       - uses: azure/cli@v2
         with:
           inlineScript: |
-            az extension add --name containerapp --upgrade
-            az provider register --namespace Microsoft.App
-            az deployment group create  \ 
-            --resource-group ${{secrets.AZURE_RESOURCE_GROUP}} \ 
-            --template-file deployments/main.bicep \
-            --parameters containerAppsName=grpc \
-            --parameters image=${{env.IMAGE_NAME}} \
-            --parameters targetPort=${{secrets.PORT}} \
-            --parameters externalIngress=true \
-            --parameters maxReplicas=10 \
-            --parameter environmentId=$(az containerapp env list -g rg-personal-my-001  --query [0].name)
+            ENV_ID=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].id)
+
+            az extension add -n containerapp --upgrade -y
+            az provider register -n Microsoft.App
+
+            az deployment group create  \
+            -g ${{secrets.AZURE_RESOURCE_GROUP}} \
+            -f deployments/main.bicep \
+            -p containerAppsName=grpc \
+            -p image=${{env.IMAGE_NAME}} \
+            -p targetPort=${{secrets.PORT}} \
+            -p externalIngress=true \
+            -p maxReplicas=10 \
+            -p environmentId=${ENV_ID//\"}
