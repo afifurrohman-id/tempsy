@@ -61,7 +61,7 @@ jobs:
             ENV_ID=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].id)
 
             az extension add -n containerapp --upgrade -y
-            az provider register -n Microsoft.App
+            # az provider register -n Microsoft.App
 
             az deployment group create  \
             -g ${{secrets.AZURE_RESOURCE_GROUP}} \
