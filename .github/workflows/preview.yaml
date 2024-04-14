@@ -26,6 +26,7 @@ jobs:
   #   needs: try
   #   steps:
   #       - run: echo ${{needs.try.outputs.key}} 
+    runs-on: ubuntu-latest
     environment: staging
     env:
       IMAGE_NAME: ghcr.io/afifurrohman-id/grpc
