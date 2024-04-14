@@ -9,6 +9,7 @@ import (
 	"github.com/afifurrohman-id/tempsy/internal/files/models"
 	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type Server struct {
@@ -27,6 +28,7 @@ func main() {
 	utils.Check(err)
 
 	server := grpc.NewServer()
+	reflection.Register(server)
 
 	models.RegisterGreeterServer(server, new(Server))
 	log.Println("server listening at:", lis.Addr())
