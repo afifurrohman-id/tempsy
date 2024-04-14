@@ -69,5 +69,7 @@ jobs:
             -p image=${{env.IMAGE_NAME}} \
             -p targetPort=${{secrets.PORT}} \
             -p externalIngress=true \
-            -p maxReplicas=10 \
+            -p transportProtocol=http2 \
+            -p memory 0.5Gi
+            -p cpuCores 0.25
             -p environmentId=${ENV_ID//\"}

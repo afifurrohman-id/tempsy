@@ -1,26 +1,22 @@
 services:
   firebase_emulators:
-    container_name: firebase_emulators
-    image: afifurrohman/tiny-firebase
+    image: fixl/firebase-emulator-suite
     networks:
       - tempsy_net
     ports:
       - 4000:4000
-      - 9999:9999
+      - 9199:9199
     restart: on-failure
-    command: firebase emulators:start -P $COMPOSE_PROJECT_NAME
+    environment:
+      - STORAGE=true
+      - FIREBASE_PROJECT_ID=$COMPOSE_PROJECT_NAME
     volumes:
-      - tempsy_data:/root/.cache/firebase
-      - ../configs/firebase.json:/firebase/firebase.json
-      - ../configs/storage.rules:/firebase/storage.rules
+      - ../configs/tempsy/storage.rules:/storage.rules
     deploy:
       resources:
         limits:
           cpus: '0.50'
           memory: 300M
-
-volumes:
-  tempsy_data:
 
 networks:
   tempsy_net:

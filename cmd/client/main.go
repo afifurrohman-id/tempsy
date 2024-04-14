@@ -2,18 +2,27 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
+	"flag"
 	"log"
-	"os"
 	"time"
 
 	"github.com/afifurrohman-id/tempsy/internal/files/models"
 	"github.com/afifurrohman-id/tempsy/internal/files/utils"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 func main() {
-	conn, err := grpc.Dial(""+os.Getenv("PORT"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	secure := flag.Bool("secure", false, "secure using HTTP/2 with TLS, (default is: false)")
+	flag.Parse()
+	creds := insecure.NewCredentials()
+	if *secure {
+		creds = credentials.NewTLS(new(tls.Config))
+	}
+
+	conn, err := grpc.Dial(flag.Arg(0), grpc.WithTransportCredentials(creds))
 	utils.Check(err)
 	defer conn.Close()
 
