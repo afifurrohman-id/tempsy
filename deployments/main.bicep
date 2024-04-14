@@ -15,6 +15,7 @@ resource containerApps 'Microsoft.App/containerApps@2023-11-02-preview' = {
       ingress: {
         external: externalIngress
         targetPort: int(targetPort) 
+        transport:'http2'
       }
     }
     template: {

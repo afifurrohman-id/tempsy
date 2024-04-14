@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"log"
-	"os"
 	"time"
 
 	"github.com/afifurrohman-id/tempsy/internal/files/models"
@@ -13,7 +12,7 @@ import (
 )
 
 func main() {
-	conn, err := grpc.Dial(":"+os.Getenv("PORT"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial("grpc.blackisland-5be6586d.southeastasia.azurecontainerapps.io", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	utils.Check(err)
 	defer conn.Close()
 
