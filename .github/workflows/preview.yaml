@@ -62,8 +62,6 @@ jobs:
 
             ENV_ID=$(az containerapp env list -g ${{secrets.AZURE_RESOURCE_GROUP}} --query [0].id)
 
-            # az provider register -n Microsoft.App
-
             az deployment group create  \
             -g ${{secrets.AZURE_RESOURCE_GROUP}} \
             -f deployments/main.bicep \

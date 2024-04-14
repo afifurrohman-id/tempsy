@@ -27,8 +27,6 @@ jobs:
         with:
           dockerfile: build/package/**Containerfile
       
-C
-
       - name: Build Image Test
         uses: docker/build-push-action@v5
         with:

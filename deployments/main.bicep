@@ -16,11 +16,6 @@ resource containerApps 'Microsoft.App/containerApps@2023-11-02-preview' = {
         external: externalIngress
         targetPort: int(targetPort) 
       }
-      registries: [
-        {
-          server: 'ghcr.io'
-        }
-      ]
     }
     template: {
       containers: [
