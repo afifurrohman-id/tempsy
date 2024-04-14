@@ -44,7 +44,6 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - uses: 
 
       - uses: azure/cli@v2
         with:
