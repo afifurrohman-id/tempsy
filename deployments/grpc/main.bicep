@@ -41,6 +41,9 @@ param memory string =  '1.0Gi'
 resource env 'Microsoft.App/managedEnvironments@2023-11-02-preview' = {
   name: envName
   location: location
+  properties: {
+    
+  }
 }
 
 
@@ -54,10 +57,11 @@ resource containerApp 'Microsoft.App/containerApps@2023-11-02-preview' = {
         external: externalIngress
         targetPort: targetPort
         transport: transportProtocol
-        customDomains: [{
-          name: ''
-          bindingType: 'SniEnabled'
-        }]
+        // customDomains: [{
+        //   name: ''
+        //   bindingType: 'SniEnabled'
+        //   certificateId: ''
+        // }]
       }
     }
     template: {
