@@ -46,7 +46,7 @@ resource env 'Microsoft.App/managedEnvironments@2023-11-02-preview' = {
   properties: {
     workloadProfiles:[
       {
-        name: envName
+        name: 'Consumption'
         workloadProfileType:  'consumption' 
       }
     ] 
