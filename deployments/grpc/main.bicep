@@ -3,19 +3,21 @@ param location string = resourceGroup().location
 param image string
 param targetPort int
 param externalIngress bool = false
-param maxReplicas int = 2
 param envName string
 
+@maxValue(10)
+param maxReplicas int = 2
+
 @allowed([
-  'auto'
-  'http'
-  'http2'
+'auto'
+'http'
+'http2'
 'tcp'
 ])
 param transportProtocol string  = 'auto'
 
 @allowed([
-  '0.25'
+'0.25'
 '0.5'
 '0.75'
 '1.0'
@@ -27,7 +29,7 @@ param transportProtocol string  = 'auto'
 param cpuCores string = '0.5'
 
 @allowed([
-  '0.5Gi'
+'0.5Gi'
 '1.0Gi' 
 '1.5Gi'
 '2.0Gi'
@@ -42,7 +44,12 @@ resource env 'Microsoft.App/managedEnvironments@2023-11-02-preview' = {
   name: envName
   location: location
   properties: {
-    
+    workloadProfiles:[
+      {
+        name: envName
+        workloadProfileType:  'consumption' 
+      }
+    ] 
   }
 }
 
@@ -51,7 +58,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-11-02-preview' = {
   name: containerAppName
   location: location
   properties: {
-    environmentId: env.id
+    environmentId: envName == '' ? '' : env.id
     configuration: {
       ingress: {
         external: externalIngress
