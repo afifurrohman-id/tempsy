@@ -1,0 +1,25 @@
+on: 
+    workflow_call:
+      inputs:
+        foo: 
+          required: true
+          type: string
+      outputs:
+        key:
+            value: ${{jobs.test.outputs.key}}
+
+jobs:
+    test:
+        environment: staging
+        runs-on: ubuntu-latest
+        outputs:
+          key: ${{steps.ok.outputs.key}}
+        steps:
+            - id: ok
+              run: | 
+                echo Foo: ${{inputs.foo}}
+                echo Run on: ${{secrets.OK}}
+                echo key=oooooooooooooooo >> $GITHUB_OUTPUT 
+                echo ${{matrix.foo.a}}
+                echo ${{matrix.foo.id}}
+
